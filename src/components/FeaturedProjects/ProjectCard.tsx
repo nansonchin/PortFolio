@@ -1,13 +1,25 @@
+import { useEffect, useLayoutEffect } from "react";
 import type { Project } from "../../domain/projects/project.types";
+import { useGsapAnimation } from "../../hooks/useGsapAnimation";
 import Image from "../Image";
+import { projectCardsReveal } from "../../animations/projectAnimation";
+import { useInteractiveCard } from "../../hooks/useInteractiveCard";
 
 type ProjectCardProps = {
   project: Project;
 };
 
 function ProjectCard({ project }: ProjectCardProps) {
+  const {cardRef, handleMouseMove,handleMouseLeave} = useInteractiveCard()
   return (
-    <article className="group border border-white/10 rounded-2xl overflow-hidden bg-black transition-all duration-500 hover:translate-y-2">
+    <article
+      ref={cardRef}
+      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
+      className="project-card relative transform-gpu preserve-3d group  border border-white/10 rounded-2xl overflow-hidden
+                bg-black transition-all duration-500 hover:-translate-y-2"
+    >
+      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_var(--mouse-x)_var(--mouse-y),rgba(255,220,34,0.15),transparent_40%)]" />
       <div className="aspect-video overflow-hidden bg-neutral-900">
         <Image
           src={project.thumbnail}
