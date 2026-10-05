@@ -1,0 +1,61 @@
+import type { Project } from "../../domain/projects/project.types";
+import Image from "../Image";
+
+type ProjectCardProps = {
+  project: Project;
+};
+
+function ProjectCard({ project }: ProjectCardProps) {
+  return (
+    <article className="group border border-white/10 rounded-2xl overflow-hidden bg-black transition-all duration-500 hover:translate-y-2">
+      <div className="aspect-video overflow-hidden bg-neutral-900">
+        <Image
+          src={project.thumbnail}
+          alt={`${project.title} project preview`}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+      </div>
+      <div className="p-6">
+        <p className="text-xs uppercase tacking-[0.3em] text-yellow-400 mb-3">
+          {project.category}
+        </p>
+        <h3 className="text-2x1 font-semibold text-white">{project.title}</h3>
+        <p className="mt-4 text-neutral-400 loading-relaxed">
+          {project.summary}
+        </p>
+        <div className="flex flex-wrap gap-2 mt-6">
+          {project.technologies.map((tech) => (
+            <span
+              key={tech}
+              className="px-3 py-1 text-xs rounded-full bg-white/10 text-neutral-3000"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+        <div className="flex gap-4 mt-8">
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm text-white underline"
+          >
+            Github
+          </a>
+          {project.demoUrl && (
+            <a
+              href={project.demoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm text-yellow-400 underline"
+            >
+              Live Demo
+            </a>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export default ProjectCard;
