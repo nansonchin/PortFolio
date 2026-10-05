@@ -1,0 +1,28 @@
+:root {
+
+
+/* Colors */
+
+--background:
+#050505;
+
+
+--gold:
+#C9A227;
+
+
+--foreground:
+#F5F5F5;
+
+
+--muted:
+#8A8A8A;
+
+
+/* Spacing */
+
+--section-padding:
+120px;
+
+
+}
