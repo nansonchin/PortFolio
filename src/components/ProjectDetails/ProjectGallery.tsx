@@ -1,6 +1,9 @@
 import { useLayoutEffect, useRef } from "react";
 import type { ProjectDetailModel } from "../../models/ProjectDetailModel";
 import { projectGalleryAnimation } from "../../animations/projectGalleryAnimation";
+import { useLightbox } from "../../hooks/useLightbox";
+import type { ProjectGalleryImageModel } from "../../models/ProjectGalleryImageModel";
+import Lightbox from "../LightBox/Lightbox";
 
 type ProjectGalleryProps = {
   project: ProjectDetailModel;
@@ -8,6 +11,8 @@ type ProjectGalleryProps = {
 
 function ProjectGallery({ project }: ProjectGalleryProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
+
+  const { selectedItem,currentIndex,total, open,close,next,previous} =  useLightbox<ProjectGalleryImageModel>()
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -34,7 +39,7 @@ function ProjectGallery({ project }: ProjectGalleryProps) {
           </h2>
         </div>
         <div className="mt-24 space-y-24">
-          {project.gallery.map((image) => (
+          {project.gallery.map((image,index) => (
             <article
               key={image.id}
               className="gallery-item grid lg:grid-cols-2 gap-12 items-center"
@@ -43,8 +48,12 @@ function ProjectGallery({ project }: ProjectGalleryProps) {
                 <img
                   src={image.imageUrl}
                   alt={image.title}
-                  className="w-full h-auto object-cover"
+                  className="gallery-image cursor-pointer w-full h-auto object-cover"
                   loading="lazy"
+                  onClick={()=>open(
+                    project.gallery,
+                    index
+                  )}
                 />
               </div>
               <div>
@@ -59,6 +68,7 @@ function ProjectGallery({ project }: ProjectGalleryProps) {
           ))}
         </div>
       </div>
+      <Lightbox image={selectedItem} currentIndex={currentIndex} total={total} onNext={next} onPrevious={previous} onClose={close}/>
     </section>
   );
 }
