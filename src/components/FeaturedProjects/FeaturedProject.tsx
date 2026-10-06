@@ -1,11 +1,12 @@
 import { useLayoutEffect, useRef } from "react";
-import { getProjects } from "../../domain/projects/project.data";
 import ProjectCard from "./ProjectCard";
 import { projectCardsReveal } from "../../animations/projectAnimation";
+import { projectRepository } from "../../repository/ProjectRepository";
+import { toProjectCardModel } from "../../mapper/projectMapper";
 
 function FeaturedProjects(){
     const sectionRef = useRef<HTMLElement | null>(null)
-    const projects = getProjects().filter((project)=>project.featured)
+    const projects =projectRepository.getFeatures().map(toProjectCardModel)
 
     useLayoutEffect(()=>{
         const section = sectionRef.current

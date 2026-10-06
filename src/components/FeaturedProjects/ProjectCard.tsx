@@ -1,18 +1,20 @@
-import { useEffect, useLayoutEffect } from "react";
-import type { Project } from "../../domain/projects/project.types";
-import { useGsapAnimation } from "../../hooks/useGsapAnimation";
 import Image from "../Image";
-import { projectCardsReveal } from "../../animations/projectAnimation";
 import { useInteractiveCard } from "../../hooks/useInteractiveCard";
+import type { ProjectCardModel } from "../../models/ProjectCardModel";
+import { useNavigate } from "react-router-dom";
 
 type ProjectCardProps = {
-  project: Project;
+  project: ProjectCardModel;
 };
 
 function ProjectCard({ project }: ProjectCardProps) {
   const {cardRef, handleMouseMove,handleMouseLeave} = useInteractiveCard()
+
+  const navigate = useNavigate()
+
   return (
     <article
+      onClick={()=> navigate(`/project/${project.slug}`)}
       ref={cardRef}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
