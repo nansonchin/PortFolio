@@ -1,3 +1,5 @@
+import type { ProjectGalleryImageModel } from "../models/ProjectGalleryImageModel";
+
 export interface Project {
   id: string;
 
@@ -25,7 +27,7 @@ export interface Project {
 
   heroImage: string;
 
-  gallery: string[];
+  gallery: ProjectGalleryImageModel[];
 
   features: string[];
 

@@ -23,10 +23,34 @@ export const projects: Project[] = [
       "SCSS",
       "Vite",
     ],
-
     gallery: [
-      "/images/projects/manga-reader/1.webp",
-      "/images/projects/manga-reader/2.webp",
+      {
+        id: "gallery-1",
+        imageUrl: "/images/projects/manga-reader/gallery-1.webp",
+        title: "Home Page",
+        description: "Landing page of Manga Reader.",
+      },
+
+      {
+        id: "gallery-2",
+        imageUrl: "/images/projects/manga-reader/gallery-2.webp",
+        title: "Detail Page",
+        description: "Project detail screen.",
+      },
+
+      {
+        id: "gallery-3",
+        imageUrl: "/images/projects/manga-reader/gallery-3.webp",
+        title: "Reader",
+        description: "Long strip reading experience.",
+      },
+
+      {
+        id: "gallery-4",
+        imageUrl: "/images/projects/manga-reader/gallery-4.webp",
+        title: "Chapter List",
+        description: "Infinite chapter loading.",
+      },
     ],
     features: [
       "Infinite Chapter Loading",
@@ -69,8 +93,33 @@ export const projects: Project[] = [
     heroImage: "../../assets/projects/mangaReader",
     technologies: ["React", "TypeScript", "GSAP", "Tailwind CSS", "Lenis"],
     gallery: [
-      "/images/projects/manga-reader/1.webp",
-      "/images/projects/manga-reader/2.webp",
+      {
+        id: "gallery-1",
+        imageUrl: "/images/projects/manga-reader/gallery-1.webp",
+        title: "Home Page",
+        description: "Landing page of Manga Reader.",
+      },
+
+      {
+        id: "gallery-2",
+        imageUrl: "/images/projects/manga-reader/gallery-2.webp",
+        title: "Detail Page",
+        description: "Project detail screen.",
+      },
+
+      {
+        id: "gallery-3",
+        imageUrl: "/images/projects/manga-reader/gallery-3.webp",
+        title: "Reader",
+        description: "Long strip reading experience.",
+      },
+
+      {
+        id: "gallery-4",
+        imageUrl: "/images/projects/manga-reader/gallery-4.webp",
+        title: "Chapter List",
+        description: "Infinite chapter loading.",
+      },
     ],
     features: [
       "Infinite Chapter Loading",

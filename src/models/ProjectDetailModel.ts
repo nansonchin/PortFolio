@@ -1,3 +1,5 @@
+import type { ProjectGalleryImageModel } from "./ProjectGalleryImageModel";
+
 export interface ProjectDetailModel{
     id:string;
     slug:string;
@@ -6,12 +8,12 @@ export interface ProjectDetailModel{
     year:number;
     category:string;
     heroImage:string;
-    gallery:string[];
+    gallery:ProjectGalleryImageModel[];
     technologies:string[];
     features:string[];
     responsibilities:string[];
     challenges:string[];
     solutions:string[];
     githubUrl:string;
-    demoUrl?:string
+    demoUrl?:string;
 }

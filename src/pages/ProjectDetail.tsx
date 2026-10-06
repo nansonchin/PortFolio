@@ -6,6 +6,7 @@ import {
 } from "../components/ProjectDetails";
 import { projectRepository } from "../repository/ProjectRepository";
 import { toProjectDetailModel } from "../mapper/projectMapper";
+import ProjectGallery from "../components/ProjectDetails/ProjectGallery";
 
 function ProjectDetail() {
   const { slug } = useParams();
@@ -24,6 +25,7 @@ function ProjectDetail() {
         <ProjectHero project={detailProject} />
         <ProjectOverview project={detailProject} />
         <ProjectTechStack project={detailProject} />
+        <ProjectGallery project={detailProject}/>
     </main>
   );
 }
