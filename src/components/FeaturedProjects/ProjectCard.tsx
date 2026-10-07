@@ -14,17 +14,19 @@ function ProjectCard({ project }: ProjectCardProps) {
 
   const navigate = useNavigate();
   const { mode } = useCursorContext();
-  
-  const handleCardClick =(event:React.MouseEvent<HTMLElement>) =>{
-    const target = event.target as HTMLElement
-    const interactiveElement = target.closest("a,button,[role='button'], input, textarea,select")
 
-    if(interactiveElement){
+  const handleCardClick = (event: React.MouseEvent<HTMLElement>) => {
+    const target = event.target as HTMLElement;
+    const interactiveElement = target.closest(
+      "a,button,[role='button'], input, textarea,select",
+    );
+
+    if (interactiveElement) {
       return;
     }
 
-    navigate(`/project/${project.slug}`)
-  }
+    navigate(`/project/${project.slug}`);
+  };
   console.log(mode);
   return (
     <article
@@ -63,27 +65,32 @@ function ProjectCard({ project }: ProjectCardProps) {
           ))}
         </div>
         <div className="flex gap-4 mt-8 justify-between">
-          <a
-             data-magnetic
-            data-cursor="code"
-            href={project.githubUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm text-white underline"
-          >
-            Github
-          </a>
-          {project.demoUrl && (
+          <div className="">
             <a
               data-magnetic
-              data-cursor="live"
-              href={project.demoUrl}
+              data-cursor="code"
+              href={project.githubUrl}
               target="_blank"
               rel="noreferrer"
-              className="text-sm text-yellow-400 underline"
+              className="text-sm text-white underline py-[10px] px-[25px]"
             >
-              Live Demo
+              Github
             </a>
+          </div>
+
+          {project.demoUrl && (
+            <div>
+              <a
+                data-magnetic
+                data-cursor="live"
+                href={project.demoUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm text-yellow-400 underline py-[10px] px-[25px]"
+              >
+                Live Demo
+              </a>
+            </div>
           )}
         </div>
       </div>

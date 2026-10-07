@@ -1,13 +1,20 @@
 import { forwardRef } from "react";
 
-type CursorMode = "default" | "view" | "code" | "live";
+import type {
+  CursorMode,
+} from "./cursorVisualConfig";
+
 
 type CursorSvgProps = {
   className?: string;
   mode?: CursorMode;
 };
 
-const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
+
+const CursorSvg = forwardRef<
+  SVGSVGElement,
+  CursorSvgProps
+>(
   (
     {
       className,
@@ -15,9 +22,19 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
     },
     ref
   ) => {
-    const isCode = mode === "code";
-    const isLive = mode === "live";
-    const isDefault = !isCode && !isLive;
+
+    const isCode =
+      mode === "code";
+
+
+    const isLive =
+      mode === "live";
+
+
+    const isDefault =
+      !isCode &&
+      !isLive;
+
 
     return (
       <svg
@@ -29,8 +46,10 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
+
         {isDefault && (
-          <>
+          <g className="cursor-target-view">
+
             {/* Outer Ring */}
             <circle
               cx="40"
@@ -42,28 +61,31 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               className="cursor-outer-ring"
             />
 
+
             {/* Middle Ring */}
             <circle
               cx="40"
               cy="40"
               r="33"
               stroke="currentColor"
-              strokeWidth="2.5"
+              strokeWidth="1.5"
               opacity="0.5"
               className="cursor-middle-ring"
             />
 
-            {/* Inner HUD Dash Arc - Top Left */}
+
+            {/* Top Left Dash */}
             <path
               d="M40 12 A28 28 0 0 0 12 40"
               stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
-              strokeDasharray="2 10"
+              strokeDasharray="12 10"
               className="cursor-arc cursor-arc-1"
             />
 
-            {/* Top Right */}
+
+            {/* Top Right Dash */}
             <path
               d="M40 12 A28 28 0 0 1 68 40"
               stroke="currentColor"
@@ -73,17 +95,19 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               className="cursor-arc cursor-arc-2"
             />
 
-            {/* Bottom Right */}
+
+            {/* Bottom Right Dash */}
             <path
               d="M68 40 A28 28 0 0 1 40 68"
               stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
-              strokeDasharray="2 10"
+              strokeDasharray="12 10"
               className="cursor-arc cursor-arc-3"
             />
 
-            {/* Bottom Left */}
+
+            {/* Bottom Left Dash */}
             <path
               d="M40 68 A28 28 0 0 1 12 40"
               stroke="currentColor"
@@ -92,16 +116,8 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               strokeDasharray="12 10"
               className="cursor-arc cursor-arc-4"
             />
-   <circle
-              cx="40"
-              cy="40"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              opacity="0.5"
-              className="cursor-middle-ring"
-            />
-            
+
+
             {/* Inner Target Ring */}
             <circle
               cx="40"
@@ -113,6 +129,7 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               className="cursor-target"
             />
 
+
             {/* Center Dot */}
             <circle
               cx="40"
@@ -121,11 +138,14 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               fill="currentColor"
               className="cursor-core"
             />
-          </>
+
+          </g>
         )}
 
+
         {isCode && (
-          <>
+          <g className="cursor-target-code">
+
             {/* Outer Square */}
             <rect
               x="14"
@@ -138,6 +158,7 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               opacity="0.8"
               className="cursor-code-outer"
             />
+
 
             {/* Inner Square */}
             <rect
@@ -152,6 +173,7 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               className="cursor-code-inner"
             />
 
+
             {/* Center Dot */}
             <circle
               cx="40"
@@ -160,11 +182,14 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               fill="currentColor"
               className="cursor-core"
             />
-          </>
+
+          </g>
         )}
 
+
         {isLive && (
-          <>
+          <g className="cursor-target-live">
+
             {/* Outer Triangle */}
             <path
               d="M40 12 L68 64 L12 64 Z"
@@ -174,6 +199,7 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               opacity="0.9"
               className="cursor-live-outer"
             />
+
 
             {/* Inner Triangle */}
             <path
@@ -185,6 +211,7 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               className="cursor-live-inner"
             />
 
+
             {/* Center Dot */}
             <circle
               cx="40"
@@ -193,13 +220,32 @@ const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
               fill="currentColor"
               className="cursor-core"
             />
-          </>
+
+          </g>
         )}
+
+
+        {/* Click Pulse Ring */}
+        <circle
+          cx="40"
+          cy="40"
+          r="10"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          opacity="0"
+          vectorEffect="non-scaling-stroke"
+          className="cursor-click-ring"
+        />
+
       </svg>
     );
   }
 );
 
-CursorSvg.displayName = "CursorSvg";
+
+CursorSvg.displayName =
+  "CursorSvg";
+
 
 export default CursorSvg;

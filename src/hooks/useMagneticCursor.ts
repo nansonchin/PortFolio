@@ -1,96 +1,239 @@
 import { useEffect } from "react";
 
-import { createCursorMagneticAnimation } from "../animations/cursorMagneticAnimation";
+import {
+  createCursorMagneticAnimation,
+} from "../animations/cursorMagneticAnimation";
 
-import { useCursorPhysics } from "../components/Cursor/CursorPhysicsContext";
+import {
+  useCursorPhysics,
+} from "../components/Cursor/CursorPhysicsContext";
+
 
 export function useMagneticCursor() {
-  const { setOffset } = useCursorPhysics();
+
+  const {
+    setOffset,
+  } = useCursorPhysics();
+
 
   useEffect(() => {
-    const magnetic = createCursorMagneticAnimation({
-      setOffset,
-    });
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const targets = document.querySelectorAll<HTMLElement>("[data-magnetic]");
+    const magnetic =
+      createCursorMagneticAnimation({
+        setOffset,
+      });
 
-      let closestTarget: HTMLElement | null = null;
 
-      let closestDistance = Infinity;
+    /**
+     * Used to know whether
+     * the Cursor is currently
+     * inside a magnetic range.
+     *
+     * This prevents the release
+     * animation from restarting
+     * on every mousemove.
+     */
+    let isMagneticActive =
+      false;
 
-      for (const element of targets) {
-        const rect = element.getBoundingClientRect();
 
-        const centerX = rect.left + rect.width / 2;
+    const handleMouseMove = (
+      event: MouseEvent,
+    ) => {
 
-        const centerY = rect.top + rect.height / 2;
-
-        const distance = Math.hypot(
-          event.clientX - centerX,
-          event.clientY - centerY,
+      const targets =
+        document.querySelectorAll<HTMLElement>(
+          "[data-magnetic]",
         );
 
-        if (distance < closestDistance) {
-          closestDistance = distance;
 
-          closestTarget = element;
-        }
-      }
+      let closestTarget:
+        HTMLElement | null = null;
+
+
+      let closestDistance =
+        Infinity;
+
 
       /**
-       * No magnetic target
+       * Find the closest
+       * magnetic target.
+       */
+      for (const element of targets) {
+
+        const rect =
+          element.getBoundingClientRect();
+
+
+        const centerX =
+          rect.left +
+          rect.width / 2;
+
+
+        const centerY =
+          rect.top +
+          rect.height / 2;
+
+
+        const distance =
+          Math.hypot(
+            event.clientX - centerX,
+            event.clientY - centerY,
+          );
+
+
+        if (
+          distance <
+          closestDistance
+        ) {
+
+          closestDistance =
+            distance;
+
+
+          closestTarget =
+            element;
+
+        }
+
+      }
+
+
+      /**
+       * No magnetic target exists.
        */
       if (!closestTarget) {
-        magnetic.reset();
+
+        if (isMagneticActive) {
+
+          isMagneticActive =
+            false;
+
+          magnetic.reset();
+
+        }
 
         return;
+
       }
 
-      /**
-       * Magnetic activation radius
-       */
-      const radius = 300;
 
       /**
-       * Outside magnetic range
+       * Magnetic activation radius.
        */
-      if (closestDistance > radius) {
-        magnetic.reset();
+      const radius =
+        280;
+
+
+      /**
+       * Mouse is outside
+       * the magnetic range.
+       */
+      if (
+        closestDistance >
+        radius
+      ) {
+
+        if (isMagneticActive) {
+
+          isMagneticActive =
+            false;
+
+          magnetic.reset();
+
+        }
 
         return;
+
       }
 
-      const rect = closestTarget.getBoundingClientRect();
-
-      const targetX = rect.left + rect.width / 2;
-
-      const targetY = rect.top + rect.height / 2;
 
       /**
-       * 0 = edge of magnetic range
-       * 1 = center of target
+       * We are inside a
+       * magnetic target.
        */
-      const strength = 1 - closestDistance / radius;
+      isMagneticActive =
+        true;
+
+
+      const rect =
+        closestTarget.getBoundingClientRect();
+
+
+      const targetX =
+        rect.left +
+        rect.width / 2;
+
+
+      const targetY =
+        rect.top +
+        rect.height / 2;
+
 
       /**
-       * Magnetic pull strength
+       * 0 = edge of range
+       * 1 = target center
        */
-      const pullStrength = 1.8;
+      const strength =
+        1 -
+        closestDistance / radius;
 
-      const offsetX = (targetX - event.clientX) * strength * pullStrength;
 
-      const offsetY = (targetY - event.clientY) * strength * pullStrength;
+      /**
+       * Overall magnetic strength.
+       */
+      const pullStrength =
+        2.35;
 
-      magnetic.animateTo(offsetX, offsetY);
+
+      const offsetX =
+        (
+          targetX -
+          event.clientX
+        )
+        *
+        strength
+        *
+        pullStrength;
+
+
+      const offsetY =
+        (
+          targetY -
+          event.clientY
+        )
+        *
+        strength
+        *
+        pullStrength;
+
+
+      magnetic.animateTo(
+        offsetX,
+        offsetY,
+      );
+
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+
+    window.addEventListener(
+      "mousemove",
+      handleMouseMove,
+    );
+
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+
+      window.removeEventListener(
+        "mousemove",
+        handleMouseMove,
+      );
+
 
       magnetic.destroy();
+
     };
+
   }, [setOffset]);
+
 }
