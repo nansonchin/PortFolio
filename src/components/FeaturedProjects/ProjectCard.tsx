@@ -3,21 +3,33 @@ import { useInteractiveCard } from "../../hooks/useInteractiveCard";
 import type { ProjectCardModel } from "../../models/ProjectCardModel";
 import { useNavigate } from "react-router-dom";
 import { useCursorContext } from "../../hooks/useCursorContext";
+import { useMagneticCursor } from "../../hooks/useMagneticCursor";
 
 type ProjectCardProps = {
   project: ProjectCardModel;
 };
 
 function ProjectCard({ project }: ProjectCardProps) {
-  const {cardRef, handleMouseMove,handleMouseLeave} = useInteractiveCard()
+  const { cardRef, handleMouseMove, handleMouseLeave } = useInteractiveCard();
 
-  const navigate = useNavigate()
-const { mode } = useCursorContext();
-console.log(mode)
+  const navigate = useNavigate();
+  const { mode } = useCursorContext();
+  
+  const handleCardClick =(event:React.MouseEvent<HTMLElement>) =>{
+    const target = event.target as HTMLElement
+    const interactiveElement = target.closest("a,button,[role='button'], input, textarea,select")
+
+    if(interactiveElement){
+      return;
+    }
+
+    navigate(`/project/${project.slug}`)
+  }
+  console.log(mode);
   return (
     <article
-    data-cursor="view"
-      onClick={()=> navigate(`/project/${project.slug}`)}
+      data-cursor="view"
+      onClick={handleCardClick}
       ref={cardRef}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
@@ -50,8 +62,10 @@ console.log(mode)
             </span>
           ))}
         </div>
-        <div className="flex gap-4 mt-8">
+        <div className="flex gap-4 mt-8 justify-between">
           <a
+             data-magnetic
+            data-cursor="code"
             href={project.githubUrl}
             target="_blank"
             rel="noreferrer"
@@ -61,6 +75,8 @@ console.log(mode)
           </a>
           {project.demoUrl && (
             <a
+              data-magnetic
+              data-cursor="live"
               href={project.demoUrl}
               target="_blank"
               rel="noreferrer"

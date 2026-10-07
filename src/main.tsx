@@ -8,13 +8,18 @@ import SmoothScrollProvider from "./app/providers/SmoothScrollProvider.tsx";
 import "lenis/dist/lenis.css";
 import Cursor from "./components/Cursor/index.ts";
 import { CursorProvider } from "./components/Cursor/CursorContext.tsx";
+import { CursorPhysicsProvider } from "./components/Cursor/CursorPhysicsContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <SmoothScrollProvider>
       <CursorProvider>
-        <Cursor />
-        <RouterProvider router={router} />
+        <CursorPhysicsProvider>
+          <div className="cursor-none">
+            <Cursor />
+            <RouterProvider router={router} />
+          </div>
+        </CursorPhysicsProvider>
       </CursorProvider>
     </SmoothScrollProvider>
   </StrictMode>,

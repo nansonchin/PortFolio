@@ -88,7 +88,7 @@ export const projects: Project[] = [
 
     githubUrl: "https://github.com/your-github/portfolio",
 
-    demoUrl: "",
+    demoUrl: "https://",
     thumbnail: "../../assets/projects/mangaReader",
     heroImage: "../../assets/projects/mangaReader",
     technologies: ["React", "TypeScript", "GSAP", "Tailwind CSS", "Lenis"],

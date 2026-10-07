@@ -1,48 +1,60 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+
+import { useCursorPhysics } from "../components/Cursor/CursorPhysicsContext";
+
 import { useCursorContext } from "./useCursorContext";
 
 export function useCursorHover() {
   const { setMode } = useCursorContext();
 
+  const { getPosition, subscribe } = useCursorPhysics();
+
+  const currentMode = useRef<string>("default");
+
   useEffect(() => {
-    const handleMouseOver = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
+    const updateCursorHover = () => {
+      const { x, y } = getPosition();
 
-      const cursorElement = target.closest(
+      const element = document.elementFromPoint(x, y);
+
+      const cursorElement = element?.closest(
         "[data-cursor]",
       ) as HTMLElement | null;
 
-      if (!cursorElement) {
+      const mode = cursorElement?.dataset.cursor;
+
+      const nextMode =
+        mode === "view" || mode === "code" || mode === "live"
+          ? mode
+          : "default";
+
+      if (currentMode.current === nextMode) {
         return;
       }
 
-      const mode = cursorElement.dataset.cursor;
+      currentMode.current = nextMode;
 
-      if (mode === "view" || mode === "code" || mode === "live") {
-        setMode(mode);
-      }
+      setMode(nextMode);
     };
 
-    const handleMouseOut = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
+    /**
+     * Initial check
+     */
+    updateCursorHover();
 
-      const cursorElement = target.closest(
-        "[data-cursor]",
-      ) as HTMLElement | null;
-
-      if (!cursorElement) {
-        return;
-      }
-
-      setMode("default");
-    };
-
-    document.addEventListener("mouseover", handleMouseOver);
-    document.addEventListener("mouseout", handleMouseOut);
+    /**
+     * Update whenever
+     * cursor physics changes.
+     *
+     * This includes:
+     *
+     * mouse movement
+     * magnetic offset
+     */
+    const unsubscribe = subscribe(updateCursorHover);
 
     return () => {
-      document.removeEventListener("mouseover", handleMouseOver);
-      document.removeEventListener("mouseout", handleMouseOut);
+      unsubscribe();
     };
-  },[setMode]);
+  }, [getPosition, subscribe, setMode]);
 }
