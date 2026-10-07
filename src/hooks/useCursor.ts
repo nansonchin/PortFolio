@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import { createCursorMovement } from "../animations/cursorMovement";
 
-export function useCursor(){
-    const cursorRef = useRef<HTMLDivElement|null>(null)
-
+export function useCursor(
+    cursorRef:React.RefObject<HTMLDivElement|null>
+){
     useEffect(()=>{
         const cursor = cursorRef.current
 
@@ -22,7 +22,6 @@ export function useCursor(){
         return ()=>{
             window.removeEventListener("mousemove", handleMouseMove)
         }
-    },[])
+    },[cursorRef])
 
-    return cursorRef
 }

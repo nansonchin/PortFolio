@@ -3,8 +3,10 @@ import ProjectCard from "./ProjectCard";
 import { projectCardsReveal } from "../../animations/projectAnimation";
 import { projectRepository } from "../../repository/ProjectRepository";
 import { toProjectCardModel } from "../../mapper/projectMapper";
+import { useCursorContext } from "../../hooks/useCursorContext";
 
 function FeaturedProjects(){
+    
     const sectionRef = useRef<HTMLElement | null>(null)
     const projects =projectRepository.getFeatures().map(toProjectCardModel)
 
@@ -23,7 +25,7 @@ function FeaturedProjects(){
     },[])
     return(
         <section ref={sectionRef} className="min-h-screen px-6 md:px-10 lg:px-16 py-32">
-            <div className="max-w-[1600px] mx-auto">
+            <div className="max-w-[1600px] mx-auto" >
                 <div className="max-w-[1600px] mx-auto">
                     <div className="mb-16">
                         <p className="text-yellow-400 uppercase tracking-[0.3rem] text-sm">Selected Work</p>

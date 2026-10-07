@@ -5,14 +5,17 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./app/router.tsx";
 import SmoothScrollProvider from "./app/providers/SmoothScrollProvider.tsx";
-import "lenis/dist/lenis.css"
+import "lenis/dist/lenis.css";
 import Cursor from "./components/Cursor/index.ts";
+import { CursorProvider } from "./components/Cursor/CursorContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <SmoothScrollProvider>
-      <Cursor/>
-      <RouterProvider router={router} />
+      <CursorProvider>
+        <Cursor />
+        <RouterProvider router={router} />
+      </CursorProvider>
     </SmoothScrollProvider>
   </StrictMode>,
 );

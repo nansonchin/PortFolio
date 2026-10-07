@@ -7,6 +7,7 @@ import {
 import { projectRepository } from "../repository/ProjectRepository";
 import { toProjectDetailModel } from "../mapper/projectMapper";
 import ProjectGallery from "../components/ProjectDetails/ProjectGallery";
+import { useCursorContext } from "../hooks/useCursorContext";
 
 function ProjectDetail() {
   const { slug } = useParams();
@@ -20,6 +21,7 @@ function ProjectDetail() {
     );
   }
   const detailProject = toProjectDetailModel(project);
+
   return (
     <main>
         <ProjectHero project={detailProject} />

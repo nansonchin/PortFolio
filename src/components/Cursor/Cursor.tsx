@@ -2,17 +2,26 @@ import { useEffect, useRef } from "react";
 
 import CursorSvg from "./CursorSvg";
 import CursorGlow from "./CursorGlow";
-import { useCursor } from "../../hooks/useCursor";
-import { createCursorVisualAnimation } from "../../animations/cursorAnimation";
+import CursorLabel from "./CursorLabel";
 
+import { useCursor } from "../../hooks/useCursor";
+import { useCursorContext } from "../../hooks/useCursorContext";
+
+import { createCursorVisualAnimation } from "../../animations/cursorAnimation";
+import { createCursorStateAnimation } from "../../animations/cursorStateAnimation";
+import { useCursorHover } from "../../hooks/useCursorHover";
 
 function Cursor() {
-  const cursorRef = useCursor();
+  const cursorRef = useRef<HTMLDivElement>(null);
 
   const glowRef = useRef<HTMLDivElement>(null);
 
   const svgRef = useRef<SVGSVGElement>(null);
 
+  const { mode } = useCursorContext();
+
+  useCursor(cursorRef);
+    useCursorHover()
   useEffect(() => {
     const cleanup = createCursorVisualAnimation({
       svg: svgRef.current,
@@ -22,6 +31,24 @@ function Cursor() {
 
     return cleanup;
   }, []);
+
+  useEffect(() => {
+    const animation = createCursorStateAnimation({
+      cursor: cursorRef.current,
+
+      glow: glowRef.current,
+    });
+
+    if (!animation) {
+      return;
+    }
+
+    if (mode === "view") {
+      animation.setView();
+    } else {
+      animation.setDefault();
+    }
+  }, [mode]);
 
   return (
     <div
@@ -38,10 +65,10 @@ function Cursor() {
         ref={svgRef}
         className=" absolute inset-0 text-[#FFDC22]"
       />
+
+      <CursorLabel />
     </div>
   );
 }
 
 export default Cursor;
-
-
