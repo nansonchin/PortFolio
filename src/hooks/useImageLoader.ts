@@ -22,7 +22,7 @@ export function useImageLoader({
     const [hasError,setHasError] = useState(false)
 
     const handleLoad = (event:SyntheticEvent<HTMLImageElement>)=>{
-        console.log("Image Load Success", event.currentTarget.src)
+        // console.log("Image Load Success", event.currentTarget.src)
         setIsLoading(false)
         setIsLoaded(true)
         setHasError(false)
@@ -31,7 +31,7 @@ export function useImageLoader({
 
     
     const handleError = (event:SyntheticEvent<HTMLImageElement>)=>{
-        console.log("Image Error",event.currentTarget.src)
+        // console.log("Image Error",event.currentTarget.src)
         setIsLoading(false)
         setHasError(true)
         onError?.(event)

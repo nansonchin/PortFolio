@@ -29,14 +29,15 @@ function ProjectCard({ project }: ProjectCardProps) {
 
     navigate(`/project/${project.slug}`);
   };
-  console.log(mode);
+  // console.log(mode);
   return (
     <article
+    data-flip-card
       data-cursor="view"
       onClick={handleCardClick}
       ref={cardRef}
-      onMouseLeave={handleMouseLeave}
-      onMouseMove={handleMouseMove}
+      // onMouseLeave={handleMouseLeave}
+      // onMouseMove={handleMouseMove}
       onMouseEnter={()=>{
         preloadImage(project.heroImage)
       }}
