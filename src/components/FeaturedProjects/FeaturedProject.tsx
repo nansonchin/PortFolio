@@ -9,7 +9,7 @@ function FeaturedProjects(){
     
     const sectionRef = useRef<HTMLElement | null>(null)
     const projects =projectRepository.getFeatures().map(toProjectCardModel)
-
+    
     useLayoutEffect(()=>{
         const section = sectionRef.current
 

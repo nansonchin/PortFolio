@@ -3,7 +3,7 @@ import { useInteractiveCard } from "../../hooks/useInteractiveCard";
 import type { ProjectCardModel } from "../../models/ProjectCardModel";
 import { useNavigate } from "react-router-dom";
 import { useCursorContext } from "../../hooks/useCursorContext";
-import { useMagneticCursor } from "../../hooks/useMagneticCursor";
+import { useImagePreload } from "../../hooks/useImagePreload";
 
 type ProjectCardProps = {
   project: ProjectCardModel;
@@ -14,6 +14,8 @@ function ProjectCard({ project }: ProjectCardProps) {
 
   const navigate = useNavigate();
   const { mode } = useCursorContext();
+
+  const preloadImage = useImagePreload()
 
   const handleCardClick = (event: React.MouseEvent<HTMLElement>) => {
     const target = event.target as HTMLElement;
@@ -35,6 +37,9 @@ function ProjectCard({ project }: ProjectCardProps) {
       ref={cardRef}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
+      onMouseEnter={()=>{
+        preloadImage(project.heroImage)
+      }}
       className="project-card relative transform-gpu preserve-3d group  border border-white/10 rounded-2xl overflow-hidden
                 bg-black transition-all duration-500 hover:-translate-y-2"
     >

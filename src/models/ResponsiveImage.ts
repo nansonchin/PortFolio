@@ -3,3 +3,7 @@ export type ResponsiveImage ={
     srcSet?:string;
     sizes?:string;
 }
+
+export type ImageSource = 
+    | string
+    | ResponsiveImage
