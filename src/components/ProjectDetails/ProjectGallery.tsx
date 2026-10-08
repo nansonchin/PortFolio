@@ -4,6 +4,7 @@ import { projectGalleryAnimation } from "../../animations/projectGalleryAnimatio
 import { useLightbox } from "../../hooks/useLightbox";
 import type { ProjectGalleryImageModel } from "../../models/ProjectGalleryImageModel";
 import Lightbox from "../LightBox/Lightbox";
+import ProjectImage from "../ProjectImage";
 
 type ProjectGalleryProps = {
   project: ProjectDetailModel;
@@ -45,7 +46,7 @@ function ProjectGallery({ project }: ProjectGalleryProps) {
               className="gallery-item grid lg:grid-cols-2 gap-12 items-center"
             >
               <div className="overflow-hidden rounded-3xl border border-white/10">
-                <img
+                <ProjectImage
                   src={image.imageUrl}
                   alt={image.title}
                   className="gallery-image cursor-pointer w-full h-auto object-cover"
