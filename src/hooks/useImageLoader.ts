@@ -1,4 +1,4 @@
-import { useState, type SyntheticEvent } from "react"
+import { useEffect, useState, type SyntheticEvent } from "react"
 
 type UseImageLoaderProps ={
     onLoad?:(event:SyntheticEvent<HTMLImageElement>)=>void;
@@ -16,18 +16,22 @@ type UseImageLoaderReturnProps ={
 export function useImageLoader({
     onLoad,
     onError,
-}:UseImageLoaderProps):UseImageLoaderReturnProps{
+}:UseImageLoaderProps= {}):UseImageLoaderReturnProps{
     const [isLoading,setIsLoading] = useState(true)
     const [isLoaded,setIsLoaded] = useState(false)
-    const [hasError,setHasError] = useState(true)
+    const [hasError,setHasError] = useState(false)
 
     const handleLoad = (event:SyntheticEvent<HTMLImageElement>)=>{
+        console.log("Image Load Success", event.currentTarget.src)
         setIsLoading(false)
         setIsLoaded(true)
+        setHasError(false)
         onLoad?.(event)
     }
 
+    
     const handleError = (event:SyntheticEvent<HTMLImageElement>)=>{
+        console.log("Image Error",event.currentTarget.src)
         setIsLoading(false)
         setHasError(true)
         onError?.(event)

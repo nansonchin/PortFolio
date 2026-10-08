@@ -16,8 +16,8 @@ const ProjectImage = ({
   onError,
   ...props
 }: ProjectImageProps) => {
-  
-  const {isLoading, isLoaded, hasError, handleLoad,handleError} = useImageLoader({onLoad,onError})
+  const { isLoading, isLoaded, hasError, handleLoad, handleError } =
+    useImageLoader({ onLoad, onError });
 
   return (
     <div className="relative overflow-hidden">
@@ -29,7 +29,7 @@ const ProjectImage = ({
         loading="lazy"
         decoding="async"
         draggable={false}
-        className={`transition-opacity duration-500 ${isLoaded? "opacity-0" : "opacity-100"} ${className}`}
+        className={`transition-opacity duration-500 ${isLoaded ? "opacity-100" : "opacity-0"} ${className}`}
         onLoad={handleLoad}
         onError={handleError}
         {...props}
