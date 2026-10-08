@@ -14,7 +14,15 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/nansonchin/manga-webReactQuery",
     demoUrl: "",
     thumbnail: "/images/projects/mangaReader/",
-    heroImage: "/images/projects/mangaReader/",
+    heroImage: {
+      src: "/images/projects/mangaReader",
+      srcSet:`
+      /images/projects/mangaReader 480w,
+      /images/projects/mangaReader 768w,
+      /images/projects/mangaReader 1920w,
+      `,
+      sizes:"(max-width:768px) 100vw, 50vw"
+    },
     technologies: [
       "React",
       "TypeScript",
@@ -90,7 +98,15 @@ export const projects: Project[] = [
 
     demoUrl: "https://",
     thumbnail: "/images/projects/portfolio/",
-    heroImage: "/images/projects/portfolio/",
+     heroImage: {
+      src: "/images/projects/portfolio/",
+      srcSet:`
+      /images/projects/portfolio/ 480w,
+      /images/projects/portfolio/ 768w,
+      /images/projects/portfolio/ 1920w,
+      `,
+      sizes:"(max-width:768px) 100vw, 50vw"
+    },
     technologies: ["React", "TypeScript", "GSAP", "Tailwind CSS", "Lenis"],
     gallery: [
       {
@@ -158,7 +174,15 @@ export const projects: Project[] = [
 
     thumbnail: "/images/projects/taskManager",
 
-    heroImage: "/images/projects/taskManager",
+    heroImage: {
+      src: "/images/projects/taskManager",
+      srcSet:`
+      /images/projects/taskManager 480w,
+      /images/projects/taskManager 768w,
+      /images/projects/taskManager 1920w,
+      `,
+      sizes:"(max-width:768px) 100vw, 50vw"
+    },
     year: 2026,
     technologies: ["React", "JavaScript", "Vite", "CSS"],
 
@@ -247,7 +271,15 @@ export const projects: Project[] = [
     demoUrl: "",
     year: 2025,
     thumbnail: "/images/projects/AiResume/Thumbnail.webp",
-    heroImage: "/images/projects/AiResume/Hero.webp",
+     heroImage: {
+      src: "/images/projects/AiResume/Hero.webp",
+      srcSet:`
+      /images/projects/AiResume/Hero.webp 480w,
+      /images/projects/AiResume/Hero.webp 768w,
+      /images/projects/AiResume/Hero.webp 1920w,
+      `,
+      sizes:"(max-width:768px) 100vw, 50vw"
+    },
     technologies: [
       "React",
       "TypeScript",
@@ -359,7 +391,15 @@ export const projects: Project[] = [
 
     thumbnail: "/images/projects/Mojito/thumbnail.webp",
 
-    heroImage: "/images/projects/Mojito/hero.webp",
+     heroImage: {
+      src: "/images/projects/Mojito/Hero.webp",
+      srcSet:`
+      /images/projects/Mojito/Hero.webp 480w,
+      /images/projects/Mojito/Hero.webp 768w,
+      /images/projects/Mojito/Hero.webp 1920w,
+      `,
+      sizes:"(max-width:768px) 100vw, 50vw"
+    },
     year: 2025,
     technologies: ["React", "TypeScript", "GSAP", "Vite"],
 
@@ -460,7 +500,15 @@ export const projects: Project[] = [
 
     thumbnail: "/images/projects/GsapAward/thumbnail.webp",
 
-    heroImage: "/images/assets/projects/GsapAward/hero.webp",
+    heroImage: {
+      src: "/images/projects/GsapAward/hero.webp",
+      srcSet:`
+      /images/projects/GsapAward/hero.webp 480w,
+      /images/projects/GsapAward/hero.webp 768w,
+      /images/projects/GsapAward/hero.webp 1920w,
+      `,
+      sizes:"(max-width:768px) 100vw, 50vw"
+    },
 
     technologies: ["React", "TypeScript", "GSAP", "Vite"],
 
@@ -568,7 +616,15 @@ export const projects: Project[] = [
 
     thumbnail: "/images/projects/Mika/thumbnail.webp",
 
-    heroImage: "/images/projects/Mika/hero.webp",
+     heroImage: {
+      src: "/images/projects/Mika/hero.webp",
+      srcSet:`
+      /images/projects/Mika/hero.webp 480w,
+      /images/projects/Mika/hero.webp 768w,
+      /images/projects/Mika/hero.webp 1920w,
+      `,
+      sizes:"(max-width:768px) 100vw, 50vw"
+    },
 
     technologies: [
       "React",
@@ -709,7 +765,15 @@ export const projects: Project[] = [
 
     thumbnail: "/images/projects/KomoriM/thumbnail.webp",
 
-    heroImage: "/images/projects/KomoriM/thumbnail.webp",
+    heroImage: {
+      src: "/images/projects/KomoriM/hero.webp",
+      srcSet:`
+      /images/projects/KomoriM/hero.webp 480w,
+      /images/projects/KomoriM/hero.webp 768w,
+      /images/projects/KomoriM/hero.webp 1920w,
+      `,
+      sizes:"(max-width:768px) 100vw, 50vw"
+    },
 
     technologies: ["React", "JavaScript", "Swiper", "Font Awesome"],
 
@@ -798,7 +862,15 @@ export const projects: Project[] = [
 
     thumbnail: "/images/projects/mangaReader",
 
-    heroImage: "/images/projects/mangaReader",
+     heroImage: {
+      src: "/images/projects/mangaReader",
+      srcSet:`
+      /images/projects/mangaReader 480w,
+      /images/projects/mangaReader 768w,
+      /images/projects/mangaReader 1920w,
+      `,
+      sizes:"(max-width:768px) 100vw, 50vw"
+    },
 
     technologies: ["React", "JavaScript", "Vite"],
 

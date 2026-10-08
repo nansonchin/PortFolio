@@ -1,4 +1,5 @@
 import type { ProjectGalleryImageModel } from "../models/ProjectGalleryImageModel";
+import type { ResponsiveImage } from "../models/ResponsiveImage";
 
 export interface Project {
   id: string;
@@ -25,7 +26,7 @@ export interface Project {
 
   technologies: string[];
 
-  heroImage: string;
+  heroImage: ResponsiveImage;
 
   gallery: ProjectGalleryImageModel[];
 

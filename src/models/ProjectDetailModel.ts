@@ -1,4 +1,5 @@
 import type { ProjectGalleryImageModel } from "./ProjectGalleryImageModel";
+import type { ResponsiveImage } from "./ResponsiveImage";
 
 export interface ProjectDetailModel{
     id:string;
@@ -7,7 +8,7 @@ export interface ProjectDetailModel{
     description:string;
     year:number;
     category:string;
-    heroImage:string;
+    heroImage:ResponsiveImage;
     gallery:ProjectGalleryImageModel[];
     technologies:string[];
     features:string[];
