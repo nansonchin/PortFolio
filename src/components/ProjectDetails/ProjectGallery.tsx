@@ -32,7 +32,7 @@ function ProjectGallery({ project }: ProjectGalleryProps) {
     <section ref={sectionRef} className="bg-black px-8 md:px-16 py-32">
       <div className="max-w-7xl mx-auto">
         <div className="gallery-header">
-          <p className="uppercase tracking-[0.5en] text-yellow-400 text-sm">
+          <p className="uppercase tracking-[0.5em] text-yellow-400 text-sm">
             Gallery
           </p>
           <h2 className="mt-8 text-5xl md:text-7xl font-bold text-white">

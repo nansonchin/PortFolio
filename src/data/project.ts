@@ -172,21 +172,21 @@ export const projects: Project[] = [
 
       {
         id: "gallery-2",
-        imageUrl: "/images/projects/task-manager/gallery-2.webp",
+        imageUrl: "../../assets/projects/task-manager/gallery-2.webp",
         title: "Task Creation",
         description: "Interface for adding new tasks.",
       },
 
       {
         id: "gallery-3",
-        imageUrl: "/images/projects/task-manager/gallery-3.webp",
+        imageUrl: "../../assets/projects/task-manager/gallery-3.webp",
         title: "Task Interaction",
         description: "Managing and updating tasks through React interactions.",
       },
 
       {
         id: "gallery-4",
-        imageUrl: "/images/projects/task-manager/gallery-4.webp",
+        imageUrl: "../../assets/projects/task-manager/gallery-4.webp",
         title: "Task List",
         description: "Displaying and managing the current list of tasks.",
       },
@@ -254,28 +254,28 @@ export const projects: Project[] = [
     gallery: [
       {
         id: "gallery-1",
-        imageUrl: "/images/projects/manga-reader/gallery-1.webp",
+        imageUrl: "../../assets/projects/manga-reader/gallery-1.webp",
         title: "Home Page",
         description: "Landing page of Manga Reader.",
       },
 
       {
         id: "gallery-2",
-        imageUrl: "/images/projects/manga-reader/gallery-2.webp",
+        imageUrl: "../../assets/projects/manga-reader/gallery-2.webp",
         title: "Detail Page",
         description: "Project detail screen.",
       },
 
       {
         id: "gallery-3",
-        imageUrl: "/images/projects/manga-reader/gallery-3.webp",
+        imageUrl: "../../assets/projects/manga-reader/gallery-3.webp",
         title: "Reader",
         description: "Long strip reading experience.",
       },
 
       {
         id: "gallery-4",
-        imageUrl: "/images/projects/manga-reader/gallery-4.webp",
+        imageUrl: "../../assets/projects/manga-reader/gallery-4.webp",
         title: "Chapter List",
         description: "Infinite chapter loading.",
       },
@@ -331,7 +331,7 @@ export const projects: Project[] = [
     gallery: [
       {
         id: "gallery-1",
-        imageUrl: "/images/projects/AiResume/Gallery/G1.webp",
+        imageUrl: "../../assets/projects/AiResume/Gallery/G1.webp",
         title: "Resume Dashboard",
         description:
           "Dashboard for viewing analyzed resumes and their generated feedback.",
@@ -339,7 +339,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-2",
-        imageUrl: "/images/projects/AiResume/Gallery/G2.webp",
+        imageUrl: "../../assets/projects/AiResume/Gallery/G2.webp",
         title: "Resume Upload",
         description:
           "Upload interface for providing a resume and target job information.",
@@ -347,7 +347,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-3",
-        imageUrl: "/images/projects/AiResume/Gallery/G3.webp",
+        imageUrl: "../../assets/projects/AiResume/Gallery/G3.webp",
         title: "AI Resume Analysis",
         description:
           "Resume analysis results including overall and ATS scores.",
@@ -355,7 +355,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-4",
-        imageUrl: "/images/projects/AiResume/Gallery/G4.webp",
+        imageUrl: "../../assets/projects/AiResume/Gallery/G4.webp",
         title: "Feedback Details",
         description:
           "Detailed AI-generated feedback covering resume content, structure, tone, and skills.",
@@ -435,7 +435,7 @@ export const projects: Project[] = [
     gallery: [
       {
         id: "gallery-1",
-        imageUrl: "/images/projects/Mojito/gallery/G1.webp",
+        imageUrl: "../../assets/projects/Mojito/gallery/G1.webp",
         title: "Mojito Landing Page",
         description:
           "Animated landing page built as part of the GSAP learning project.",
@@ -443,7 +443,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-2",
-        imageUrl: "/images/projects/Mojito/gallery/G2.webp",
+        imageUrl: "../../assets/projects/Mojito/gallery/G2.webp",
         title: "Product Section",
         description:
           "Interactive product section with animated visual elements.",
@@ -451,7 +451,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-3",
-        imageUrl: "/images/projects/Mojito/gallery/G3.webp",
+        imageUrl: "../../assets/projects/Mojito/gallery/G3.webp",
         title: "Animated Sections",
         description:
           "Page sections demonstrating GSAP-powered transitions and motion.",
@@ -459,14 +459,14 @@ export const projects: Project[] = [
 
       {
         id: "gallery-4",
-        imageUrl: "/images/projects/Mojito/gallery/G4.webp",
+        imageUrl: "../../assets/projects/Mojito/gallery/G4.webp",
         title: "Responsive Layout",
         description:
           "Responsive React layout combined with animated UI interactions.",
       },
       {
         id: "gallery-5",
-        imageUrl: "/images/projects/Mojito/gallery/G5.webp",
+        imageUrl: "../../assets/projects/Mojito/gallery/G5.webp",
         title: "Responsive Layout",
         description:
           "Responsive React layout combined with animated UI interactions.",
@@ -536,7 +536,7 @@ export const projects: Project[] = [
     gallery: [
       {
         id: "gallery-1",
-        imageUrl: "/images/projects/GsapAward/Gallery/G1.webp",
+        imageUrl: "../../assets/projects/GsapAward/Gallery/G1.webp",
         title: "Interactive Landing Page",
         description:
           "Visually focused landing page built to explore advanced web animation techniques.",
@@ -544,7 +544,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-2",
-        imageUrl: "/images/projects/GsapAward/Gallery/G2.webp",
+        imageUrl: "../../assets/projects/GsapAward/Gallery/G2.webp",
         title: "Animated Sections",
         description:
           "Page sections enhanced with GSAP-powered transitions and interactive motion.",
@@ -552,7 +552,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-3",
-        imageUrl: "/images/projects/GsapAward/Gallery/G3.webp",
+        imageUrl: "../../assets/projects/GsapAward/Gallery/G3.webp",
         title: "Scroll Animations",
         description:
           "Scroll-based animations used to create a more dynamic browsing experience.",
@@ -560,21 +560,21 @@ export const projects: Project[] = [
 
       {
         id: "gallery-4",
-        imageUrl: "/images/projects/GsapAward/Gallery/G4.webp",
+        imageUrl: "../../assets/projects/GsapAward/Gallery/G4.webp",
         title: "Page Transitions",
         description:
           "Animated transitions connecting different sections of the interactive experience.",
       },
       {
         id: "gallery-5",
-        imageUrl: "/images/projects/GsapAward/Gallery/G5.webp",
+        imageUrl: "../../assets/projects/GsapAward/Gallery/G5.webp",
         title: "Page Transitions",
         description:
           "Animated transitions connecting different sections of the interactive experience.",
       },
       {
         id: "gallery-6",
-        imageUrl: "/images/projects/GsapAward/Gallery/G6.webp",
+        imageUrl: "../../assets/projects/GsapAward/Gallery/G6.webp",
         title: "Page Transitions",
         description:
           "Animated transitions connecting different sections of the interactive experience.",
@@ -657,7 +657,7 @@ export const projects: Project[] = [
     gallery: [
       {
         id: "gallery-1",
-        imageUrl: "/images/projects/Mika/Gallery/G1.webp",
+        imageUrl: "../../assets/projects/Mika/Gallery/G1.webp",
         title: "Artist Landing Page",
         description:
           "A visually focused landing page designed around the artist's artwork and visual identity.",
@@ -665,7 +665,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-2",
-        imageUrl: "/images/projects/Mika/Gallery/G2.webp",
+        imageUrl: "../../assets/projects/Mika/Gallery/G2.webp",
         title: "Artwork Showcase",
         description:
           "Artwork-focused interface for presenting visual content in an organized portfolio layout.",
@@ -673,7 +673,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-3",
-        imageUrl: "/images/projects/Mika/Gallery/G3.webp",
+        imageUrl: "../../assets/projects/Mika/Gallery/G3.webp",
         title: "Portfolio Experience",
         description:
           "Responsive portfolio sections combining artwork, navigation, and supporting content.",
@@ -681,28 +681,28 @@ export const projects: Project[] = [
 
       {
         id: "gallery-4",
-        imageUrl: "/images/projects/Mika/Gallery/G4.webp",
+        imageUrl: "../../assets/projects/Mika/Gallery/G4.webp",
         title: "Interactive Content",
         description:
           "Interactive content presentation using routing and carousel-based UI components.",
       },
       {
         id: "gallery-5",
-        imageUrl: "/images/projects/Mika/Gallery/G5.webp",
+        imageUrl: "../../assets/projects/Mika/Gallery/G5.webp",
         title: "Interactive Content",
         description:
           "Interactive content presentation using routing and carousel-based UI components.",
       },
       {
         id: "gallery-6",
-        imageUrl: "/images/projects/Mika/Gallery/G6.webp",
+        imageUrl: "../../assets/projects/Mika/Gallery/G6.webp",
         title: "Interactive Content",
         description:
           "Interactive content presentation using routing and carousel-based UI components.",
       },
       {
         id: "gallery-7",
-        imageUrl: "/images/projects/Mika/Gallery/G7.webp",
+        imageUrl: "../../assets/projects/Mika/Gallery/G7.webp",
         title: "Interactive Content",
         description:
           "Interactive content presentation using routing and carousel-based UI components.",
@@ -785,7 +785,7 @@ export const projects: Project[] = [
     gallery: [
       {
         id: "gallery-1",
-        imageUrl: "/images/projects/KomoriM/Gallery/G1.webp",
+        imageUrl: "../../assets/projects/KomoriM/Gallery/G1.webp",
         title: "Landing Page",
         description:
           "Main landing page presenting the site's content and visual design.",
@@ -793,7 +793,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-2",
-        imageUrl: "/images/projects/KomoriM/Gallery/G2.webp",
+        imageUrl: "../../assets/projects/KomoriM/Gallery/G2.webp",
         title: "Content Section",
         description:
           "Content-focused section demonstrating the page layout and structure.",
@@ -801,14 +801,14 @@ export const projects: Project[] = [
 
       {
         id: "gallery-3",
-        imageUrl: "/images/projects/KomoriM/Gallery/G3.webp",
+        imageUrl: "../../assets/projects/KomoriM/Gallery/G3.webp",
         title: "Image Slider",
         description: "Interactive content presentation using Swiper.",
       },
 
       {
         id: "gallery-4",
-        imageUrl: "/images/projects/KomoriM/Gallery/G4.webp",
+        imageUrl: "../../assets/projects/KomoriM/Gallery/G4.webp",
         title: "UI Elements",
         description: "Simple interface elements using Font Awesome icons.",
       },
@@ -874,14 +874,14 @@ export const projects: Project[] = [
     gallery: [
       {
         id: "gallery-1",
-        imageUrl: "/images/projects/slot-machine/gallery-1.webp",
+        imageUrl: "../../assets/projects/slot-machine/gallery-1.webp",
         title: "Slot Machine",
         description: "Main game interface for the browser-based slot machine.",
       },
 
       {
         id: "gallery-2",
-        imageUrl: "/images/projects/slot-machine/gallery-2.webp",
+        imageUrl: "../../assets/projects/slot-machine/gallery-2.webp",
         title: "Game Interaction",
         description:
           "Interactive interface for starting and playing the slot machine.",
@@ -889,7 +889,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-3",
-        imageUrl: "/images/projects/slot-machine/gallery-3.webp",
+        imageUrl: "../../assets/projects/slot-machine/gallery-3.webp",
         title: "Game Result",
         description:
           "Displays the result after the slot machine completes a spin.",
@@ -897,7 +897,7 @@ export const projects: Project[] = [
 
       {
         id: "gallery-4",
-        imageUrl: "/images/projects/slot-machine/gallery-4.webp",
+        imageUrl: "../../assets/projects/slot-machine/gallery-4.webp",
         title: "Game Interface",
         description: "Simple game-focused UI built with React.",
       },
