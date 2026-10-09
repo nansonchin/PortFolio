@@ -1,53 +1,158 @@
-import type { TerminalCommand, TerminalCommandName } from "../../../types/terminal.types";
+import { projectRepository } from "../../../repository/ProjectRepository";
+import type {
+  TerminalCommand,
+  TerminalCommandName,
+} from "../../../types/terminal.types";
+import { resolveNavigationPath } from "../Navigations/navigationService";
 
-export const terminalCommands:Record<TerminalCommandName,TerminalCommand>={
-    help:{
-        name:"help",
-        description:"Show all available commandds",
-        aliases:["h","commands"],
-        execute:()=>({
-            type:"output",
-            lines:[
-                "Available commands:",
-                "",
-                "help       -   Show all available comands",
-                "projects   -   Explore portfolio projects",
-                "about      -   Learn about the developer",
-                "clear       -  Clear terminal history",
+export const terminalCommands: Record<TerminalCommandName, TerminalCommand> = {
+  help: {
+    name: "help",
 
-            ]
-        })
+    description: "Show all available commands",
+
+    aliases: ["h", "commands"],
+
+    execute: async () => ({
+      type: "output",
+
+      lines: [
+        "Available commands:",
+        "",
+        "help       - Show commands",
+        "clear      - Clear terminal",
+        "about      - About developer",
+        "navigate   - Navigate pages",
+      ],
+    }),
+  },
+
+  projects: {
+    name: "projects",
+
+    description: "Explore projects",
+
+    aliases: ["p"],
+
+    execute: async () => ({
+      type: "output",
+
+      lines: ["Use: navigate projects"],
+    }),
+  },
+
+  about: {
+    name: "about",
+
+    description: "About developer",
+
+    aliases: ["whoami"],
+
+    execute: async () => ({
+      type: "output",
+
+      lines: ["Developer portfolio terminal."],
+    }),
+  },
+
+  clear: {
+    name: "clear",
+
+    description: "Clear terminal",
+
+    aliases: ["cls"],
+
+    execute: async () => ({
+      type: "clear",
+
+      lines: [],
+    }),
+  },
+
+  navigate: {
+    name: "navigate",
+
+    description: "Navigate pages or projects",
+
+    aliases: ["goto"],
+
+    execute: async (args) => {
+      const target = args[0];
+
+      if (!target) {
+        return {
+          type: "output",
+
+          lines: [
+            "Usage:",
+
+            "navigate projects",
+
+            "navigate about",
+
+            "navigate project <slug>",
+          ],
+        };
+      }
+
+      /**
+       * Project Detail Navigation
+       */
+      if (target === "project") {
+        const slug = args[1];
+
+        if (!slug) {
+          return {
+            type: "output",
+
+            lines: ["Missing project slug"],
+          };
+        }
+
+        const project = projectRepository.getBySlug(slug);
+
+        if (!project) {
+          return {
+            type: "unknown",
+
+            lines: [`✗ Project not found: ${slug}`],
+          };
+        }
+
+        return {
+          type: "navigation",
+
+          path: resolveNavigationPath({
+            type: "project",
+            slug,
+          }),
+
+          lines: ["✓ Opening project:", project.title],
+        };
+      }
+
+      /**
+       * Normal Pages
+       */
+      if (target === "projects" || target === "about") {
+        return {
+          type: "navigation",
+
+          path: resolveNavigationPath({
+            type: "page",
+
+            target,
+          }),
+
+          lines: [`✓ Opening ${target}`],
+        };
+      }
+
+      return {
+        type: "unknown",
+
+        lines: [`Unknown navigation target: ${target}`],
+      };
     },
-    projects:{
-        name:"projects",
-        description:"Explore the portfolio projects",
-        aliases:["p"],
-        execute:()=>({
-            type:"output",
-            lines:[
-                "Future add"
-            ]
-        })
-    },
-    about:{
-        name:"about",
-        description:"Learn about the developer",
-        aliases:["whoami"],
-        execute:()=>({
-            type:"output",
-            lines:[
-                "Developer portfolio terminal.",
-                "Future add"
-            ]
-        })
-    },
-    clear:{
-        name:"clear",
-        description:"Clear terminal history",
-        aliases:["cls"],
-        execute:()=>({
-            type:"clear",
-            lines:[]
-        })
-    }
-}
+  },
+};

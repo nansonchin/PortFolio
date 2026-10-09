@@ -1,31 +1,39 @@
 import type { TerminalCommandResult } from "../../../types/terminal.types";
 import { terminalCommands } from "./terminalCommands";
 
-export function parseCommand(
-    input:string,
-):TerminalCommandResult{
-    const normalizedInput = input.trim().toLowerCase()
+export async function parseCommand(
+  input: string,
+): Promise<TerminalCommandResult> {
+  const parts = input.trim().toLowerCase().split(/\s+/);
 
-    if(!normalizedInput){
-        return{
-            type:"output",
-            lines:["Please enter a comand"]
-        }
-    }
+  const commandName = parts[0];
 
-    const matchedCommand = Object.values(terminalCommands).find(
-        (command)=> command.name === normalizedInput || command.aliases?.includes(normalizedInput)
-    )
+  const args = parts.slice(1);
 
-    if(!matchedCommand){
-        return{
-            type:"output",
-            lines:[
-                `Unknow command: "${normalizedInput}"`,
-                'Type "help" to see available commands'
-            ]
-        }
-    }
+  if (!commandName) {
+    return {
+      type: "output",
 
-    return matchedCommand.execute();
+      lines: ["Please enter a command"],
+    };
+  }
+
+  const matchedCommand = Object.values(terminalCommands).find(
+    (command) =>
+      command.name === commandName || command.aliases?.includes(commandName),
+  );
+
+  if (!matchedCommand) {
+    return {
+      type: "unknown",
+
+      lines: [
+        `Unknown command: "${commandName}"`,
+
+        `Type "help" to see available commands`,
+      ],
+    };
+  }
+
+  return await matchedCommand.execute(args);
 }

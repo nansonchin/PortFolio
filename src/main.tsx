@@ -19,7 +19,6 @@ createRoot(document.getElementById("root")!).render(
           <div className="cursor-none">
             <Cursor />
             <RouterProvider router={router} />
-            <TerminalAssistant/>
           </div>
         </CursorPhysicsProvider>
       </CursorProvider>

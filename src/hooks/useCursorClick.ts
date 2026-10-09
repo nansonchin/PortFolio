@@ -20,6 +20,12 @@ export function useCursorClick() {
         return;
       }
 
+      const ignoredTarget = element.closest("[data-cursor-ignore]");
+
+      if (ignoredTarget) {
+        return;
+      }
+      
       const clickableTarget = element.closest(
         'a, button, [data-cursor], [role="button"]',
       ) as HTMLElement | null;
