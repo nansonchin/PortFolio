@@ -9,6 +9,7 @@ import "lenis/dist/lenis.css";
 import Cursor from "./components/Cursor/index.ts";
 import { CursorProvider } from "./components/Cursor/CursorContext.tsx";
 import { CursorPhysicsProvider } from "./components/Cursor/CursorPhysicsContext.tsx";
+import TerminalAssistant from "./components/TerminalAssistant/TerminalAssistant.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -18,6 +19,7 @@ createRoot(document.getElementById("root")!).render(
           <div className="cursor-none">
             <Cursor />
             <RouterProvider router={router} />
+            <TerminalAssistant/>
           </div>
         </CursorPhysicsProvider>
       </CursorProvider>

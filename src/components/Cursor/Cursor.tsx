@@ -240,7 +240,7 @@ function Cursor() {
         w-20
         h-20
         pointer-events-none
-        z-[9999]
+        z-[9999999]
         -translate-x-1/2
         -translate-y-1/2
       "
