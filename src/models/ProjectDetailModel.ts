@@ -1,4 +1,6 @@
+import type { ProjectArchitectureModel } from "./ProjectArchitectureModel";
 import type { ProjectGalleryImageModel } from "./ProjectGalleryImageModel";
+import type { ProjectStoryModel } from "./ProjectStoryModel";
 import type { ResponsiveImage } from "./ResponsiveImage";
 
 export interface ProjectDetailModel{
@@ -17,4 +19,6 @@ export interface ProjectDetailModel{
     solutions:string[];
     githubUrl:string;
     demoUrl?:string;
+    story:ProjectStoryModel;
+    architecture?:ProjectArchitectureModel;
 }

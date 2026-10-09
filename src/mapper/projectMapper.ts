@@ -34,5 +34,7 @@ export function toProjectDetailModel(project: Project): ProjectDetailModel {
     solutions: project.solutions,
     githubUrl: project.githubUrl,
     demoUrl: project.demoUrl,
+    story:project.story,
+    architecture:project.architecture
   };
 }

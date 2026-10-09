@@ -1,4 +1,6 @@
+import type { ProjectArchitectureModel } from "../models/ProjectArchitectureModel";
 import type { ProjectGalleryImageModel } from "../models/ProjectGalleryImageModel";
+import type { ProjectStoryModel } from "../models/ProjectStoryModel";
 import type { ResponsiveImage } from "../models/ResponsiveImage";
 
 export interface Project {
@@ -37,4 +39,6 @@ export interface Project {
   challenges: string[];
 
   solutions: string[];
+  story:ProjectStoryModel;
+  architecture?:ProjectArchitectureModel;
 }

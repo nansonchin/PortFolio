@@ -7,7 +7,8 @@ import {
 import { projectRepository } from "../repository/ProjectRepository";
 import { toProjectDetailModel } from "../mapper/projectMapper";
 import ProjectGallery from "../components/ProjectDetails/ProjectGallery";
-import { useCursorContext } from "../hooks/useCursorContext";
+import ProjectStory from "../components/ProjectStory/ProjectStory";
+import ArchitectureSection from "../components/Architecture/ArchitectureSection";
 
 function ProjectDetail() {
   const { slug } = useParams();
@@ -21,13 +22,17 @@ function ProjectDetail() {
     );
   }
   const detailProject = toProjectDetailModel(project);
-
+  console.log(project.architecture)
   return (
     <main>
-        <ProjectHero project={detailProject} />
-        <ProjectOverview project={detailProject} />
-        <ProjectTechStack project={detailProject} />
-        <ProjectGallery project={detailProject}/>
+      <ProjectHero project={detailProject} />
+      <ProjectOverview project={detailProject} />
+      <ProjectStory story={detailProject.story} />
+      {detailProject.architecture && (
+        <ArchitectureSection architecture={detailProject.architecture} />
+      )}
+      <ProjectTechStack project={detailProject} />
+      <ProjectGallery project={detailProject} />
     </main>
   );
 }

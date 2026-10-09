@@ -1,4 +1,5 @@
 import type { Project } from "../entities/Project";
+import { mangaReaderArchitecture } from "./mangaReaderArchitecture";
 
 export const projects: Project[] = [
   {
@@ -16,12 +17,12 @@ export const projects: Project[] = [
     thumbnail: "/images/projects/mangaReader/",
     heroImage: {
       src: "/images/projects/mangaReader",
-      srcSet:`
+      srcSet: `
       /images/projects/mangaReader 480w,
       /images/projects/mangaReader 768w,
       /images/projects/mangaReader 1920w,
       `,
-      sizes:"(max-width:768px) 100vw, 50vw"
+      sizes: "(max-width:768px) 100vw, 50vw",
     },
     technologies: [
       "React",
@@ -75,6 +76,14 @@ export const projects: Project[] = [
       "Reducing unnecessary network requests",
     ],
     solutions: ["React Query caching", "Browser image cache strategy"],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
+    architecture:mangaReaderArchitecture,
+
   },
   {
     id: "portfolio",
@@ -98,14 +107,14 @@ export const projects: Project[] = [
 
     demoUrl: "https://",
     thumbnail: "/images/projects/portfolio/",
-     heroImage: {
+    heroImage: {
       src: "/images/projects/portfolio/",
-      srcSet:`
+      srcSet: `
       /images/projects/portfolio/ 480w,
       /images/projects/portfolio/ 768w,
       /images/projects/portfolio/ 1920w,
       `,
-      sizes:"(max-width:768px) 100vw, 50vw"
+      sizes: "(max-width:768px) 100vw, 50vw",
     },
     technologies: ["React", "TypeScript", "GSAP", "Tailwind CSS", "Lenis"],
     gallery: [
@@ -152,6 +161,12 @@ export const projects: Project[] = [
       "Reducing unnecessary network requests",
     ],
     solutions: ["React Query caching", "Browser image cache strategy"],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
   },
   {
     id: "taskmanager-j",
@@ -176,12 +191,12 @@ export const projects: Project[] = [
 
     heroImage: {
       src: "/images/projects/taskManager",
-      srcSet:`
+      srcSet: `
       /images/projects/taskManager 480w,
       /images/projects/taskManager 768w,
       /images/projects/taskManager 1920w,
       `,
-      sizes:"(max-width:768px) 100vw, 50vw"
+      sizes: "(max-width:768px) 100vw, 50vw",
     },
     year: 2026,
     technologies: ["React", "JavaScript", "Vite", "CSS"],
@@ -250,6 +265,12 @@ export const projects: Project[] = [
       "Used React state to manage task data and UI interactions",
       "Followed Fireship's React learning material as a guide while implementing the project",
     ],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
   },
   {
     id: "Ai-resume",
@@ -271,14 +292,14 @@ export const projects: Project[] = [
     demoUrl: "",
     year: 2025,
     thumbnail: "/images/projects/AiResume/Thumbnail.webp",
-     heroImage: {
+    heroImage: {
       src: "/images/projects/AiResume/Hero.webp",
-      srcSet:`
+      srcSet: `
       /images/projects/AiResume/Hero.webp 480w,
       /images/projects/AiResume/Hero.webp 768w,
       /images/projects/AiResume/Hero.webp 1920w,
       `,
-      sizes:"(max-width:768px) 100vw, 50vw"
+      sizes: "(max-width:768px) 100vw, 50vw",
     },
     technologies: [
       "React",
@@ -369,6 +390,12 @@ export const projects: Project[] = [
       "Used React Router to organize application routes",
       "Used Puter.js to learn about authentication, storage, and AI service integration",
     ],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
   },
   {
     id: "gsap_mojito",
@@ -391,14 +418,14 @@ export const projects: Project[] = [
 
     thumbnail: "/images/projects/Mojito/thumbnail.webp",
 
-     heroImage: {
+    heroImage: {
       src: "/images/projects/Mojito/Hero.webp",
-      srcSet:`
+      srcSet: `
       /images/projects/Mojito/Hero.webp 480w,
       /images/projects/Mojito/Hero.webp 768w,
       /images/projects/Mojito/Hero.webp 1920w,
       `,
-      sizes:"(max-width:768px) 100vw, 50vw"
+      sizes: "(max-width:768px) 100vw, 50vw",
     },
     year: 2025,
     technologies: ["React", "TypeScript", "GSAP", "Vite"],
@@ -478,6 +505,12 @@ export const projects: Project[] = [
       "Experimented with animation timing, easing, and transitions",
       "Applied the learned animation techniques to different sections of the page",
     ],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
   },
   {
     id: "gsap_award",
@@ -502,12 +535,12 @@ export const projects: Project[] = [
 
     heroImage: {
       src: "/images/projects/GsapAward/hero.webp",
-      srcSet:`
+      srcSet: `
       /images/projects/GsapAward/hero.webp 480w,
       /images/projects/GsapAward/hero.webp 768w,
       /images/projects/GsapAward/hero.webp 1920w,
       `,
-      sizes:"(max-width:768px) 100vw, 50vw"
+      sizes: "(max-width:768px) 100vw, 50vw",
     },
 
     technologies: ["React", "TypeScript", "GSAP", "Vite"],
@@ -594,6 +627,12 @@ export const projects: Project[] = [
       "Experimented with animation timing, easing, and sequencing",
       "Applied GSAP techniques to create smoother page and scroll interactions",
     ],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
   },
   {
     id: "mika_pikazo",
@@ -616,14 +655,14 @@ export const projects: Project[] = [
 
     thumbnail: "/images/projects/Mika/thumbnail.webp",
 
-     heroImage: {
+    heroImage: {
       src: "/images/projects/Mika/hero.webp",
-      srcSet:`
+      srcSet: `
       /images/projects/Mika/hero.webp 480w,
       /images/projects/Mika/hero.webp 768w,
       /images/projects/Mika/hero.webp 1920w,
       `,
-      sizes:"(max-width:768px) 100vw, 50vw"
+      sizes: "(max-width:768px) 100vw, 50vw",
     },
 
     technologies: [
@@ -741,6 +780,12 @@ export const projects: Project[] = [
       "Used JWT and bcrypt as part of the authentication infrastructure",
       "Used Swiper for interactive artwork/content presentation",
     ],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
   },
   {
     id: "komori-met",
@@ -767,12 +812,12 @@ export const projects: Project[] = [
 
     heroImage: {
       src: "/images/projects/KomoriM/hero.webp",
-      srcSet:`
+      srcSet: `
       /images/projects/KomoriM/hero.webp 480w,
       /images/projects/KomoriM/hero.webp 768w,
       /images/projects/KomoriM/hero.webp 1920w,
       `,
-      sizes:"(max-width:768px) 100vw, 50vw"
+      sizes: "(max-width:768px) 100vw, 50vw",
     },
 
     technologies: ["React", "JavaScript", "Swiper", "Font Awesome"],
@@ -840,6 +885,13 @@ export const projects: Project[] = [
       "Used Font Awesome for reusable interface icons",
       "Kept the project focused on simple and maintainable frontend implementation",
     ],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
+
   },
   {
     id: "slotmachine",
@@ -862,14 +914,14 @@ export const projects: Project[] = [
 
     thumbnail: "/images/projects/mangaReader",
 
-     heroImage: {
+    heroImage: {
       src: "/images/projects/mangaReader",
-      srcSet:`
+      srcSet: `
       /images/projects/mangaReader 480w,
       /images/projects/mangaReader 768w,
       /images/projects/mangaReader 1920w,
       `,
-      sizes:"(max-width:768px) 100vw, 50vw"
+      sizes: "(max-width:768px) 100vw, 50vw",
     },
 
     technologies: ["React", "JavaScript", "Vite"],
@@ -939,5 +991,11 @@ export const projects: Project[] = [
       "Discussed implementation approaches with AI before refining the code",
       "Kept the project small so I could focus on experimenting with React and game logic",
     ],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
   },
 ];
