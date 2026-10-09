@@ -26,7 +26,6 @@ export const terminalCommands: Record<TerminalCommandName, TerminalCommand> = {
       ],
     }),
   },
-
   projects: {
     name: "projects",
 
@@ -34,11 +33,33 @@ export const terminalCommands: Record<TerminalCommandName, TerminalCommand> = {
 
     aliases: ["p"],
 
-    execute: async () => ({
-      type: "output",
+    execute: async () => {
+      const projects = projectRepository.getAll();
 
-      lines: ["Use: navigate projects"],
-    }),
+      const lines: string[] = ["Available Projects:", ""];
+
+      projects.forEach((project, index) => {
+        lines.push(`${index + 1}. ${project.title}`);
+
+        lines.push(`   category: ${project.category}`);
+
+        lines.push(`   year: ${project.year}`);
+
+        lines.push(`   stack: ${project.technologies.join(", ")}`);
+
+        lines.push(`   slug: ${project.slug}`);
+
+        lines.push("");
+      });
+
+      lines.push("Use:", "navigate project <slug>");
+
+      return {
+        type: "output",
+
+        lines,
+      };
+    },
   },
 
   about: {

@@ -38,3 +38,22 @@ export type TerminalCommand = {
 
   execute: (args: string[]) => Promise<TerminalCommandResult>;
 };
+
+// ================================
+// Terminal UI Message
+// ================================
+
+export type TerminalMessageType =
+  | "system"
+  | "command"
+  | "output"
+  | "success"
+  | "error";
+
+export type TerminalMessage = {
+  id: string;
+
+  type: TerminalMessageType;
+
+  text: string;
+};

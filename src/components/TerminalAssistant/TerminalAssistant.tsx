@@ -40,7 +40,7 @@ export default function TerminalAssistant(_props: TerminalAssistantProps) {
           onChangeCommand={terminal.setCommand}
           onSubmit={terminal.submit}
           onClose={terminal.close}
-          onHistoryNavigate={terminal.handleHistoryNavigation}
+          onHistoryNavigate={terminal.navigateHistory}
         />
       )}
     </div>
