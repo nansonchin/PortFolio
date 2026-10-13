@@ -1,15 +1,11 @@
-
 import { setAiProvider } from "./aiProvider";
 import { GeminiProvider } from "./geminiProvider";
 
 export function setupAI() {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const model = import.meta.env.VITE_GEMINI_MODEL;
+  
+  if (!apiKey) throw new Error("Gemini API Key Missing");
 
-  if (!apiKey) {
-    throw new Error("Gemini API key missing");
-  }
-
-  const geminiProvider = new GeminiProvider(apiKey);
-
-  setAiProvider(geminiProvider);
+  setAiProvider(new GeminiProvider(apiKey, model || undefined));
 }

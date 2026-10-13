@@ -35,7 +35,7 @@ export type TerminalCommand = {
   description: string;
 
   aliases?: string[];
-
+acceptsArgs?: boolean;
   execute: (args: string[]) => Promise<TerminalCommandResult>;
 };
 

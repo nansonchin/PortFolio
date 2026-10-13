@@ -1,175 +1,104 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { askJarvis } from "../components/Ai/services/chatService";
+import { parseCommand } from "../components/TerminalAssistant/commands/parseCommand"; // 按你的实际路径改
+import type { TerminalMessage, TerminalMessageType } from "../types/terminal.types";
 
-import type { TerminalMessage } from "../types/terminal.types";
-
-import { askTerminalAI } from "../components/Ai/services/terminalAIService";
-
-function createTerminalMessage(
-  type: TerminalMessage["type"],
-  text: string,
-): TerminalMessage {
-  return {
-    id: `${Date.now()}-${Math.random()}`,
-
-    type,
-
-    text,
-  };
-}
+const WELCOME: TerminalMessage = {
+  id: "welcome",
+  type: "system",
+  text: 'JARVIS online. Ask me anything about this portfolio, or type "help".',
+};
 
 export function useTerminal() {
   const navigate = useNavigate();
 
-  /**
-   * Terminal open state
-   */
   const [isOpen, setIsOpen] = useState(false);
-
-  /**
-   * Input command
-   */
   const [command, setCommand] = useState("");
+  const [history, setHistory] = useState<TerminalMessage[]>([WELCOME]);
+  const [isThinking, setIsThinking] = useState(false);
 
-  /**
-   * Terminal output
-   */
-  const [history, setHistory] = useState<TerminalMessage[]>([
-    createTerminalMessage("system", "Welcome to the developer terminal."),
+  const inputHistory = useRef<string[]>([]);
+  const cursor = useRef(-1);
 
-    createTerminalMessage("system", "Explore this portfolio through commands."),
+  const push = useCallback((type: TerminalMessageType, text: string) => {
+    setHistory((prev) => [...prev, { id: crypto.randomUUID(), type, text }]);
+  }, []);
 
-    createTerminalMessage("system", "Type a command to get started."),
-  ]);
+  const openExternal = useCallback((url:string)=>{
+    window.open(url,"_blank","noopener,noreferrer")
+  },[])
 
-  /**
-   * Command history
-   */
-  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const toggle = useCallback(() => setIsOpen((v) => !v), []);
+  const close = useCallback(() => setIsOpen(false), []);
 
-  const [historyIndex, setHistoryIndex] = useState(-1);
-
-  function toggle() {
-    setIsOpen((previous) => !previous);
-  }
-
-  function open() {
-    setIsOpen(true);
-  }
-
-  function close() {
-    setIsOpen(false);
-  }
-
-  function navigateHistory(direction: "up" | "down") {
-    if (commandHistory.length === 0) {
-      return;
-    }
-
-    if (direction === "up") {
-      const newIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
-
-      setHistoryIndex(newIndex);
-
-      setCommand(commandHistory[commandHistory.length - 1 - newIndex]);
-
-      return;
-    }
-
-    if (direction === "down") {
-      const newIndex = historyIndex - 1;
-
-      if (newIndex < 0) {
-        setHistoryIndex(-1);
-
-        setCommand("");
-
-        return;
-      }
-
-      setHistoryIndex(newIndex);
-
-      setCommand(commandHistory[commandHistory.length - 1 - newIndex]);
-    }
-  }
-
-  async function submit() {
-    const trimmedCommand = command.trim();
-
-    if (!trimmedCommand) {
-      return;
-    }
-
-    setCommandHistory((previous) => [...previous, trimmedCommand]);
-
-    setHistoryIndex(-1);
-
-    /**
-     * User command
-     */
-
-    setHistory((previous) => [
-      ...previous,
-
-      createTerminalMessage("command", `> ${trimmedCommand}`),
-    ]);
-
-    try {
-      const response = await askTerminalAI(trimmedCommand);
-
-      /**
-       * AI Message
-       */
-
-      setHistory((previous) => [
-        ...previous,
-
-        createTerminalMessage(
-          "output",
-
-          response.message,
-        ),
-      ]);
-
-      /**
-       * Navigation Action
-       */
-
-      if (response.action?.type === "navigate") {
-        navigate(response.action.path);
-      }
-    } catch (error) {
-      setHistory((previous) => [
-        ...previous,
-
-        createTerminalMessage(
-          "error",
-
-          "AI service failed.",
-        ),
-      ]);
-    }
+  const submit = useCallback(async () => {
+    const input = command.trim();
+    if (!input || isThinking) return;
 
     setCommand("");
-  }
+    inputHistory.current.push(input);
+    cursor.current = -1;
+    push("command", `> ${input}`);
+
+    const local = await parseCommand(input);
+    if (local) {
+      if (local.type === "clear") {
+        setHistory([]);
+        return;
+      }
+      local.lines.forEach((line) =>
+        push(local.type === "navigation" ? "success" : "output", line),
+      );
+      if (local.type === "navigation") navigate(local.path);
+      return;
+    }
+
+    const pendingId = crypto.randomUUID();
+    setHistory((prev) => [
+      ...prev,
+      { id: pendingId, type: "system", text: "JARVIS is thinking..." },
+    ]);
+    setIsThinking(true);
+
+    try {
+      const reply = await askJarvis(input, { navigate,openExternal });
+      setHistory((prev) => prev.filter((m) => m.id !== pendingId));
+      push("success", reply);
+    } catch (error) {
+      console.error(error);
+      setHistory((prev) => prev.filter((m) => m.id !== pendingId));
+      push("error", "JARVIS is unavailable right now. Try a command like: projects");
+    } finally {
+      setIsThinking(false);
+    }
+  }, [command, isThinking, navigate,openExternal, push]);
+
+  const navigateHistory = useCallback((direction: "up" | "down") => {
+    const list = inputHistory.current;
+    if (list.length === 0) return;
+
+    if (direction === "up") {
+      cursor.current =
+        cursor.current === -1 ? list.length - 1 : Math.max(cursor.current - 1, 0);
+      setCommand(list[cursor.current]);
+      return;
+    }
+
+    if (cursor.current === -1) return;
+    const next = cursor.current + 1;
+    if (next >= list.length) {
+      cursor.current = -1;
+      setCommand("");
+    } else {
+      cursor.current = next;
+      setCommand(list[next]);
+    }
+  }, []);
 
   return {
-    isOpen,
-
-    command,
-
-    history,
-
-    setCommand,
-
-    toggle,
-
-    open,
-
-    close,
-
-    submit,
-
-    navigateHistory,
+    isOpen, toggle, close,
+    history, command, setCommand,
+    submit, navigateHistory, isThinking,
   };
 }

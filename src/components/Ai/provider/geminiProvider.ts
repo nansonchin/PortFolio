@@ -1,82 +1,75 @@
 import type {
-  AiCompletionRequest,
-  AiCompletionResponse,
+  AiMessage,
   AiProvider,
+  AiRequest,
+  AiResponse,
 } from "./aiProvider.types";
+
+const ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
+
+function toGeminiContent(message: AiMessage) {
+  switch (message.role) {
+    case "user":
+      return { role: "user", parts: [{ text: message.text }] };
+    case "model":
+      return message.raw ?? { role: "model", parts: [{ text: message.text }] };
+    case "tool":
+      return {
+        role: "user",
+        parts: message.results.map((r) => ({
+          functionResponse: { name: r.name, response: r.response },
+        })),
+      };
+  }
+}
 
 export class GeminiProvider implements AiProvider {
   private apiKey: string;
+  private model: string;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, model: string = "gemini-flash-lite-latest") {
     this.apiKey = apiKey;
+    this.model = model;
   }
 
-  async generate(request: AiCompletionRequest): Promise<AiCompletionResponse> {
-    const systemPrompt = request.messages
-      .filter((message) => message.role === "system")
-      .map((message) => message.content)
-      .join("\n");
-
-    const conversation = request.messages
-      .filter((message) => message.role !== "system")
-      .map((message) => {
-        return `${message.role}:
-
-${message.content}`;
-      })
-      .join("\n");
-
-    const finalPrompt = `
-
-${systemPrompt}
-
-
-========================
-
-
-${conversation}
-
-
-`;
-
-    console.log("Gemini Prompt:", finalPrompt);
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${this.apiKey}`,
-
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-
-              parts: [
-                {
-                  text: finalPrompt,
-                },
-              ],
-            },
-          ],
-        }),
+  async generate({
+    systemPrompt,
+    messages,
+    tools,
+  }: AiRequest): Promise<AiResponse> {
+    const response = await fetch(`${ENDPOINT}/${this.model}:generateContent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": this.apiKey,
       },
-    );
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: messages.map(toGeminiContent),
+        tools: tools?.length ? [{ functionDeclarations: tools }] : undefined,
+      }),
+    });
 
     if (!response.ok) {
-      const error = await response.text();
-
-      throw new Error(error);
+      throw new Error(`Gemini ${response.status}: ${await response.text()}`);
     }
 
     const data = await response.json();
+    const content = data.candidates?.[0]?.content;
+    const parts: any[] = content?.parts ?? [];
 
     return {
-      content: data.candidates[0].content.parts[0].text,
+      text: parts
+        .filter((p) => p.text)
+        .map((p) => p.text)
+        .join(""),
+      toolCalls: parts
+        .filter((p) => p.functionCall)
+        .map((p) => ({
+          name: p.functionCall.name,
+          args: p.functionCall.args ?? {},
+        })),
+      raw: content,
     };
   }
 }

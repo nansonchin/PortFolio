@@ -4,12 +4,12 @@ export function resolveNavigationPath(request: NavigationTarget) {
   switch (request.type) {
     case "page":
       switch (request.target) {
+        case "home":
+          return "/";
         case "projects":
           return "/projects";
-
         case "about":
           return "/about";
-
         default:
           return "/";
       }

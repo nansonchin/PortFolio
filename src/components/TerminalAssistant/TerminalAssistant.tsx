@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useTerminal } from "../../hooks/useTerminal";
 import TerminalButton from "./TerminalButton";
 import TerminalPanel from "./TerminalPanel";
+import { useTerminal } from "../../hooks/useTerminal";
 
 type TerminalAssistantProps = {};
 

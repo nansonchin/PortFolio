@@ -2,7 +2,7 @@ export type NavigationTarget =
   | {
       type: "page";
 
-      target: "projects" | "about";
+      target: "home" | "projects" | "about"; 
     }
   | {
       type: "project";

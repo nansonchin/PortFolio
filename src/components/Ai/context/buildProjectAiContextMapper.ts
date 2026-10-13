@@ -16,6 +16,8 @@ export function buildProjectContext():ProjectAiContext[]{
         responsibilities:project.responsibilities,
         challenges:project.challenges,
         solutions:project.solutions,
+        githubUrl:project.githubUrl,
+        demoUrl:project.demoUrl,
         architecture:project.architecture
     }))
 }

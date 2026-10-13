@@ -16,6 +16,24 @@ type TerminalPanelProps = {
   onClose: () => void;
 };
 
+function renderText(text: string) {
+  return text.split(/(https?:\/\/\S+)/g).map((part, i) =>
+    /^https?:\/\//.test(part) ? (
+      <a
+        key={i}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline underline-offset-2 hover:text-white"
+      >
+        {part}
+      </a>
+    ) : (
+      part
+    ),
+  );
+} 
+
 export default function TerminalPanel({
   history,
 
@@ -170,7 +188,7 @@ export default function TerminalPanel({
           <p
             key={message.id}
             className={`
-                  break-words
+                  break-words whitespace-pre-wrap
 
                   ${
                     message.type === "command"
@@ -184,7 +202,7 @@ export default function TerminalPanel({
 
                   `}
           >
-            {message.text}
+           {renderText(message.text)}
           </p>
         ))}
       </div>
