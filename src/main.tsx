@@ -10,6 +10,9 @@ import Cursor from "./components/Cursor/index.ts";
 import { CursorProvider } from "./components/Cursor/CursorContext.tsx";
 import { CursorPhysicsProvider } from "./components/Cursor/CursorPhysicsContext.tsx";
 import TerminalAssistant from "./components/TerminalAssistant/TerminalAssistant.tsx";
+import { setupAI } from "./components/Ai/provider/setupAI.ts";
+
+setupAI();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

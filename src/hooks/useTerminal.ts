@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { parseTerminalInput } from "../utils/terminalParser";
 import type { TerminalMessage } from "../types/terminal.types";
+
+import { askTerminalAI } from "../components/Ai/services/terminalAIService";
 
 function createTerminalMessage(
   type: TerminalMessage["type"],
@@ -10,7 +11,9 @@ function createTerminalMessage(
 ): TerminalMessage {
   return {
     id: `${Date.now()}-${Math.random()}`,
+
     type,
+
     text,
   };
 }
@@ -24,12 +27,12 @@ export function useTerminal() {
   const [isOpen, setIsOpen] = useState(false);
 
   /**
-   * Current input value
+   * Input command
    */
   const [command, setCommand] = useState("");
 
   /**
-   * Terminal displayed messages
+   * Terminal output
    */
   const [history, setHistory] = useState<TerminalMessage[]>([
     createTerminalMessage("system", "Welcome to the developer terminal."),
@@ -41,21 +44,9 @@ export function useTerminal() {
 
   /**
    * Command history
-   *
-   * Example:
-   *
-   * [
-   *   "help",
-   *   "navigate projects"
-   * ]
    */
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
 
-  /**
-   * Current command history position
-   *
-   * -1 means normal typing mode
-   */
   const [historyIndex, setHistoryIndex] = useState(-1);
 
   function toggle() {
@@ -70,17 +61,11 @@ export function useTerminal() {
     setIsOpen(false);
   }
 
-  /**
-   * Arrow Up / Arrow Down handler
-   */
   function navigateHistory(direction: "up" | "down") {
     if (commandHistory.length === 0) {
       return;
     }
 
-    /**
-     * Go older command
-     */
     if (direction === "up") {
       const newIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
 
@@ -91,15 +76,9 @@ export function useTerminal() {
       return;
     }
 
-    /**
-     * Go newer command
-     */
     if (direction === "down") {
       const newIndex = historyIndex - 1;
 
-      /**
-       * Return to empty input
-       */
       if (newIndex < 0) {
         setHistoryIndex(-1);
 
@@ -121,69 +100,54 @@ export function useTerminal() {
       return;
     }
 
-    /**
-     * Save command
-     */
     setCommandHistory((previous) => [...previous, trimmedCommand]);
 
-    /**
-     * Reset history pointer
-     */
     setHistoryIndex(-1);
 
-    const result = await parseTerminalInput(trimmedCommand);
+    /**
+     * User command
+     */
 
-    switch (result.type) {
-      case "clear":
-        setHistory([createTerminalMessage("system", "Terminal cleared.")]);
+    setHistory((previous) => [
+      ...previous,
 
-        break;
+      createTerminalMessage("command", `> ${trimmedCommand}`),
+    ]);
 
-      case "navigation":
-        setHistory((previous) => [
-          ...previous,
+    try {
+      const response = await askTerminalAI(trimmedCommand);
 
-          createTerminalMessage("command", `> ${trimmedCommand}`),
+      /**
+       * AI Message
+       */
 
-          ...result.lines.map((line) => createTerminalMessage("success", line)),
-        ]);
+      setHistory((previous) => [
+        ...previous,
 
-        navigate(result.path);
+        createTerminalMessage(
+          "output",
 
-        break;
+          response.message,
+        ),
+      ]);
 
-      case "output":
-        setHistory((previous) => [
-          ...previous,
+      /**
+       * Navigation Action
+       */
 
-          createTerminalMessage("command", `> ${trimmedCommand}`),
+      if (response.action?.type === "navigate") {
+        navigate(response.action.path);
+      }
+    } catch (error) {
+      setHistory((previous) => [
+        ...previous,
 
-          ...result.lines.map((line) => createTerminalMessage("output", line)),
-        ]);
-        break;
-      case "unknown":
-        setHistory((previous) => [
-          ...previous,
+        createTerminalMessage(
+          "error",
 
-          createTerminalMessage("command", `> ${trimmedCommand}`),
-
-          ...result.lines.map((line) => createTerminalMessage("error", line)),
-        ]);
-        break;
-
-      case "project":
-        setHistory((previous) => [
-          ...previous,
-
-          createTerminalMessage("command", `> ${trimmedCommand}`),
-
-          ...result.lines.map((line) => createTerminalMessage("output", line)),
-        ]);
-
-        break;
-
-      default:
-        break;
+          "AI service failed.",
+        ),
+      ]);
     }
 
     setCommand("");

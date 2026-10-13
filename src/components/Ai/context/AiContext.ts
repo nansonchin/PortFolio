@@ -3,6 +3,7 @@ import type { ProjectArchitectureModel } from "../../../models/ProjectArchitectu
 export interface DeveloperContext{
     name:string;
     role:string;
+    description:string,
     background:string[];
     skills:string[];
     goals:string[]
