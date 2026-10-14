@@ -1,10 +1,10 @@
-import { Home } from "lucide-react";
 import MainLayout from "../layouts/MainLayout";
 import About from "../pages/About";
 import Projects from "../pages/Projects";
 import ProjectDetail from "../pages/ProjectDetail";
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layouts/RootLayout";
+import Home from "../pages/Home";
 
 const router = createBrowserRouter([
   {

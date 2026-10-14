@@ -38,7 +38,7 @@ export function heroReveal() {
         duration:0.7
   },"-=0.5")
 
-  gsap.fromTo("scroll-line",
+  gsap.fromTo(".scroll-line",
     {
         scaleX:0.2,
         opacity:0.4,

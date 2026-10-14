@@ -23,7 +23,7 @@ function Hero() {
     >
       <GoldLight />
       <div className="relative z-10 w-full max-w-5xl mx-auto">
-        <p className="hero-eyebrow mb-6 text-xs md:text-sm uppdercase tracking-[0.35em] text-[var(--gold)]">
+        <p className="hero-eyebrow mb-6 text-xs md:text-sm uppercase tracking-[0.35em] text-[var(--gold)]">
           Portfolio / 2026
         </p>
         <HeroTitle text="FRONT ENGINEER" />

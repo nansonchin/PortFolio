@@ -7,7 +7,7 @@ function Navbar(){
             <div className="hidden md:flex gap-8"> 
                 <Link to="/">Home</Link>
                 <Link to="/projects">Projects</Link>
-                <Link to="/about">Home</Link>
+                <Link to="/about">About</Link>
 
             </div>
         </nav>

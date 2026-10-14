@@ -274,7 +274,7 @@ export const projects: Project[] = [
   },
   {
     id: "Ai-resume",
-    slug: "Ai-Resume",
+    slug: "ai-resume",
     title: "AI Resume Analysis",
 
     summary:
@@ -399,7 +399,7 @@ export const projects: Project[] = [
   },
   {
     id: "gsap_mojito",
-    slug: "Gsap_mojito",
+    slug: "gsap_mojito",
     title: "GSAP Mojito",
 
     summary:
@@ -514,7 +514,7 @@ export const projects: Project[] = [
   },
   {
     id: "gsap_award",
-    slug: "Gsap_award",
+    slug: "gsap_award",
     title: "GSAP Award Winning",
 
     summary:
@@ -636,7 +636,7 @@ export const projects: Project[] = [
   },
   {
     id: "mika_pikazo",
-    slug: "Mika_pikazo",
+    slug: "mika_pikazo",
     title: "Mika Pikazo",
     year: 2025,
     summary:
@@ -789,7 +789,7 @@ export const projects: Project[] = [
   },
   {
     id: "komori-met",
-    slug: "Komori_met",
+    slug: "komori_met",
     title: "Komori Met Landing Page",
 
     summary:
@@ -895,7 +895,7 @@ export const projects: Project[] = [
   },
   {
     id: "slotmachine",
-    slug: "Slotmachine",
+    slug: "slotmachine",
     title: "Slot Machine",
     year: 2025,
     summary:
