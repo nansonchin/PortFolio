@@ -15,7 +15,7 @@ function ProjectCard({ project }: ProjectCardProps) {
   const navigate = useNavigate();
   const { mode } = useCursorContext();
 
-  const preloadImage = useImagePreload()
+  const preloadImage = useImagePreload();
 
   const handleCardClick = (event: React.MouseEvent<HTMLElement>) => {
     const target = event.target as HTMLElement;
@@ -32,14 +32,14 @@ function ProjectCard({ project }: ProjectCardProps) {
   // console.log(mode);
   return (
     <article
-    data-flip-card
+      data-flip-card
       data-cursor="view"
       onClick={handleCardClick}
       ref={cardRef}
       // onMouseLeave={handleMouseLeave}
       // onMouseMove={handleMouseMove}
-      onMouseEnter={()=>{
-        preloadImage(project.heroImage)
+      onMouseEnter={() => {
+        preloadImage(project.heroImage);
       }}
       className="project-card relative transform-gpu preserve-3d group  border border-white/10 rounded-2xl overflow-hidden
                 bg-black transition-all duration-500 hover:-translate-y-2"
@@ -53,36 +53,38 @@ function ProjectCard({ project }: ProjectCardProps) {
         />
       </div>
       <div className="p-6">
-        <p className="text-xs uppercase tacking-[0.3em] text-yellow-400 mb-3">
+        <p className="text-xs uppercase tracking-[0.3em] text-yellow-400 mb-3">
           {project.category}
         </p>
-        <h3 className="text-2x1 font-semibold text-white">{project.title}</h3>
-        <p className="mt-4 text-neutral-400 loading-relaxed">
+        <h3 className="text-2l font-semibold text-white">{project.title}</h3>
+        <p className="mt-4 text-neutral-400 leading-relaxed">
           {project.summary}
         </p>
         <div className="flex flex-wrap gap-2 mt-6">
           {project.technologies.map((tech) => (
             <span
               key={tech}
-              className="px-3 py-1 text-xs rounded-full bg-white/10 text-neutral-3000"
+              className="px-3 py-1 text-xs rounded-full bg-white/10 text-neutral-300"
             >
               {tech}
             </span>
           ))}
         </div>
         <div className="flex gap-4 mt-8 justify-between">
-          <div className="">
-            <a
-              data-magnetic
-              data-cursor="code"
-              href={project.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm text-white underline py-[10px] px-[25px]"
-            >
-              Github
-            </a>
-          </div>
+          {project.githubUrl && (
+            <div className="">
+              <a
+                data-magnetic
+                data-cursor="code"
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm text-white underline py-[10px] px-[25px]"
+              >
+                Github
+              </a>
+            </div>
+          )}
 
           {project.demoUrl && (
             <div>

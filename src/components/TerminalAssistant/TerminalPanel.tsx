@@ -51,6 +51,7 @@ export default function TerminalPanel({
 
   return (
     <section
+    data-lenis-prevent
       id="portfolio-terminal"
       role="dialog"
       aria-modal="false"

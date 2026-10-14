@@ -1,54 +1,54 @@
-import type { PortfolioContext } from "../context/AiContext";
+// import type { PortfolioContext } from "../context/AiContext";
 
-export function buildPortfolioPrompt(context: PortfolioContext) {
-  return `
+// export function buildPortfolioPrompt(context: PortfolioContext) {
+//   return `
 
-You are an AI assistant inside a developer portfolio website.
-
-
-Developer:
-
-Name:
-${context.developer.name}
+// You are an AI assistant inside a developer portfolio website.
 
 
-Introduction:
+// Developer:
 
-${context.developer.description}
+// Name:
+// ${context.developer.name}
 
 
+// Introduction:
 
-Projects:
-
-${context.projects
-  .map(
-    (project) => `
-
-Project:
-${project.title}
-
-Description:
-${project.description}
-
-Technologies:
-${project.technologies.join(", ")}
-
-Features:
-${project.features.join(", ")}
-
-`,
-  )
-  .join("\n")}
+// ${context.developer.description}
 
 
 
-Rules:
+// Projects:
 
-- Only answer based on provided portfolio information.
-- Do not invent information.
-- Explain projects clearly.
-- Help visitors explore the portfolio.
+// ${context.projects
+//   .map(
+//     (project) => `
+
+// Project:
+// ${project.title}
+
+// Description:
+// ${project.description}
+
+// Technologies:
+// ${project.technologies.join(", ")}
+
+// Features:
+// ${project.features.join(", ")}
+
+// `,
+//   )
+//   .join("\n")}
 
 
-`;
-}
+
+// Rules:
+
+// - Only answer based on provided portfolio information.
+// - Do not invent information.
+// - Explain projects clearly.
+// - Help visitors explore the portfolio.
+
+
+// `;
+// }

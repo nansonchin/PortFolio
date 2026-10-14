@@ -41,6 +41,14 @@ export function useMagneticCursor() {
       event: MouseEvent,
     ) => {
 
+      if(event.target instanceof Element && event.target.closest("[data-cursor-ignore]")){
+        if(isMagneticActive){
+          isMagneticActive= false;
+          magnetic.reset()
+        }
+        return;
+      }
+
       const targets =
         document.querySelectorAll<HTMLElement>(
           "[data-magnetic]",
@@ -170,6 +178,14 @@ export function useMagneticCursor() {
         rect.height / 2;
 
 
+        const topElement = document.elementFromPoint(targetX,targetY)
+
+        if(!topElement || closestTarget.contains(topElement)){
+          if(isMagneticActive){
+            isMagneticActive=false;
+            magnetic.reset()
+          }
+        }
       /**
        * 0 = edge of range
        * 1 = target center

@@ -1,37 +1,37 @@
-import { parseCommand } from "../components/TerminalAssistant/commands/parseCommand";
-import { searchProjects } from "./searchProjects";
+// import { parseCommand } from "../components/TerminalAssistant/commands/parseCommand";
+// import { searchProjects } from "./searchProjects";
 
-export async function parseTerminalInput(input: string) {
-  const commandResult = await parseCommand(input);
+// export async function parseTerminalInput(input: string) {
+//   const commandResult = await parseCommand(input);
 
-  /**
-   *
-   * Real commands have priority
-   *
-   */
-  if (commandResult.type !== "unknown") {
-    return commandResult;
-  }
+//   /**
+//    *
+//    * Real commands have priority
+//    *
+//    */
+//   if (commandResult.type !== "unknown") {
+//     return commandResult;
+//   }
 
-  const projects = searchProjects(input);
+//   const projects = searchProjects(input);
 
-  if (projects.length) {
-    return {
-      type: "project" as const,
+//   if (projects.length) {
+//     return {
+//       type: "project" as const,
 
-      projects,
+//       projects,
 
-      lines: [`Found ${projects.length} project(s)`],
-    };
-  }
+//       lines: [`Found ${projects.length} project(s)`],
+//     };
+//   }
 
-  return {
-    type: "unknown" as const,
+//   return {
+//     type: "unknown" as const,
 
-    lines: [
-      `Unknown command: "${input}"`,
+//     lines: [
+//       `Unknown command: "${input}"`,
 
-      `Type "help" to see available commands`,
-    ],
-  };
-}
+//       `Type "help" to see available commands`,
+//     ],
+//   };
+// }
