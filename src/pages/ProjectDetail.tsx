@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   ProjectHero,
   ProjectOverview,
@@ -9,6 +9,7 @@ import { toProjectDetailModel } from "../mapper/projectMapper";
 import ProjectGallery from "../components/ProjectDetails/ProjectGallery";
 import ProjectStory from "../components/ProjectStory/ProjectStory";
 import ArchitectureSection from "../components/Architecture/ArchitectureSection";
+import NextProject from "../components/FeaturedProjects/NextProject";
 
 function ProjectDetail() {
   const { slug } = useParams();
@@ -16,15 +17,20 @@ function ProjectDetail() {
 
   if (!project) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        Project Not Found
-      </div>
+      <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-ink px-6 text-center">
+        <p className="label text-alert">[ 404 ] PROJECT NOT FOUND</p>
+        <Link to="/projects" className="bar-select label border border-gold/60 px-5 py-3">
+          ← Back to projects
+        </Link>
+      </main>
     );
   }
+
   const detailProject = toProjectDetailModel(project);
-  console.log(project.architecture)
+  const nextProject = projectRepository.getNext(project.slug);
+
   return (
-    <main>
+    <main key={project.slug}>
       <ProjectHero project={detailProject} />
       <ProjectOverview project={detailProject} />
       <ProjectStory story={detailProject.story} />
@@ -33,6 +39,7 @@ function ProjectDetail() {
       )}
       <ProjectTechStack project={detailProject} />
       <ProjectGallery project={detailProject} />
+      {nextProject && <NextProject project={nextProject} />}
     </main>
   );
 }

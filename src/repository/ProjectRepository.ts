@@ -17,12 +17,25 @@ export class ProjectRepository{
         return projects.find(project=>project.slug===key)
     }
 
+    getNext(slug:string):Project|undefined{
+        const key = slug.toLowerCase()
+        const index = projects.findIndex(
+            project=>project.slug.toLowerCase() === key
+        )
+
+        if(index ===-1 || projects.length<2){
+            return undefined
+        }
+
+        return projects[(index+1) % projects.length]
+    }
+
     getById(id:string):Project|undefined{
         return projects.find(
             project=>project.id === id
         )
     }
-
+    
     getStats():ProjectStat[]{
         const technologies = new Set<string>()
 

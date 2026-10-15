@@ -1,46 +1,140 @@
-import { useLayoutEffect, useRef } from "react";
-import ProjectCard from "./ProjectCard";
-import { projectCardsReveal } from "../../animations/projectAnimation";
+import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { projectRepository } from "../../repository/ProjectRepository";
-import { toProjectCardModel } from "../../mapper/projectMapper";
-import { useCursorContext } from "../../hooks/useCursorContext";
+import { prefersReducedMotion } from "../../animations/glitch";
+import WorkPreview from "./WorkPreview";
+import ProjectThumb from "./ProjectThumb";
+import { canHover, workLog } from "./workUtils";
+import SectionLabel from "../SectionLabel/SectionLabel";
 
-function FeaturedProjects(){
-    
-    const sectionRef = useRef<HTMLElement | null>(null)
-    const projects =projectRepository.getFeatures().map(toProjectCardModel)
-    
-    useLayoutEffect(()=>{
-        const section = sectionRef.current
+gsap.registerPlugin(ScrollTrigger);
 
-        if(!section){
-            return
-        }
+const pad = (value: number) => String(value).padStart(2, "0");
 
-        const ctx = projectCardsReveal(section)
+function FeaturedProjects() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const projects = projectRepository.getFeatures();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-        return ()=>{
-            ctx.revert()
-        }
-    },[])
-    return(
-        <section ref={sectionRef} className="min-h-screen px-6 md:px-10 lg:px-16 py-32">
-            <div className="max-w-[1600px] mx-auto" >
-                <div className="max-w-[1600px] mx-auto">
-                    <div className="mb-16">
-                        <p className="text-yellow-400 uppercase tracking-[0.3rem] text-sm">Selected Work</p>
-                        <h2 className="mt-4 text-5xl md:text-7xl font-bold text-white">Featured Projects</h2>
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-8">
-                        {
-                            projects.map((project)=>(
-                                <ProjectCard key={project.id} project={project}/>
-                            ))
-                        }
-                    </div>
-                </div>
-            </div>
-        </section>
-    )
+  useGSAP(
+    () => {
+      workLog("rows", { count: projects.length });
+
+      if (prefersReducedMotion()) return;
+
+      gsap.from(".work-header > *", {
+        autoAlpha: 0,
+        y: 30,
+        duration: 0.9,
+        stagger: 0.1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".work-header",
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      gsap.from(".work-row", {
+        autoAlpha: 0,
+        y: 40,
+        duration: 0.9,
+        stagger: 0.08,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".work-list", start: "top 80%", once: true },
+      });
+    },
+    { scope: sectionRef },
+  );
+
+  const activate = (index: number) => {
+    if (!canHover()) return;
+
+    workLog("hover", { index, slug: projects[index].slug });
+    setActiveIndex(index);
+  };
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative bg-ink px-6 py-24 md:px-10 md:py-32"
+    >
+      <div className="mx-auto max-w-7xl">
+        <div className="work-header mb-12 md:mb-16">
+          <SectionLabel index="01" text="SELECTED WORK" className="mb-8" />
+
+          <div className="flex items-end justify-between gap-6">
+            <h2 className="heading-lg text-paper">Featured projects</h2>
+            <p className="label text-gold-dim">{pad(projects.length)} ITEMS</p>
+          </div>
+        </div>
+
+        <ul
+          className="work-list work-list-root border-t border-line"
+          onMouseLeave={() => setActiveIndex(null)}
+          onBlur={(event) => {
+            if (
+              !event.currentTarget.contains(event.relatedTarget as Node | null)
+            ) {
+              setActiveIndex(null);
+            }
+          }}
+        >
+          {projects.map((project, index) => (
+            <li key={project.id} className="work-row border-b border-line">
+              <Link
+                to={`/project/${project.slug}`}
+                data-cursor="view"
+                onMouseEnter={() => activate(index)}
+                onFocus={() => activate(index)}
+                className="work-link bar-select grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 px-3 py-6 md:grid-cols-[4rem_1fr_13rem_4rem_2rem] md:gap-x-8 md:px-6 md:py-9"
+              >
+                <span className="label opacity-60">{pad(index + 1)}</span>
+
+                <span className="font-display text-[clamp(2rem,5.2vw,4.75rem)] uppercase leading-[0.95]">
+                  {project.title}
+                </span>
+
+                <span className="label hidden opacity-60 md:block">
+                  {project.category}
+                </span>
+                <span className="label hidden opacity-60 md:block">
+                  {project.year}
+                </span>
+
+                <span className="work-arrow label justify-self-end">→</span>
+
+                <span className="label col-start-2 col-end-[-1] mt-2 opacity-60 md:hidden">
+                  {project.category} / {project.year}
+                </span>
+
+                <span className="col-start-2 col-end-[-1] mt-4 hidden aspect-[16/9] overflow-hidden [@media(hover:none)]:block">
+                  <ProjectThumb
+                    src={project.thumbnail}
+                    alt={`${project.title} preview`}
+                  />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <Link
+          to="/projects"
+          data-magnetic
+          className="bar-select label mt-12 inline-flex items-center gap-3 border border-gold/60 px-5 py-3"
+        >
+          View all projects
+          <span className="opacity-60">→</span>
+        </Link>
+      </div>
+
+      <WorkPreview items={projects} activeIndex={activeIndex} />
+    </section>
+  );
 }
-export default FeaturedProjects
+
+export default FeaturedProjects;

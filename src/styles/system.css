@@ -151,3 +151,26 @@
   .glitch[data-glitch="on"]::before,
   .glitch[data-glitch="on"]::after { animation: none; opacity: 0; }
 }
+
+/* ===== Featured Project ===== */
+.work-link {
+  transition:
+    color 0.2s var(--ease-sys),
+    opacity 0.35s var(--ease-sys);
+}
+
+@media (hover: hover) {
+  .work-list-root:has(.work-link:hover) .work-link:not(:hover),
+  .work-list-root:has(.work-link:focus-visible) .work-link:not(:focus-visible) {
+    opacity: 0.3;
+  }
+}
+
+.work-arrow {
+  transition: transform 0.45s var(--ease-sys);
+}
+
+.work-link:hover .work-arrow,
+.work-link:focus-visible .work-arrow {
+  transform: translateX(0.5rem);
+}
