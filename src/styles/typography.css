@@ -14,6 +14,14 @@
     line-height: 1;
   }
 
+  .heading-name{
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height:0.85;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+  }
+
   .text-body {
     font-family: var(--font-body);
     font-size: 1.0625rem;

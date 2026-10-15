@@ -1,8 +1,9 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { askJarvis } from "../components/Ai/services/chatService";
 import { parseCommand } from "../components/TerminalAssistant/commands/parseCommand"; // 按你的实际路径改
 import type { TerminalMessage, TerminalMessageType } from "../types/terminal.types";
+import { JARVIS_OPEN_EVENT } from "../components/TerminalAssistant/terminalEvent";
 
 const WELCOME: TerminalMessage = {
   id: "welcome",
@@ -31,6 +32,13 @@ export function useTerminal() {
 
   const toggle = useCallback(() => setIsOpen((v) => !v), []);
   const close = useCallback(() => setIsOpen(false), []);
+
+  useEffect(()=>{
+    const open = () => setIsOpen(true)
+    window.addEventListener(JARVIS_OPEN_EVENT,open);
+
+    return()=>window.removeEventListener(JARVIS_OPEN_EVENT,open)
+  },[])
 
   const submit = useCallback(async () => {
     const input = command.trim();
