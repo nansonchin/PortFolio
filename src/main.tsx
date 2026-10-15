@@ -19,6 +19,7 @@ import "@fontsource/instrument-serif/400.css";
 import "@fontsource/instrument-serif/400-italic.css";
 import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/inter";
+import { IntroProvider } from "./components/Intro/IntroContext.tsx";
 setupAI();
 
 createRoot(document.getElementById("root")!).render(
@@ -26,10 +27,12 @@ createRoot(document.getElementById("root")!).render(
     <SmoothScrollProvider>
       <CursorProvider>
         <CursorPhysicsProvider>
-          <div className="cursor-none">
-            <Cursor />
-            <RouterProvider router={router} />
-          </div>
+          <IntroProvider>
+            <div className="cursor-none">
+              <Cursor />
+              <RouterProvider router={router} />
+            </div>
+          </IntroProvider>
         </CursorPhysicsProvider>
       </CursorProvider>
     </SmoothScrollProvider>

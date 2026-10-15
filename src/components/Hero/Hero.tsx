@@ -3,15 +3,19 @@ import { useRef } from "react";
 import HeroTitle from "./HeroTitle";
 import GoldLight from "./GoldLight";
 import { heroReveal } from "../../animations/heroReveal";
+import { useIntro } from "../../hooks/useIntro";
 
 function Hero() {
   const heroRef = useRef<HTMLElement | null>(null);
+  const { phase } = useIntro();
+  const canReveal = phase !== "booting";
 
   useGSAP(
     () => {
+      if (!canReveal) return;
       heroReveal();
     },
-    { scope: heroRef },
+    { scope: heroRef, dependencies: [canReveal] },
   );
 
   return (
@@ -22,7 +26,9 @@ function Hero() {
       <GoldLight />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl">
-        <p className="hero-eyebrow label mb-8 text-gold">[ 00 ] PORTFOLIO / 2026</p>
+        <p className="hero-eyebrow label mb-8 text-gold">
+          [ 00 ] PORTFOLIO / 2026
+        </p>
 
         <HeroTitle text="FRONT ENGINEER" />
 
