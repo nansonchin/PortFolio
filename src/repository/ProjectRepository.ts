@@ -13,7 +13,8 @@ export class ProjectRepository{
         )
     }
     getBySlug(slug:string):Project|undefined{
-        return projects.find(project=>project.slug===slug)
+        const key = slug.toLowerCase();
+        return projects.find(project=>project.slug===key)
     }
 
     getById(id:string):Project|undefined{
