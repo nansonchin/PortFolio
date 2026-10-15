@@ -10,6 +10,8 @@ export function resolveNavigationPath(request: NavigationTarget) {
           return "/projects";
         case "about":
           return "/about";
+        case "contact":
+          return "/contact"
         default:
           return "/";
       }

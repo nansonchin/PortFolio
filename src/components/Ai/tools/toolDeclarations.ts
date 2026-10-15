@@ -27,7 +27,7 @@ export const portfolioTools: AiToolDeclaration[] = [
         page: {
           type: "string",
           description: "Which page to open.",
-          enum: ["home", "projects", "about"],
+          enum: ["home", "projects", "about", "contact"],
         },
       },
       required: ["page"],

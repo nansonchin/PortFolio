@@ -5,6 +5,7 @@ const links = [
   { to: "/", label: "HOME", end: true },
   { to: "/projects", label: "PROJECTS", end: false },
   { to: "/about", label: "ABOUT", end: false },
+    { to: "/contact", label: "CONTACT", end: false },
 ];
 
 function Navbar() {

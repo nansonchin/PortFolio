@@ -112,7 +112,7 @@ export const terminalCommands: Record<TerminalCommandName, TerminalCommand> = {
             "Usage:",
 
             "navigate projects",
-
+            "navigate contact",
             "navigate about",
 
             "navigate project <slug>",
@@ -159,7 +159,7 @@ export const terminalCommands: Record<TerminalCommandName, TerminalCommand> = {
       /**
        * Normal Pages
        */
-      if (target === "projects" || target === "about") {
+      if (target === "projects" || target === "about" || target === "contact") {
         return {
           type: "navigation",
 

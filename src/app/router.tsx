@@ -5,6 +5,8 @@ import ProjectDetail from "../pages/ProjectDetail";
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layouts/RootLayout";
 import Home from "../pages/Home";
+import NotFound from "../pages/NotFound";
+import Contact from "../pages/Contact";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,8 @@ const router = createBrowserRouter([
             path: "projects",
             element: <Projects />,
           },
+          { path: "contact", element: <Contact /> },
+          { path: "*", element: <NotFound /> },
         ],
       },
       {
@@ -37,4 +41,4 @@ const router = createBrowserRouter([
   },
 ]);
 
-export default router
+export default router;

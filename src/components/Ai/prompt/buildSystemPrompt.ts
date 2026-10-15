@@ -1,6 +1,10 @@
+import { profile } from "../../../data/profile";
 import type { PortfolioContext } from "../context/AiContext";
 
-export function buildSystemPrompt({ developer, projects }: PortfolioContext): string {
+export function buildSystemPrompt({
+  developer,
+  projects,
+}: PortfolioContext): string {
   const projectBlocks = projects
     .map((p) =>
       [
@@ -14,14 +18,24 @@ export function buildSystemPrompt({ developer, projects }: PortfolioContext): st
         `responsibilities: ${p.responsibilities.join("; ")}`,
         `challenges: ${p.challenges.join("; ")}`,
         `solutions: ${p.solutions.join("; ")}`,
-        `github: ${p.githubUrl?? "none"}`,
-        `demo: ${p.demoUrl??"none"}`,
+        `github: ${p.githubUrl ?? "none"}`,
+        `demo: ${p.demoUrl ?? "none"}`,
         p.architecture ? `architecture: ${JSON.stringify(p.architecture)}` : "",
       ]
         .filter(Boolean)
         .join("\n"),
     )
     .join("\n\n");
+
+  const contactLines = [
+    profile.email ? `email: ${profile.email}` : "",
+    profile.github ? `github: ${profile.github}` : "",
+    profile.linkedin ? `linkedin: ${profile.linkedin}` : "",
+    profile.location ? `location: ${profile.location}` : "",
+    `status: ${profile.status}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   return `You are JARVIS, the AI guide inside ${developer.name}'s developer portfolio website.
 Visitors talk to you through a small terminal. You answer questions about the portfolio and you can take visitors to pages using tools.
@@ -51,5 +65,8 @@ ${projectBlocks}
 - When the visitor asks for a project's source code, GitHub, repo, live demo or website, call open_project_link. After it succeeds, say what you opened and write the URL on its own line. in case the browser blocked the new tab.
 - If a project has not github or demo link, say so. Never make up a URL.
 
+# Contact
+${contactLines}
+- When the visitor asks how to contact or hire ${developer.name}, or whether he is available, share the contact details above and offer to open the contact page with navigate_to_page (page: contact). Never invent contact details that are not listed.
 `;
 }

@@ -73,8 +73,9 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
       const page = String(call.args.page ?? "") as
         | "home"
         | "projects"
-        | "about";
-      if (!["home", "projects", "about"].includes(page)) {
+        | "about"
+        | "contact"
+      if (!["home", "projects", "about", "contact"].includes(page)) {
         return {
           name: call.name,
           response: { success: false, error: "Unknown page" },
