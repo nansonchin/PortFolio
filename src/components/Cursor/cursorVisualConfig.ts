@@ -19,25 +19,25 @@ export const cursorVisualConfig: Record<
 
   default: {
     svgClassName:
-      "text-[#FFDC22]",
+      "text-[#D8BD83]",
 
     glowClassName:
-      "bg-[#FFDC22]/40",
+      "bg-[#D8BD83]/40",
 
     labelClassName:
-      "text-[#FFDC22]",
+      "text-[#D8BD83]",
   },
 
 
   view: {
     svgClassName:
-      "text-[#FFDC22]",
+      "text-[#D8BD83]",
 
     glowClassName:
-      "bg-[#FFDC22]/40",
+      "bg-[#D8BD83]/40",
 
     labelClassName:
-      "text-[#FFDC22]",
+      "text-[#D8BD83]",
   },
 
 
@@ -55,13 +55,13 @@ export const cursorVisualConfig: Record<
 
   live: {
     svgClassName:
-      "text-[#F40404]",
+      "text-[#C8452F]",
 
     glowClassName:
-      "bg-[#F40404]/35",
+      "bg-[#C8452F]/35",
 
     labelClassName:
-      "text-[#F40404]",
+      "text-[#C8452F]",
   },
 
 };

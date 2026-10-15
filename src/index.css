@@ -1,4 +1,29 @@
 @import "tailwindcss";
 @import "./styles/variables.css";
+@import "./styles/typography.css";
 @import "./styles/globals.css";
-@import "./styles//typography.css"
+@import "./styles/system.css";
+
+@theme static {
+  --color-ink: #0A0908;
+  --color-ink-2: #12100D;
+  --color-gold: #C9A96E;
+  --color-gold-bright: #D8BD83;
+  --color-gold-dim: #8C7A52;
+  --color-paper: #E8E2D0;
+  --color-muted: #8A8578;
+  --color-alert: #C8452F;
+  --color-line: rgb(201 169 110 / 0.18);
+
+  --font-display: "Instrument Serif", "Times New Roman", serif;
+  --font-system: "JetBrains Mono Variable", ui-monospace, Menlo, Consolas, monospace;
+  --font-body: "Inter Variable", system-ui, sans-serif;
+
+  --color-black: #0A0908;
+  --color-white: #E8E2D0;
+  --color-yellow-400: #C9A96E;
+  --color-yellow-500: #C9A96E;
+  --color-neutral-400: #9A9484;
+  --color-neutral-500: #6F6A5E;
+  --color-neutral-900: #14120F;
+}

@@ -44,7 +44,7 @@ function ProjectCard({ project }: ProjectCardProps) {
       className="project-card relative transform-gpu preserve-3d group  border border-white/10 rounded-2xl overflow-hidden
                 bg-black transition-all duration-500 hover:-translate-y-2"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_var(--mouse-x)_var(--mouse-y),rgba(255,220,34,0.15),transparent_40%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_var(--mouse-x)_var(--mouse-y),rgba(216,189,131,0.15),transparent_40%)]" />
       <div className="aspect-video overflow-hidden bg-neutral-900">
         <Image
           src={project.thumbnail}
