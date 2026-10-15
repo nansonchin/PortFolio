@@ -3,6 +3,9 @@ import { developerContext } from "../../data/developerContext";
 import type { Project } from "../../entities/Project";
 import { projectRepository } from "../../repository/ProjectRepository";
 import SectionLabel from "../SectionLabel/SectionLabel";
+import React, { useState } from "react";
+import WorkPreview from "../FeaturedProjects/WorkPreview";
+import { canHover } from "../FeaturedProjects/workUtils";
 
 function groupByYear(projects: Project[]): [number, Project[]][] {
   const map = new Map<number, Project[]>();
@@ -16,6 +19,20 @@ function groupByYear(projects: Project[]): [number, Project[]][] {
 
 function BuildLog() {
   const groups = groupByYear(projectRepository.getAll());
+  const [activeProject, setActiveProject] = useState<{
+    year: number;
+    index: number;
+  } | null>(null);
+  
+  const activate = (year:number,index: number) => {
+    if (!canHover()) return;
+
+    setActiveProject({year,index});
+  };
+
+  const clearActivate =()=>{
+    setActiveProject(null)
+  }
 
   return (
     <section className="border-t border-line px-6 py-20 md:px-10 md:py-28">
@@ -26,32 +43,59 @@ function BuildLog() {
         </div>
 
         <div className="grid gap-16 lg:grid-cols-[1.6fr_1fr] lg:gap-24">
-          <div>
+          <div
+            onMouseLeave={()=>clearActivate()}
+            onBlur={(event) => {
+              if (
+                !event.currentTarget.contains(
+                  event.relatedTarget as Node | null,
+                )
+              ) {
+                clearActivate()
+              }
+            }}
+          >
             {groups.map(([year, items]) => (
-              <div
-                key={year}
-                data-reveal
-                className="grid gap-6 border-t border-line py-8 md:grid-cols-[8rem_1fr] md:gap-10"
-              >
-                <p className="font-display text-5xl leading-none text-gold md:text-6xl">{year}</p>
+              <React.Fragment key={year}>
+                <WorkPreview
+                  items={items}
+                  activeIndex={
+                    activeProject?.year === year ? activeProject.index : null
+                  }
+                />
+                <div
+                  key={year}
+                  data-reveal
+                  className="grid gap-6 border-t border-line py-8 md:grid-cols-[8rem_1fr] md:gap-10"
+                >
+                  <p className="font-display text-5xl leading-none text-gold md:text-6xl">
+                    {year}
+                  </p>
 
-                <ul>
-                  {items.map((project) => (
-                    <li key={project.id}>
-                      <Link
-                        to={`/project/${project.slug}`}
-                        data-cursor="view"
-                        className="bar-select flex items-baseline justify-between gap-6 px-3 py-3"
-                      >
-                        <span className="font-display text-2xl uppercase md:text-3xl">
-                          {project.title}
-                        </span>
-                        <span className="label hidden opacity-60 sm:block">{project.category}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                  <ul>
+                    {items.map((project, index) => (
+                      <li key={project.id}>
+                        <Link
+                          to={`/project/${project.slug}`}
+                          data-cursor="view"
+                          onMouseEnter={() => {
+                            activate(year,index)
+                          }}
+                          onFocus={() => activate(year,index)}
+                          className="bar-select flex items-baseline justify-between gap-6 px-3 py-3"
+                        >
+                          <span className="font-display text-2xl uppercase md:text-3xl">
+                            {project.title}
+                          </span>
+                          <span className="label hidden opacity-60 sm:block">
+                            {project.category}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </React.Fragment>
             ))}
           </div>
 
