@@ -1,34 +1,28 @@
-import { useLayoutEffect, useRef } from "react";
-import { projectHeroReveal } from "../../../../animations/projectHeroRevealAnimations";
+import SectionLabel from "../../../../components/SectionLabel/SectionLabel";
 
-function ProjectHeroFeatures(){
-    const sectionRef = useRef<HTMLElement|null>(null)
+function ProjectHeroFeatures() {
+  return (
+    <section className="px-6 pb-16 pt-36 md:px-10 md:pb-24 md:pt-44">
+      <div className="mx-auto max-w-7xl">
+        <div data-reveal>
+          <SectionLabel index="05" text="PROJECTS" className="mb-10" />
+        </div>
 
-    useLayoutEffect(()=>{
-        const section = sectionRef.current;
+        <h1
+          data-reveal
+          className="font-display text-[clamp(3rem,10vw,9.5rem)] uppercase leading-[0.9] text-paper"
+        >
+          <span className="block">Explore</span>
+          <span className="block italic text-gold-bright">my work.</span>
+        </h1>
 
-        if(!section){
-            return;
-        }
-
-        const ctx=projectHeroReveal({
-            container:section
-        })
-
-        return()=>{
-            ctx.revert()
-        }
-    },[])
-
-    return(
-        <section ref={sectionRef} className="min-h-screen flex items-center px-6 md:px-10 lg:px-16 bg-black text-white">
-            <div className="hero-label text-yellow-400 uppercase tracking-[0.5rem] text-sm">
-                <p className="hero-label text-yellow-400 uppercase tracking-[0.5rem] text-sm">Projects</p>
-                <h1 className="hero-title mt-8 text-6xl md:text-8xl lg:text-[10rem] font-bold leading-none">Explore <br/> My Work</h1>
-                <p className="hero-description mt-10 max-w-2xl text-neutral-400 text-lg md:text-xl leading-relaxed">A collection of frontend projects, experiment and engineering solutions built with React, TypeScript and modern web technologies</p>
-            </div>
-        </section>
-    )
+        <p data-reveal className="text-body mt-10 max-w-2xl">
+          A collection of frontend projects, experiments and engineering solutions built with React,
+          TypeScript and modern web technologies.
+        </p>
+      </div>
+    </section>
+  );
 }
 
-export default ProjectHeroFeatures
+export default ProjectHeroFeatures;

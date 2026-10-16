@@ -1,104 +1,106 @@
-import Image from "../Image";
-import { useInteractiveCard } from "../../hooks/useInteractiveCard";
-import type { ProjectCardModel } from "../../models/ProjectCardModel";
-import { useNavigate } from "react-router-dom";
-import { useCursorContext } from "../../hooks/useCursorContext";
+import type { MouseEvent } from "react";
+import { Link } from "react-router-dom";
 import { useImagePreload } from "../../hooks/useImagePreload";
+import type { ProjectCardModel } from "../../models/ProjectCardModel";
+import ProjectThumb from "./ProjectThumb";
 
 type ProjectCardProps = {
   project: ProjectCardModel;
+  number: number;
 };
 
-function ProjectCard({ project }: ProjectCardProps) {
-  const { cardRef, handleMouseMove, handleMouseLeave } = useInteractiveCard();
+const MAX_TECH = 4;
 
-  const navigate = useNavigate();
-  const { mode } = useCursorContext();
+const pad = (value: number) => String(value).padStart(2, "0");
 
+function ProjectCard({ project, number }: ProjectCardProps) {
   const preloadImage = useImagePreload();
 
-  const handleCardClick = (event: React.MouseEvent<HTMLElement>) => {
-    const target = event.target as HTMLElement;
-    const interactiveElement = target.closest(
-      "a,button,[role='button'], input, textarea,select",
-    );
+  const handleMouseMove = (event: MouseEvent<HTMLElement>) => {
+    const card = event.currentTarget;
+    const rect = card.getBoundingClientRect();
 
-    if (interactiveElement) {
-      return;
-    }
-
-    navigate(`/project/${project.slug}`);
+    card.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+    card.style.setProperty("--my", `${event.clientY - rect.top}px`);
   };
-  // console.log(mode);
+
+  const extraTech = project.technologies.length - MAX_TECH;
+
   return (
     <article
       data-flip-card
       data-cursor="view"
-      onClick={handleCardClick}
-      ref={cardRef}
-      // onMouseLeave={handleMouseLeave}
-      // onMouseMove={handleMouseMove}
-      onMouseEnter={() => {
-        preloadImage(project.heroImage);
-      }}
-      className="project-card relative transform-gpu preserve-3d group  border border-white/10 rounded-2xl overflow-hidden
-                bg-black transition-all duration-500 hover:-translate-y-2"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => preloadImage(project.heroImage)}
+      className="project-card group relative flex flex-col border border-line bg-ink p-4 transition-colors duration-300 hover:border-gold md:p-5"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_var(--mouse-x)_var(--mouse-y),rgba(216,189,131,0.15),transparent_40%)]" />
-      <div className="aspect-video overflow-hidden bg-neutral-900">
-        <Image
+      {/* 跟着鼠标的金色聚光 */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--mx,50%)_var(--my,50%),rgba(201,169,110,0.12),transparent_45%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+      />
+
+      <div className="relative mb-4 flex items-center justify-between">
+        <span className="label text-gold">[ {pad(number)} ]</span>
+        <span className="label text-gold-dim">{project.year}</span>
+      </div>
+
+      <div className="relative aspect-[16/10] overflow-hidden border border-line bg-ink-2">
+        <ProjectThumb
           src={project.thumbnail}
           alt={`${project.title} project preview`}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="transition-transform duration-700 group-hover:scale-105"
         />
       </div>
-      <div className="p-6">
-        <p className="text-xs uppercase tracking-[0.3em] text-yellow-400 mb-3">
-          {project.category}
-        </p>
-        <h3 className="text-2l font-semibold text-white">{project.title}</h3>
-        <p className="mt-4 text-neutral-400 leading-relaxed">
-          {project.summary}
-        </p>
-        <div className="flex flex-wrap gap-2 mt-6">
-          {project.technologies.map((tech) => (
-            <span
-              key={tech}
-              className="px-3 py-1 text-xs rounded-full bg-white/10 text-neutral-300"
-            >
+
+      <div className="mt-5 flex flex-1 flex-col">
+        <p className="label text-gold">{project.category}</p>
+
+        <h3 className="mt-3 font-display text-3xl uppercase leading-[0.95] text-paper md:text-4xl">
+          <Link
+            to={`/project/${project.slug}`}
+            className="after:absolute after:inset-0 after:content-[''] text-[clamp(1rem,2.2vw,2.75rem)]"
+          >
+            {project.title}
+          </Link>
+        </h3>
+
+        <p className="text-body mt-4 line-clamp-2 text-[1vw]">{project.summary}</p>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {project.technologies.slice(0, MAX_TECH).map((tech) => (
+            <span key={tech} className="label border border-line px-2.5 py-1 text-paper/80">
               {tech}
             </span>
           ))}
+          {extraTech > 0 && <span className="label px-1 py-1 text-gold-dim">+{extraTech}</span>}
         </div>
-        <div className="flex gap-4 mt-8 justify-between">
+
+        <div className="mt-auto flex items-center gap-2 pt-6">
           {project.githubUrl && (
-            <div className="">
-              <a
-                data-magnetic
-                data-cursor="code"
-                href={project.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm text-white underline py-[10px] px-[25px]"
-              >
-                Github
-              </a>
-            </div>
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-magnetic
+              data-cursor="code"
+              className="label relative z-10 px-3 py-2 text-gold-dim transition-colors hover:text-gold-bright"
+            >
+              GitHub ↗
+            </a>
           )}
 
           {project.demoUrl && (
-            <div>
-              <a
-                data-magnetic
-                data-cursor="live"
-                href={project.demoUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm text-yellow-400 underline py-[10px] px-[25px]"
-              >
-                Live Demo
-              </a>
-            </div>
+            <a
+              href={project.demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-magnetic
+              data-cursor="live"
+              className="label relative z-10 px-3 py-2 text-gold-dim transition-colors hover:text-gold-bright"
+            >
+              Live demo ↗
+            </a>
           )}
         </div>
       </div>

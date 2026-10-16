@@ -7,6 +7,7 @@ export function toProjectCardModel(project: Project): ProjectCardModel {
     id: project.id,
     slug: project.slug,
     title: project.title,
+    year:project.year,
     summary: project.summary,
     thumbnail: project.thumbnail,
     heroImage:project.heroImage,

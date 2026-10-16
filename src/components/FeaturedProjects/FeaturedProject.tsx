@@ -94,7 +94,7 @@ function FeaturedProjects() {
               >
                 <span className="label opacity-60">{pad(index + 1)}</span>
 
-                <span className="font-display text-[clamp(2rem,5.2vw,4.75rem)] uppercase leading-[0.95]">
+                <span className="font-display text-[clamp(1rem,3.2vw,2.75rem)] uppercase leading-[0.95]">
                   {project.title}
                 </span>
 

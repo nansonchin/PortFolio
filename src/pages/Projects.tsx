@@ -1,17 +1,23 @@
-import ProjectHeroFeatures from "../features/projects/components/ProjectHero/ProjectHero"
-import ProjectStats from "../features/projects/components/ProjectStats/ProjectStats"
-import ProjectExplorer from "../features/projects/components/ProjectExplorer/ProjectExplorer"
-import { projectRepository } from "../repository/ProjectRepository"
+import { useRef } from "react";
+import ProjectHeroFeatures from "../features/projects/components/ProjectHero/ProjectHero";
+import ProjectStats from "../features/projects/components/ProjectStats/ProjectStats";
+import ProjectExplorer from "../features/projects/components/ProjectExplorer/ProjectExplorer";
+import { projectRepository } from "../repository/ProjectRepository";
+import { useReveal } from "../hooks/useReveal";
 
-function  Projects(){
-    const stats = projectRepository.getStats()
-    return(
-        <main className="bg-black min-h-screen">
-            <ProjectHeroFeatures/>
-            <ProjectStats stats={stats}/>
-            <ProjectExplorer/>
-        </main>
-    )
+function Projects() {
+  const pageRef = useRef<HTMLElement | null>(null);
+  const stats = projectRepository.getStats();
+
+  useReveal(pageRef);
+
+  return (
+    <main ref={pageRef} className="min-h-screen bg-ink">
+      <ProjectHeroFeatures />
+      <ProjectStats stats={stats} />
+      <ProjectExplorer />
+    </main>
+  );
 }
 
-export default Projects
+export default Projects;

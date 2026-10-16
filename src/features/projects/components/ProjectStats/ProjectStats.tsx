@@ -1,25 +1,27 @@
 import type { ProjectStat } from "../../../../models/ProjectStatsModel";
 
-type ProjectStatsProps={
-    stats:ProjectStat[]
-}
-function ProjectStats({stats}:ProjectStatsProps) {
+type ProjectStatsProps = {
+  stats: ProjectStat[];
+};
+
+function ProjectStats({ stats }: ProjectStatsProps) {
   return (
-    <section className="px-6 md:px-10 lg:px-16 py-24 bg-black text-white">
-      <div className="max-w-[1600px] mx-auto grid md:grid-cols-3 gap-12">
+    <section className="px-6 pb-20 md:px-10 md:pb-28">
+      <dl
+        data-reveal
+        className="mx-auto grid max-w-7xl grid-cols-1 border-l border-t border-line sm:grid-cols-3"
+      >
         {stats.map((stat) => (
-          <div key={stat.label} className="stat-item">
-            <h3 className="text-6xl md:text-8xl font-bold">
-                {stat.value}
-            </h3>
-            <p className="mt-4 uppercase tracking-[0.3rem] text-sm text-neutral-400">
-                {stat.label}
-            </p>
+          <div key={stat.label} className="border-b border-r border-line p-6 md:p-8">
+            <dt className="label mb-4 text-gold-dim">{stat.label}</dt>
+            <dd className="font-display text-6xl leading-none text-gold md:text-7xl">
+              {stat.value}
+            </dd>
           </div>
         ))}
-      </div>
+      </dl>
     </section>
   );
 }
 
-export default ProjectStats
+export default ProjectStats;
