@@ -76,7 +76,7 @@ function Hero() {
             <button
               type="button"
               data-magnetic
-              onClick={openJarvis}
+              onClick={()=>openJarvis()}
               aria-label="Open JARVIS assistant"
               className="bar-select label flex items-center gap-3 border border-gold/60 px-5 py-3"
             >

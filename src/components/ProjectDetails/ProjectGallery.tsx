@@ -1,75 +1,74 @@
-import { useLayoutEffect, useRef } from "react";
 import type { ProjectDetailModel } from "../../models/ProjectDetailModel";
-import { projectGalleryAnimation } from "../../animations/projectGalleryAnimation";
-import { useLightbox } from "../../hooks/useLightbox";
 import type { ProjectGalleryImageModel } from "../../models/ProjectGalleryImageModel";
+import { useLightbox } from "../../hooks/useLightbox";
 import Lightbox from "../LightBox/Lightbox";
-import ProjectImage from "../ProjectImage";
+import ProjectFrame from "./ProjectFrame";
+import SectionLabel from "../SectionLabel/SectionLabel";
 
 type ProjectGalleryProps = {
+  index: string;
   project: ProjectDetailModel;
 };
 
-function ProjectGallery({ project }: ProjectGalleryProps) {
-  const sectionRef = useRef<HTMLElement | null>(null);
+const pad = (value: number) => String(value).padStart(2, "0");
 
-  const { selectedItem,currentIndex,total, open,close,next,previous} =  useLightbox<ProjectGalleryImageModel>()
+function ProjectGallery({ index, project }: ProjectGalleryProps) {
+  const { selectedItem, currentIndex, total, open, close, next, previous } =
+    useLightbox<ProjectGalleryImageModel>();
 
-  useLayoutEffect(() => {
-    const section = sectionRef.current;
-
-    if (!section) {
-      return;
-    }
-
-    const ctx = projectGalleryAnimation({
-      container: section,
-    });
-
-    return () => ctx.revert();
-  }, []);
   return (
-    <section ref={sectionRef} className="bg-black px-8 md:px-16 py-32">
-      <div className="max-w-7xl mx-auto">
-        <div className="gallery-header">
-          <p className="uppercase tracking-[0.5em] text-yellow-400 text-sm">
-            Gallery
-          </p>
-          <h2 className="mt-8 text-5xl md:text-7xl font-bold text-white">
-            Project Showcase
-          </h2>
+    <section className="border-t border-line px-6 py-20 md:px-10 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <div data-reveal className="mb-12 md:mb-20">
+          <SectionLabel index={index} text="GALLERY" className="mb-8" />
+          <h2 className="heading-lg text-paper">Project showcase</h2>
         </div>
-        <div className="mt-24 space-y-24">
-          {project.gallery.map((image,index) => (
-            <article
-              key={image.id}
-              className="gallery-item grid lg:grid-cols-2 gap-12 items-center"
-            >
-              <div className="overflow-hidden rounded-3xl border border-white/10">
-                <ProjectImage
-                  src={image.imageUrl}
-                  alt={image.title}
-                  className="gallery-image cursor-pointer w-full h-auto object-cover"
-                  loading="lazy"
-                  onClick={()=>open(
-                    project.gallery,
-                    index
-                  )}
-                />
-              </div>
-              <div>
-                <h3 className="text-4xl font-semibold text-white">
-                  {image.title}
-                </h3>
-                <p className="mt-6 text-neutral-400 leading-relaxed text-lg">
-                  {image.description}
-                </p>
-              </div>
-            </article>
-          ))}
+
+        <div className="space-y-20 md:space-y-28">
+          {project.gallery.map((image, i) => {
+            const even = i % 2 === 0;
+
+            return (
+              <article
+                key={image.id}
+                data-reveal
+                className="grid items-end gap-6 lg:grid-cols-12 lg:gap-10"
+              >
+                <button
+                  type="button"
+                  data-cursor="view"
+                  onClick={() => open(project.gallery, i)}
+                  aria-label={`Open ${image.title}`}
+                  className={`block text-left lg:col-span-8 ${even ? "" : "lg:order-2"}`}
+                >
+                  <ProjectFrame
+                    image={{ src: image.imageUrl }}
+                    alt={image.title}
+                    parallax
+                  />
+                </button>
+
+                <div className={`lg:col-span-4 ${even ? "" : "lg:order-1"}`}>
+                  <p className="label text-gold">[ FIG.{pad(i + 1)} ]</p>
+                  <h3 className="mt-3 font-display text-3xl uppercase text-paper md:text-4xl">
+                    {image.title}
+                  </h3>
+                  <p className="text-body mt-4">{image.description}</p>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
-      <Lightbox image={selectedItem} currentIndex={currentIndex} total={total} onNext={next} onPrevious={previous} onClose={close}/>
+
+      <Lightbox
+        image={selectedItem}
+        currentIndex={currentIndex}
+        total={total}
+        onNext={next}
+        onPrevious={previous}
+        onClose={close}
+      />
     </section>
   );
 }

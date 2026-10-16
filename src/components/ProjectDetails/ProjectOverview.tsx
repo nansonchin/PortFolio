@@ -1,76 +1,55 @@
-import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { ProjectDetailModel } from "../../models/ProjectDetailModel";
-import { projectOverviewAnimation } from "../../animations/projectOverviewAnimation";
+import SectionLabel from "../SectionLabel/SectionLabel";
 
-
-gsap.registerPlugin(ScrollTrigger);
-
-type Props = {
+type ProjectOverviewProps = {
+  index: string;
   project: ProjectDetailModel;
 };
 
-function ProjectOverview({ project }: Props) {
-  const sectionRef = useRef<HTMLElement | null>(null);
+const pad = (value: number) => String(value).padStart(2, "0");
 
-  useLayoutEffect(() => {
-    const section = sectionRef.current
-    if(!section){
-      return
-    }
-    const ctx = projectOverviewAnimation({
-      container:section
-    })
-    return () => ctx.revert();
-  }, []);
+type ListBlockProps = {
+  tag: string;
+  title: string;
+  items: string[];
+};
+
+function ListBlock({ tag, title, items }: ListBlockProps) {
+  if (items.length === 0) return null;
 
   return (
-    <section ref={sectionRef} className="bg-black px-8 md:px-16 py-32">
-      <div className="max-w-7xl mx-auto">
-        <div className="gold-line h-[2px] bg-yellow-400 mb-16 w-full" />
+    <div data-reveal>
+      <p className="label mb-5 text-gold">
+        [ {tag} ] {title}
+      </p>
 
-        <div className="grid md:grid-cols-2 gap-16">
-          <div className="overview-item">
-            <p className="text-yellow-400 uppercase tracking-[0.4em] text-sm">
-              Project Overview
-            </p>
+      <ul className="border-t border-line">
+        {items.map((item, i) => (
+          <li
+            key={`${i}-${item}`}
+            className="grid grid-cols-[2.5rem_1fr] gap-4 border-b border-line py-4"
+          >
+            <span className="label text-gold-dim">{pad(i + 1)}</span>
+            <span className="font-system text-sm tracking-wide text-paper">{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
-            <h2 className="mt-8 text-5xl md:text-6xl font-bold text-white">
-              {project.title}
-            </h2>
-          </div>
-
-          <div className="overview-item">
-            <p className="text-neutral-400 text-lg leading-relaxed">
-              {project.description}
-            </p>
-          </div>
+function ProjectOverview({ index, project }: ProjectOverviewProps) {
+  return (
+    <section className="border-t border-line px-6 py-20 md:px-10 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <div data-reveal className="mb-12 md:mb-16">
+          <SectionLabel index={index} text="OVERVIEW" className="mb-8" />
+          <h2 className="heading-lg text-paper">What it does</h2>
         </div>
 
-        <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-10">
-          <div className="overview-item">
-            <p className="text-neutral-500 uppercase text-sm">Role</p>
-
-            <p className="mt-3 text-white text-xl">Frontend Developer</p>
-          </div>
-
-          <div className="overview-item">
-            <p className="text-neutral-500 uppercase text-sm">Year</p>
-
-            <p className="mt-3 text-white text-xl">{project.year}</p>
-          </div>
-
-          <div className="overview-item">
-            <p className="text-neutral-500 uppercase text-sm">Category</p>
-
-            <p className="mt-3 text-white text-xl">{project.category}</p>
-          </div>
-
-          <div className="overview-item">
-            <p className="text-neutral-500 uppercase text-sm">Status</p>
-            <p className="mt-3 text-white text-xl">Completed</p>
-          </div>
+        <div className="grid gap-12 md:grid-cols-2 md:gap-20">
+          <ListBlock tag="FT" title="FEATURES" items={project.features} />
+          <ListBlock tag="RS" title="MY RESPONSIBILITIES" items={project.responsibilities} />
         </div>
       </div>
     </section>

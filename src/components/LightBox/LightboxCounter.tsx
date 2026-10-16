@@ -4,43 +4,14 @@ export type LightboxCounterProps = {
   total: number;
 };
 
-function LightboxCounter({
-  title,
+const pad = (value: number) => String(value).padStart(2, "0");
 
-  currentIndex,
-
-  total,
-}: LightboxCounterProps) {
+function LightboxCounter({ title, currentIndex, total }: LightboxCounterProps) {
   return (
-    <div
-      className="
-            text-center
-            "
-    >
-      <h2
-        className="
-                text-white
-
-                text-3xl
-
-                font-semibold
-                "
-      >
-        {title}
-      </h2>
-
-      <p
-        className="
-                mt-2
-
-                text-neutral-400
-                "
-      >
-        {currentIndex + 1}
-
-        {" / "}
-
-        {total}
+    <div className="text-center">
+      <h2 className="font-display text-3xl uppercase text-paper md:text-4xl">{title}</h2>
+      <p className="label mt-2 text-gold">
+        [ {pad(currentIndex + 1)} / {pad(total)} ]
       </p>
     </div>
   );

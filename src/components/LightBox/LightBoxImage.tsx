@@ -15,13 +15,7 @@ const LightboxImage = forwardRef<HTMLImageElement, LightboxImageProps>(
         src={image.imageUrl}
         alt={image.title}
         onLoad={onLoad}
-        className="
-lightbox-image
-w-full
-max-h-[85vh]
-object-contain
-rounded-2xl
-"
+        className="lightbox-image w-full max-h-[85vh] object-contain border border-line"
       />
     );
   },

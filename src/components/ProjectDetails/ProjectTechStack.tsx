@@ -1,58 +1,31 @@
-import { useLayoutEffect, useRef } from "react";
-
-import gsap from "gsap";
-
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { ProjectDetailModel } from "../../models/ProjectDetailModel";
-import { projectTechAnimation } from "../../animations/projectTechAnimation";
+import SectionLabel from "../SectionLabel/SectionLabel";
 
-
-gsap.registerPlugin(ScrollTrigger);
-
-type Props = {
+type ProjectTechStackProps = {
+  index: string;
   project: ProjectDetailModel;
 };
 
-function ProjectTechStack({ project }: Props) {
-  const sectionRef = useRef<HTMLElement | null>(null);
+const pad = (value: number) => String(value).padStart(2, "0");
 
-  useLayoutEffect(() => {
-    const section = sectionRef.current
-    if(!section){
-      return
-    }
-    const ctx = projectTechAnimation({
-      container:section
-    })
-    return () => ctx.revert();
-  }, []);
-
+function ProjectTechStack({ index, project }: ProjectTechStackProps) {
   return (
-    <section ref={sectionRef} className="bg-black px-8 md:px-16 py-32">
-      <div className="max-w-7xl mx-auto">
-        <p className="text-yellow-400 uppercase tracking-[0.5em] text-sm">
-          Technology
-        </p>
+    <section className="border-t border-line px-6 py-20 md:px-10 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <div data-reveal className="mb-12 md:mb-16">
+          <SectionLabel index={index} text="TECHNOLOGY" className="mb-8" />
+          <h2 className="heading-lg text-paper">Built with</h2>
+        </div>
 
-        <h2 className="mt-8 text-5xl md:text-7xl font-bold text-white">
-          Built With
-        </h2>
-
-        <div className="mt-20 grid md:grid-cols-2 gap-8">
-          {project.technologies.map((tech, index) => (
+        <div className="grid border-l border-t border-line sm:grid-cols-2 lg:grid-cols-3">
+          {project.technologies.map((tech, i) => (
             <div
               key={tech}
-              className="tech-item group relative border border-white/10 rounded-3xl p-8 overflow-hidden"
+              data-reveal
+              className="bar-select flex min-h-40 flex-col justify-between border-b border-r border-line p-6 md:p-8"
             >
-              <div className="absolute inset-0 bg-yellow-400/0 group-hover:bg-yellow-400/40 transition duration-500" />
-
-              <div className="relative z-10">
-                <span className="text-neutral-500 text-sm">{String(index+1).padStart(2,"0")}</span>
-
-                <h3 className="mt-6 text-3xl font-semibold text-white group-hover:text-yellow-400 transition">
-                  {tech}
-                </h3>
-              </div>
+              <span className="label opacity-60">[ {pad(i + 1)} ]</span>
+              <span className="font-display text-3xl uppercase md:text-4xl">{tech}</span>
             </div>
           ))}
         </div>

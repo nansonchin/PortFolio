@@ -24,10 +24,10 @@ function ArchitectureNode({
   const isRelated = relatedNodeIds.has(node.id);
 
   const nodeStyle = isSelected
-    ? "border-[#D4AF37] bg-[#211B0D] shadow-[0_0_24px_rgba(212,175,55,0.12)]"
+    ? "border-gold bg-gold/15 shadow-[0_0_24px_rgba(201,169,110,0.18)]"
     : isRelated
-      ? "border-[#D4AF37]/60 bg-[#17140D]"
-      : "border-[#D4AF37]/25 bg-[#11100D]";
+      ? "border-gold/60 bg-gold/10"
+      : "border-gold/25 bg-ink-2";
 
   return (
     <div className="flex w-max flex-col items-center">
@@ -38,13 +38,13 @@ function ArchitectureNode({
         data-architecture-depth={depth}
         aria-pressed={isSelected}
         onClick={() => onSelect(node.id)}
-        className={`architecture-node group relative z-10 flex w-52 shrink-0 flex-col items-center rounded-xl border px-5 py-5 text-center transition-[border-color,background-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#080706] ${nodeStyle}`}
+        className={`architecture-node group relative z-10 flex w-52 shrink-0 flex-col items-center rounded-none border px-5 py-5 text-center transition-[border-color,background-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink ${nodeStyle}`}
       >
         <div
-          className={`mb-3 h-1 rounded-full transition-all duration-300 ${
+          className={`mb-3 h-1 rounded-none transition-all duration-300 ${
             isSelected
-              ? "w-12 bg-[#D4AF37]"
-              : "w-8 bg-[#D4AF37]/70 group-hover:w-12 group-hover:bg-[#D4AF37]"
+              ? "w-12 bg-gold"
+              : "w-8 bg-gold/70 group-hover:w-12 group-hover:bg-gold"
           }`}
         />
 
@@ -58,7 +58,7 @@ function ArchitectureNode({
           </span>
         )}
 
-        <span className="mt-3 text-[9px] uppercase tracking-[0.2em] text-[#D4AF37]/70">
+        <span className="mt-3 text-[9px] uppercase tracking-[0.2em] text-gold/70">
           {isSelected ? "Selected" : "Explore module"}
         </span>
       </button>
@@ -72,7 +72,7 @@ function ArchitectureNode({
             data-architecture-depth={childDepth}
             aria-hidden="true"
             className={`h-10 w-px shrink-0 transition-colors duration-300 ${
-              isRelated ? "bg-[#D4AF37]" : "bg-[#D4AF37]/50"
+              isRelated ? "bg-gold" : "bg-gold/50"
             }`}
           />
 
@@ -84,8 +84,8 @@ function ArchitectureNode({
               const isChildRelated = relatedNodeIds.has(child.id);
 
               const lineStyle = isChildRelated
-                ? "bg-[#D4AF37]"
-                : "bg-[#D4AF37]/50";
+                ? "bg-gold"
+                : "bg-gold/50";
 
               return (
                 <div

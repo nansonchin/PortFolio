@@ -120,16 +120,16 @@ function ArchitectureTree({ architecture }: ArchitectureTreeProps) {
       {/* Selected node details */}
       <div
         aria-live="polite"
-        className="mx-6 mt-4 min-h-36 rounded-xl border border-[#D4AF37]/20 bg-[#11100D] p-5 md:p-6"
+        className="mx-6 mt-4 min-h-36 rounded-none border border-gold/20 bg-ink-2 p-5 md:p-6"
       >
         {selectedNode ? (
           <div key={selectedNode.id}>
             <div className="flex flex-wrap items-center gap-3">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-[#D4AF37]">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-GOLD">
                 Selected Module
               </p>
 
-              <span className="rounded-full border border-[#D4AF37]/20 px-2 py-1 text-[9px] uppercase tracking-wider text-neutral-400">
+              <span className="rounded-none border border-gold/20 px-2 py-1 text-[9px] uppercase tracking-wider text-neutral-400">
                 {selectedNodeId}
               </span>
             </div>
@@ -145,14 +145,14 @@ function ArchitectureTree({ architecture }: ArchitectureTreeProps) {
             <button
               type="button"
               onClick={() => setSelectedNodeId(null)}
-              className="mt-5 text-xs uppercase tracking-[0.18em] text-[#D4AF37] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+              className="mt-5 text-xs uppercase tracking-[0.18em] text-GOLD transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-GOLD"
             >
               Clear selection
             </button>
           </div>
         ) : (
           <div className="flex min-h-24 flex-col justify-center">
-            <p className="text-xs uppercase tracking-[0.25em] text-[#D4AF37]">
+            <p className="text-xs uppercase tracking-[0.25em] text-GOLD">
               Explore the architecture
             </p>
 

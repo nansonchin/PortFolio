@@ -1,5 +1,11 @@
-export const JARVIS_OPEN_EVENT="jarvis:open";
+export const JARVIS_OPEN_EVENT = "jarvis:open";
 
-export function openJarvis(){
-    window.dispatchEvent(new Event(JARVIS_OPEN_EVENT));
+export type JarvisOpenDetail = {
+  prompt?: string;
+};
+
+export function openJarvis(prompt?: string) {
+  window.dispatchEvent(
+    new CustomEvent<JarvisOpenDetail>(JARVIS_OPEN_EVENT, { detail: { prompt } }),
+  );
 }

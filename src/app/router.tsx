@@ -31,11 +31,11 @@ const router = createBrowserRouter([
           },
           { path: "contact", element: <Contact /> },
           { path: "*", element: <NotFound /> },
+          {
+            path: "project/:slug",
+            element: <ProjectDetail />,
+          },
         ],
-      },
-      {
-        path: "project/:slug",
-        element: <ProjectDetail />,
       },
     ],
   },

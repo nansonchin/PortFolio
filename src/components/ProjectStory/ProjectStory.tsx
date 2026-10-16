@@ -1,67 +1,101 @@
-import { useLayoutEffect, useRef } from "react";
-import { projectStoryReveal } from "../../animations/projectStoryReveal";
 import type { ProjectStoryModel } from "../../models/ProjectStoryModel";
+import SectionLabel from "../SectionLabel/SectionLabel";
 
 type ProjectStoryProps = {
+  index: string;
   story: ProjectStoryModel;
+  challenges: string[];
+  solutions: string[];
 };
 
-function ProjectStory({ story }: ProjectStoryProps) {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  useLayoutEffect(() => {
-    const section = sectionRef.current;
+const pad = (value: number) => String(value).padStart(2, "0");
 
-    if (!section) {
-      return;
-    }
+function ProjectStory({
+  index,
+  story,
+  challenges,
+  solutions,
+}: ProjectStoryProps) {
+  const blocks = [
+    { tag: "PROBLEM", text: story.problem },
+    { tag: "APPROACH", text: story.approach },
+    { tag: "OUTCOME", text: story.outcome },
+  ].filter((block) => block.text);
 
-    const ctx = projectStoryReveal({
-      container: section,
-    });
+  const stack = story.architecture ?? [];
 
-    return () => {
-      ctx.revert();
-    };
-  }, []);
+  const log = challenges.map((challenge, i) => ({
+    challenge,
+    solution: solutions[i],
+  }));
+
   return (
-    <section ref={sectionRef} className="bg-black px-8 md:px-16 py-32">
-      <div className="max-w-6xl mx-auto">
-        <p className="text-yellow-400 uppercase tracking-[0.3rem] text-sm">
-          Case Study
-        </p>
-        <h2 className="mt-6 text-5xl md:text-7xl font-bold text-white">
-          Behind The Project
-        </h2>
-        <div className="mt-20 grid md:grid-cols-2 gap-12">
-          <article className="story-item">
-            <h3 className="text-2xl font-semibold text-white">Problem</h3>
-            <p className="mt-4 text-neutral-400 leading-relaxed">
-              {story.problem}
-            </p>
-          </article>
-          <article className="story-item">
-            <h3 className="text-2xl font-semibold text-white">Approach</h3>
-            <p className="mt-4 text-neutral-400 leading-relaxed">
-              {story.approach}
-            </p>
-          </article>
+    <section className="border-t border-line px-6 py-20 md:px-10 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <div data-reveal className="mb-12 md:mb-16">
+          <SectionLabel index={index} text="CASE STUDY" className="mb-8" />
+          <h2 className="heading-lg text-paper">Behind the project</h2>
         </div>
-        <div className="mt-16 story-item">
-          <h3 className="text-2xl font-semibold text-white">Architecture</h3>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {story.architecture.map((item) => (
-              <span className="px-4 py-2 rounded-full bg-white/10 text-neutral-300 text-sm">
+
+        {blocks.length > 0 && (
+          <div className="border-t border-line">
+            {blocks.map((block, i) => (
+              <div
+                key={block.tag}
+                data-reveal
+                className="grid gap-4 border-b border-line py-8 md:grid-cols-[14rem_1fr] md:gap-10"
+              >
+                <p className="label text-gold">
+                  [ {pad(i + 1)} ] {block.tag}
+                </p>
+                <p className="text-body max-w-3xl">{block.text}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {stack.length > 0 && (
+          <div data-reveal className="mt-12 flex flex-wrap gap-3">
+            {stack.map((item) => (
+              <span
+                key={item}
+                className="label border border-line px-4 py-2 text-paper"
+              >
                 {item}
               </span>
             ))}
           </div>
-        </div>
-        <div className="mt-16 story-item">
-          <h3 className="text-2xl font-semibold text-white">Outcome</h3>
-          <p className="mt-4 text-neutral-400 leading-relaxed">
-            {story.outcome}
-          </p>
-        </div>
+        )}
+
+        {log.length > 0 && (
+          <div className={blocks.length > 0 ? "mt-20" : ""}>
+            <p data-reveal className="label mb-6 text-gold">
+              [ LOG ] CHALLENGES &amp; SOLUTIONS
+            </p>
+
+            <div className="border-t border-line">
+              {log.map((row, i) => (
+                <div
+                  key={`${i}-${row.challenge}`}
+                  data-reveal
+                  className="grid gap-4 border-b border-line py-8 md:grid-cols-[4rem_1fr_1fr] md:gap-10"
+                >
+                  <span className="label text-gold-dim">{pad(i + 1)}</span>
+
+                  <div>
+                    <p className="label mb-2 text-gold-dim">CHALLENGE</p>
+                    <p className="text-body">{row.challenge}</p>
+                  </div>
+
+                  <div>
+                    <p className="label mb-2 text-gold">SOLUTION</p>
+                    <p className="text-body">{row.solution ?? "—"}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

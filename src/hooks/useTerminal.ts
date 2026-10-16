@@ -34,7 +34,11 @@ export function useTerminal() {
   const close = useCallback(() => setIsOpen(false), []);
 
   useEffect(()=>{
-    const open = () => setIsOpen(true)
+    const open = (event:Event) => {
+      const detail = (event as CustomEvent<{prompt?:string}>).detail;
+      setIsOpen(true)
+      if(detail?.prompt) setCommand(detail.prompt) 
+    }
     window.addEventListener(JARVIS_OPEN_EVENT,open);
 
     return()=>window.removeEventListener(JARVIS_OPEN_EVENT,open)
