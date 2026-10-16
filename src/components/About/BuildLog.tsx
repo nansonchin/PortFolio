@@ -62,6 +62,7 @@ function BuildLog() {
                   activeIndex={
                     activeProject?.year === year ? activeProject.index : null
                   }
+                  showSummary
                 />
                 <div
                   key={year}

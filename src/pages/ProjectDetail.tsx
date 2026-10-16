@@ -13,6 +13,7 @@ import ArchitectureSection from "../components/Architecture/ArchitectureSection"
 import ProjectTechStack from "../components/ProjectDetails/ProjectTechStack";
 import ProjectGallery from "../components/ProjectDetails/ProjectGallery";
 import NextProject from "../components/FeaturedProjects/NextProject";
+import { useGlitchLoop } from "../hooks/useGlitchLoop";
 
 type ProjectDetailViewProps = {
   project: Project;
@@ -23,6 +24,7 @@ function ProjectDetailView({ project }: ProjectDetailViewProps) {
 
   useReveal(pageRef);
   useFrameParallax(pageRef);
+  useGlitchLoop(pageRef);
 
   const detail = toProjectDetailModel(project);
   const nextProject = projectRepository.getNext(project.slug);
@@ -35,7 +37,8 @@ function ProjectDetailView({ project }: ProjectDetailViewProps) {
 
   const story = detail.story;
   const hasStory = Boolean(story.problem || story.approach || story.outcome);
-  const hasOverview = detail.features.length > 0 || detail.responsibilities.length > 0;
+  const hasOverview =
+    detail.features.length > 0 || detail.responsibilities.length > 0;
   const hasCase = hasStory || detail.challenges.length > 0;
   const hasArchitecture = Boolean(detail.architecture);
   const hasTech = detail.technologies.length > 0;
@@ -60,7 +63,10 @@ function ProjectDetailView({ project }: ProjectDetailViewProps) {
       )}
 
       {detail.architecture && (
-        <ArchitectureSection index={nextIndex()} architecture={detail.architecture} />
+        <ArchitectureSection
+          index={nextIndex()}
+          architecture={detail.architecture}
+        />
       )}
 
       {hasTech && <ProjectTechStack index={nextIndex()} project={detail} />}
@@ -80,7 +86,10 @@ function ProjectDetail() {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-ink px-6 text-center">
         <p className="label text-alert">[ 404 ] PROJECT NOT FOUND</p>
-        <Link to="/projects" className="bar-select label border border-gold/60 px-5 py-3">
+        <Link
+          to="/projects"
+          className="bar-select label border border-gold/60 px-5 py-3"
+        >
           ← Back to projects
         </Link>
       </main>

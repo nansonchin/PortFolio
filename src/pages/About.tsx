@@ -7,13 +7,14 @@ import { developerContext } from "../data/developerContext";
 import { profile } from "../data/profile";
 import { useReveal } from "../hooks/useReveal";
 import { projectRepository } from "../repository/ProjectRepository";
+import { useGlitchLoop } from "../hooks/useGlitchLoop";
 
 function About() {
   const pageRef = useRef<HTMLElement | null>(null);
 
   useReveal(pageRef);
 
-
+useGlitchLoop(pageRef)
   return (
     <main ref={pageRef} className="bg-ink">
       <AboutIntro />

@@ -1,11 +1,12 @@
 type GlitchTextProps={
     text:string;
     className?:string;
+    loop?:boolean
 }
 
-function GlitchText({text,className=""}:GlitchTextProps){
+function GlitchText({text,className="",loop=false}:GlitchTextProps){
     return(
-        <span className={`glitch ${className}`} data-text={text}>
+        <span className={`glitch ${className}`} data-text={text} data-glitch-loop={loop?"" :undefined}>
             {text}
         </span>
     )

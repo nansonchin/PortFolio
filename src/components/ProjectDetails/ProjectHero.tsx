@@ -8,6 +8,7 @@ import GoldLight from "../Hero/GoldLight";
 import ProjectFrame from "./ProjectFrame";
 import SectionLabel from "../SectionLabel/SectionLabel";
 import { openJarvis } from "../TerminalAssistant/terminalEvent";
+import GlitchText from "../GlitchText/GlitchText";
 
 type ProjectHeroProps = {
   project: ProjectDetailModel;
@@ -90,7 +91,7 @@ function ProjectHero({ project, position }: ProjectHeroProps) {
 
         <h1 className="overflow-hidden pb-2">
           <span className="detail-title-inner block font-display text-[clamp(2.75rem,9vw,9rem)] uppercase leading-[0.92] text-paper">
-            {project.title}
+            <GlitchText text={project.title} loop />
           </span>
         </h1>
 

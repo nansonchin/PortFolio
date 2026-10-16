@@ -132,7 +132,7 @@ function FeaturedProjects() {
         </Link>
       </div>
 
-      <WorkPreview items={projects} activeIndex={activeIndex} />
+      <WorkPreview items={projects} activeIndex={activeIndex} showSummary/>
     </section>
   );
 }

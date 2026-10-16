@@ -1,3 +1,4 @@
+import GlitchText from "../../../../components/GlitchText/GlitchText";
 import SectionLabel from "../../../../components/SectionLabel/SectionLabel";
 
 function ProjectHeroFeatures() {
@@ -13,7 +14,7 @@ function ProjectHeroFeatures() {
           className="font-display text-[clamp(3rem,10vw,9.5rem)] uppercase leading-[0.9] text-paper"
         >
           <span className="block">Explore</span>
-          <span className="block italic text-gold-bright">my work.</span>
+          <span className="block italic text-gold-bright"><GlitchText text="my work." loop /></span>
         </h1>
 
         <p data-reveal className="text-body mt-10 max-w-2xl">

@@ -5,6 +5,7 @@ import type { Project } from "../../entities/Project";
 import { useCursorPhysics } from "../Cursor/CursorPhysicsContext";
 import ProjectThumb from "./ProjectThumb";
 import { canHover } from "./workUtils";
+import SummaryLog from "../SummaryLog/SummaryLog";
 
 const OFFSET = 56; 
 const EDGE = 16; 
@@ -12,9 +13,16 @@ const EDGE = 16;
 type WorkPreviewProps = {
   items: Project[];
   activeIndex: number | null;
+
+  /** adds the floating SUMMARY card under the thumbnail */        // ← 新增
+  showSummary?: boolean;
 };
 
-function WorkPreview({ items, activeIndex }: WorkPreviewProps) {
+function WorkPreview({
+  items,
+  activeIndex,
+  showSummary = false,                                              // ← 新增
+}: WorkPreviewProps) {
   const boxRef = useRef<HTMLDivElement>(null);
   const lastIndexRef = useRef(0);
   const { getPosition, subscribe } = useCursorPhysics();
@@ -106,26 +114,34 @@ function WorkPreview({ items, activeIndex }: WorkPreviewProps) {
       ref={boxRef}
       data-work-preview
       aria-hidden="true"
-      className="pointer-events-none invisible fixed left-0 top-0 z-40 w-[min(32vw,440px)] border border-gold/40 bg-ink opacity-0 will-change-transform"
+      className="pointer-events-none invisible fixed left-0 top-0 z-40 w-[min(32vw,440px)] opacity-0 will-change-transform"
     >
-      <div className="relative aspect-[16/10] overflow-hidden">
-        {items.map((item, index) => (
-          <div
-            key={item.id}
-            className="absolute inset-0 transition-opacity duration-300"
-            style={{ opacity: index === shownIndex ? 1 : 0 }}
-          >
-            <ProjectThumb src={item.thumbnail} alt="" />
-          </div>
-        ))}
+      {/* card 1: thumbnail (border + background moved here from the wrapper) */}
+      <div className="border border-gold/40 bg-ink">
+        <div className="relative aspect-[16/10] overflow-hidden">
+          {items.map((item, index) => (
+            <div
+              key={item.id}
+              className="absolute inset-0 transition-opacity duration-300"
+              style={{ opacity: index === shownIndex ? 1 : 0 }}
+            >
+              <ProjectThumb src={item.thumbnail} alt="" />
+            </div>
+          ))}
+        </div>
+
+        <div className="flex items-center justify-between gap-4 border-t border-gold/30 px-3 py-2">
+          <span className="label text-gold">
+            [ {String(shownIndex + 1).padStart(2, "0")} ]
+          </span>
+          <span className="label truncate text-paper">{shown?.title}</span>
+        </div>
       </div>
 
-      <div className="flex items-center justify-between gap-4 border-t border-gold/30 px-3 py-2">
-        <span className="label text-gold">
-          [ {String(shownIndex + 1).padStart(2, "0")} ]
-        </span>
-        <span className="label truncate text-paper">{shown?.title}</span>
-      </div>
+      {/* card 2: summary – same wrapper, so it moves / flips / fades together */}
+      {showSummary && shown && (
+        <SummaryLog summary={shown.summary} active={isVisible} />
+      )}
     </div>,
     document.body,
   );

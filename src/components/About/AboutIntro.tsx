@@ -1,5 +1,6 @@
 import { developerContext } from "../../data/developerContext";
 import { profile } from "../../data/profile";
+import GlitchText from "../GlitchText/GlitchText";
 import SectionLabel from "../SectionLabel/SectionLabel";
 
 type ReadoutRow ={
@@ -33,7 +34,7 @@ function AboutIntro(){
         >
           {profile.headline.map((line) => (
             <span key={line} className="block">
-              {line}
+              <GlitchText text={line} loop /> 
             </span>
           ))}
         </h1>

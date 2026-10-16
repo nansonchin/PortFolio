@@ -64,8 +64,8 @@ function ContactBlock() {
           data-reveal
           className="font-display text-[clamp(3rem,10vw,9.5rem)] uppercase leading-[0.9] text-paper"
         >
-          <span className="block">Let&apos;s build</span>
-          <span className="block italic text-gold-bright">something.</span>
+          <span className="block"><GlitchText text="Let's build" loop /></span>
+          <span className="block italic text-gold-bright"> <GlitchText text="something." loop /></span>
         </h1>
 
         <p
