@@ -1,41 +1,20 @@
 import { forwardRef } from "react";
-
-import type {
-  CursorMode,
-} from "./cursorVisualConfig";
-
+import type { CursorMode } from "./cursorVisualConfig";
 
 type CursorSvgProps = {
   className?: string;
   mode?: CursorMode;
 };
 
-
-const CursorSvg = forwardRef<
-  SVGSVGElement,
-  CursorSvgProps
->(
-  (
-    {
-      className,
-      mode = "default",
-    },
-    ref
-  ) => {
-
-    const isCode =
-      mode === "code";
-
-
-    const isLive =
-      mode === "live";
-
-
-    const isDefault =
-      !isCode &&
-      !isLive;
-
-
+/**
+ * default / code / live 共用同一个版式：
+ * 角括号 + 准星短线 + 虚线菱形 + 中心点。
+ * code = 四个角 45° 倒角，live = 只保留 3 个角（三角形）。
+ * 点击点永远是 (40, 40)。
+ * .cursor-target-* / .cursor-core / .cursor-click-ring 被 GSAP 使用，不要改名。
+ */
+const CursorSvg = forwardRef<SVGSVGElement, CursorSvgProps>(
+  ({ className, mode = "default" }, ref) => {
     return (
       <svg
         ref={ref}
@@ -46,206 +25,163 @@ const CursorSvg = forwardRef<
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
+        {/* ───────── DEFAULT：四个直角 ───────── */}
+        {mode === "default" && (
+          <g className="cursor-target-default">
+            <path
+              d="M24 30V24H30 M50 24H56V30 M56 50V56H50 M30 56H24V50"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              d="M40 28V32 M40 48V52 M28 40H32 M48 40H52"
+              stroke="currentColor"
+              strokeWidth="1"
+              opacity="0.6"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              className="cursor-spin"
+              d="M40 31L49 40L40 49L31 40Z"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeDasharray="4 3"
+              opacity="0.55"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              className="cursor-core"
+              d="M40 36.5L43.5 40L40 43.5L36.5 40Z"
+              fill="currentColor"
+            />
+          </g>
+        )}
 
-        {isDefault && (
+        {/* ───────── VIEW：更大的开放框 + 延长的准星线 ───────── */}
+        {mode === "view" && (
           <g className="cursor-target-view">
-
-            {/* Outer Ring */}
-            <circle
-              cx="40"
-              cy="40"
-              r="37"
-              stroke="currentColor"
-              strokeWidth="1"
-              opacity="0.25"
-              className="cursor-outer-ring"
-            />
-
-
-            {/* Middle Ring */}
-            <circle
-              cx="40"
-              cy="40"
-              r="33"
+            <path
+              d="M18 26V18H26 M54 18H62V26 M62 54V62H54 M26 62H18V54"
               stroke="currentColor"
               strokeWidth="1.5"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              d="M10 40H16 M64 40H70 M40 10V16 M40 64V70"
+              stroke="currentColor"
+              strokeWidth="1"
               opacity="0.5"
-              className="cursor-middle-ring"
+              vectorEffect="non-scaling-stroke"
             />
-
-
-            {/* Top Left Dash */}
             <path
-              d="M40 12 A28 28 0 0 0 12 40"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="12 10"
-              className="cursor-arc cursor-arc-1"
-            />
-
-
-            {/* Top Right Dash */}
-            <path
-              d="M40 12 A28 28 0 0 1 68 40"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="12 10"
-              className="cursor-arc cursor-arc-2"
-            />
-
-
-            {/* Bottom Right Dash */}
-            <path
-              d="M68 40 A28 28 0 0 1 40 68"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="12 10"
-              className="cursor-arc cursor-arc-3"
-            />
-
-
-            {/* Bottom Left Dash */}
-            <path
-              d="M40 68 A28 28 0 0 1 12 40"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="12 10"
-              className="cursor-arc cursor-arc-4"
-            />
-
-
-            {/* Inner Target Ring */}
-            <circle
-              cx="40"
-              cy="40"
-              r="10"
+              className="cursor-spin"
+              d="M40 28L52 40L40 52L28 40Z"
               stroke="currentColor"
               strokeWidth="1"
-              opacity="0.35"
-              className="cursor-target"
+              strokeDasharray="5 4"
+              opacity="0.6"
+              vectorEffect="non-scaling-stroke"
             />
-
-
-            {/* Center Dot */}
-            <circle
-              cx="40"
-              cy="40"
-              r="4"
-              fill="currentColor"
+            <path
               className="cursor-core"
+              d="M40 36.5L43.5 40L40 43.5L36.5 40Z"
+              fill="currentColor"
             />
-
           </g>
         )}
 
-
-        {isCode && (
+        {/* ───────── CODE：同版式，外框整体旋转 45° = 钻石 ◇ ───────── */}
+        {mode === "code" && (
           <g className="cursor-target-code">
-
-            {/* Outer Square */}
-            <rect
-              x="14"
-              y="14"
-              width="52"
-              height="52"
-              rx="8"
-              stroke="currentColor"
-              strokeWidth="2"
-              opacity="0.8"
-              className="cursor-code-outer"
-            />
-
-
-            {/* Inner Square */}
-            <rect
-              x="28"
-              y="28"
-              width="24"
-              height="24"
-              rx="4"
+            {/* default 的四个直角括号，绕点击点 (40,40) 旋转 45° */}
+            <path
+              transform="rotate(45 40 40)"
+              d="M24 30V24H30 M50 24H56V30 M56 50V56H50 M30 56H24V50"
               stroke="currentColor"
               strokeWidth="1.5"
-              opacity="0.45"
-              className="cursor-code-inner"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              vectorEffect="non-scaling-stroke"
             />
-
-
-            {/* Center Dot */}
-            <circle
-              cx="40"
-              cy="40"
-              r="3.5"
-              fill="currentColor"
+            <path
+              d="M40 28V32 M40 48V52 M28 40H32 M48 40H52"
+              stroke="currentColor"
+              strokeWidth="1"
+              opacity="0.6"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              className="cursor-spin"
+              d="M40 31L49 40L40 49L31 40Z"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeDasharray="4 3"
+              opacity="0.55"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
               className="cursor-core"
+              d="M40 36.5L43.5 40L40 43.5L36.5 40Z"
+              fill="currentColor"
             />
-
           </g>
         )}
-
-
-        {isLive && (
+        {/* ───────── LIVE：同版式，三个角组成三角形 ───────── */}
+        {mode === "live" && (
           <g className="cursor-target-live">
-
-            {/* Outer Triangle */}
+            {/* 三角形顶点 (40,14) (62,53) (18,53)，重心正好是 (40,40) */}
             <path
-              d="M40 12 L68 64 L12 64 Z"
-              stroke="currentColor"
-              strokeWidth="2.25"
-              strokeLinejoin="round"
-              opacity="0.9"
-              className="cursor-live-outer"
-            />
-
-
-            {/* Inner Triangle */}
-            <path
-              d="M40 24 L56 54 L24 54 Z"
+              d="M35.6 21.8L40 14L44.4 21.8 M57.6 45.2L62 53H53 M22.4 45.2L18 53H27"
               stroke="currentColor"
               strokeWidth="1.5"
-              strokeLinejoin="round"
-              opacity="0.45"
-              className="cursor-live-inner"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              vectorEffect="non-scaling-stroke"
             />
-
-
-            {/* Center Dot */}
-            <circle
-              cx="40"
-              cy="40"
-              r="3.5"
-              fill="currentColor"
+            {/* 三条准星短线，分别指向三个角 */}
+            <path
+              d="M40 30V26 M48.6 45.1L52 47.1 M31.4 45.1L28 47.1"
+              stroke="currentColor"
+              strokeWidth="1"
+              opacity="0.6"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              className="cursor-spin"
+              d="M40 31L49 40L40 49L31 40Z"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeDasharray="4 3"
+              opacity="0.55"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
               className="cursor-core"
+              d="M40 36.5L43.5 40L40 43.5L36.5 40Z"
+              fill="currentColor"
             />
-
           </g>
         )}
 
-
-        {/* Click Pulse Ring */}
-        <circle
-          cx="40"
-          cy="40"
-          r="10"
+        {/* 点击脉冲（菱形），始终存在，由 GSAP 控制 */}
+        <path
+          className="cursor-click-ring"
+          d="M40 28L52 40L40 52L28 40Z"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.5"
           opacity="0"
           vectorEffect="non-scaling-stroke"
-          className="cursor-click-ring"
         />
-
       </svg>
     );
-  }
+  },
 );
 
-
-CursorSvg.displayName =
-  "CursorSvg";
-
-
+CursorSvg.displayName = "CursorSvg";
 export default CursorSvg;

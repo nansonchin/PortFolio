@@ -1,104 +1,48 @@
-import {
-  useEffect,
-  useRef,
-} from "react";
-
+import { useEffect, useRef } from "react";
 
 import CursorSvg from "./CursorSvg";
 import CursorGlow from "./CursorGlow";
 import CursorLabel from "./CursorLabel";
 
+import { cursorVisualConfig } from "./cursorVisualConfig";
 
-import {
-  cursorVisualConfig,
-} from "./cursorVisualConfig";
+import { useCursor } from "../../hooks/useCursor";
 
+import { useCursorContext } from "../../hooks/useCursorContext";
 
-import {
-  useCursor,
-} from "../../hooks/useCursor";
+import { useCursorHover } from "../../hooks/useCursorHover";
 
-
-import {
-  useCursorContext,
-} from "../../hooks/useCursorContext";
+import { useMagneticCursor } from "../../hooks/useMagneticCursor";
 
 
-import {
-  useCursorHover,
-} from "../../hooks/useCursorHover";
+import { useCursorIdle } from "../../hooks/useCursorIdle";
 
+import { createCursorVisualAnimation } from "../../animations/cursorAnimation";
 
-import {
-  useMagneticCursor,
-} from "../../hooks/useMagneticCursor";
+import { createCursorStateAnimation } from "../../animations/cursorStateAnimation";
 
+import { createCursorTargetAnimation } from "../../animations/cursorTargetAnimation";
 
-import {
-  useCursorClick,
-} from "../../hooks/useCursorClick";
-
-
-import {
-  useCursorIdle,
-} from "../../hooks/useCursorIdle";
-
-
-import {
-  createCursorVisualAnimation,
-} from "../../animations/cursorAnimation";
-
-
-import {
-  createCursorStateAnimation,
-} from "../../animations/cursorStateAnimation";
-
-
-import {
-  createCursorTargetAnimation,
-} from "../../animations/cursorTargetAnimation";
-
-
-import {
-  createCursorClickAnimation,
-} from "../../animations/cursorClickAnimation";
-
+import { createCursorClickAnimation } from "../../animations/cursorClickAnimation";
 
 function Cursor() {
+  const cursorRef = useRef<HTMLDivElement>(null);
 
-  const cursorRef =
-    useRef<HTMLDivElement>(null);
+  const visualRef = useRef<HTMLDivElement>(null);
 
+  const glowRef = useRef<HTMLDivElement>(null);
 
-  const visualRef =
-    useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
+  const { mode } = useCursorContext();
 
-  const glowRef =
-    useRef<HTMLDivElement>(null);
-
-
-  const svgRef =
-    useRef<SVGSVGElement>(null);
-
-
-  const {
-    mode,
-  } = useCursorContext();
-
-
-  const visual =
-    cursorVisualConfig[mode];
-
+  const visual = cursorVisualConfig[mode];
 
   useCursor(cursorRef);
 
   useCursorHover();
 
   useMagneticCursor();
-
-  useCursorClick();
-
 
   /**
    * Idle State.
@@ -108,13 +52,11 @@ function Cursor() {
    * It does NOT directly control
    * SVG or Glow.
    */
-  const isIdle =
-    useCursorIdle({
-      visualRef,
+  const isIdle = useCursorIdle({
+    visualRef,
 
-      idleDelay: 1200,
-    });
-
+    idleDelay: 1200,
+  });
 
   /**
    * Permanent Visual Animation.
@@ -125,19 +67,12 @@ function Cursor() {
    * - Glow breathing
    */
   useEffect(() => {
-
-    const cleanup =
-      createCursorVisualAnimation({
-        svg: svgRef.current,
-
-        glow: glowRef.current,
-      });
-
+    const cleanup = createCursorVisualAnimation({
+      glow: glowRef.current,
+    });
 
     return cleanup;
-
   }, []);
-
 
   /**
    * Cursor State Animation.
@@ -150,46 +85,26 @@ function Cursor() {
    * - Live
    */
   useEffect(() => {
+    const animation = createCursorStateAnimation({
+      cursor: cursorRef.current,
 
-    const animation =
-      createCursorStateAnimation({
-        cursor: cursorRef.current,
-
-        glow: glowRef.current,
-      });
-
+      glow: glowRef.current,
+    });
 
     if (!animation) {
       return;
     }
 
-
     if (mode === "view") {
-
       animation.setView();
-
-    }
-
-    else if (mode === "code") {
-
+    } else if (mode === "code") {
       animation.setCode();
-
-    }
-
-    else if (mode === "live") {
-
+    } else if (mode === "live") {
       animation.setLive();
-
-    }
-
-    else {
-
+    } else {
       animation.setDefault();
-
     }
-
   }, [mode]);
-
 
   /**
    * Target Lock Animation.
@@ -198,19 +113,14 @@ function Cursor() {
    * for View / Code / Live.
    */
   useEffect(() => {
+    const cleanup = createCursorTargetAnimation({
+      svg: svgRef.current,
 
-    const cleanup =
-      createCursorTargetAnimation({
-        svg: svgRef.current,
-
-        mode,
-      });
-
+      mode,
+    });
 
     return cleanup;
-
   }, [mode]);
-
 
   /**
    * Click Pulse.
@@ -218,17 +128,12 @@ function Cursor() {
    * Runs once.
    */
   useEffect(() => {
-
-    const cleanup =
-      createCursorClickAnimation({
-        svg: svgRef.current,
-      });
-
+    const cleanup = createCursorClickAnimation({
+      svg: svgRef.current,
+    });
 
     return cleanup;
-
   }, []);
-
 
   return (
     <div
@@ -246,7 +151,6 @@ function Cursor() {
       "
       aria-hidden="true"
     >
-
       {/*
         Visual Wrapper
 
@@ -262,18 +166,16 @@ function Cursor() {
           inset-0
         "
       >
-
         <CursorGlow
           ref={glowRef}
           className={`
             absolute
-            inset-0
+            inset-5
             rounded-full
-            blur-xl
+            blur-lg
             ${visual.glowClassName}
           `}
         />
-
 
         <CursorSvg
           ref={svgRef}
@@ -284,9 +186,7 @@ function Cursor() {
             ${visual.svgClassName}
           `}
         />
-
       </div>
-
 
       {/*
         Label stays outside the
@@ -295,13 +195,9 @@ function Cursor() {
         Therefore STANDBY READY
         does not get scaled down.
       */}
-      <CursorLabel
-        isIdle={isIdle}
-      />
-
+      <CursorLabel isIdle={isIdle} />
     </div>
   );
 }
-
 
 export default Cursor;

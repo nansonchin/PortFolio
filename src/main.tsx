@@ -28,10 +28,8 @@ createRoot(document.getElementById("root")!).render(
       <CursorProvider>
         <CursorPhysicsProvider>
           <IntroProvider>
-            <div className="cursor-none">
               <Cursor />
               <RouterProvider router={router} />
-            </div>
           </IntroProvider>
         </CursorPhysicsProvider>
       </CursorProvider>

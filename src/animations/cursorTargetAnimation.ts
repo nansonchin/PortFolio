@@ -1,10 +1,6 @@
 import gsap from "gsap";
 
-type CursorTargetMode =
-  | "default"
-  | "view"
-  | "code"
-  | "live";
+type CursorTargetMode = "default" | "view" | "code" | "live";
 
 type CursorTargetAnimationProps = {
   svg: SVGSVGElement | null;
@@ -25,26 +21,20 @@ export function createCursorTargetAnimation({
     live: ".cursor-target-live",
   };
 
-  const selector =
-    selectorMap[
-      mode as keyof typeof selectorMap
-    ];
+  const selector = selectorMap[mode as keyof typeof selectorMap];
 
   if (!selector) {
     return;
   }
 
-  const target =
-    svg.querySelector<SVGGElement>(selector);
+  const target = svg.querySelector<SVGGElement>(selector);
 
   if (!target) {
     return;
   }
 
   const ctx = gsap.context(() => {
-    gsap.set(target, {
-      transformOrigin: "50% 50%",
-    });
+    gsap.set(target, { svgOrigin: "40 40" });
 
     /**
      * Initial lock-in.
@@ -60,35 +50,22 @@ export function createCursorTargetAnimation({
         scale: 1,
         duration: 0.35,
         ease: "back.out(1.7)",
-      }
+      },
     );
 
     /**
      * Continuous target breathing.
      */
-    gsap.to(
-      target,
-      {
-        scale:
-          mode === "view"
-            ? 1.035
-            : mode === "code"
-              ? 1.05
-              : 1.04,
+    gsap.to(target, {
+      scale: mode === "view" ? 1.035 : mode === "code" ? 1.05 : 1.04,
 
-        duration:
-          mode === "view"
-            ? 1.8
-            : mode === "code"
-              ? 1.4
-              : 1.6,
+      duration: mode === "view" ? 1.8 : mode === "code" ? 1.4 : 1.6,
 
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 0.35,
-      }
-    );
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+      delay: 0.35,
+    });
   }, svg);
 
   return () => {

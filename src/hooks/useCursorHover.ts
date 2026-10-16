@@ -1,60 +1,56 @@
-import { useEffect, useRef } from "react";
-
+import { useEffect } from "react";
 import { useCursorPhysics } from "../components/Cursor/CursorPhysicsContext";
-
 import { useCursorContext } from "./useCursorContext";
+import type { CursorMode } from "../components/Cursor/CursorContext";
 
 export function useCursorHover() {
   const { setMode } = useCursorContext();
-
-  const { getPosition, subscribe } = useCursorPhysics();
-
-  const currentMode = useRef<string>("default");
+  const { getMousePosition } = useCursorPhysics();
 
   useEffect(() => {
-    const updateCursorHover = () => {
-      const { x, y } = getPosition();
+    let currentMode: CursorMode = "default";
+    let frame = 0;
+    let hasMoved = false;
 
+    const check = () => {
+      frame = 0;
+      const { x, y } = getMousePosition();          
       const element = document.elementFromPoint(x, y);
+      let nextMode: CursorMode = "default";
 
-      const cursorElement = element?.closest(
-        "[data-cursor]",
-      ) as HTMLElement | null;
-
-      const mode = cursorElement?.dataset.cursor;
-
-      const nextMode =
-        mode === "view" || mode === "code" || mode === "live"
-          ? mode
-          : "default";
-
-      if (currentMode.current === nextMode) {
-        return;
+      if (element && !element.closest("[data-cursor-ignore]")) {
+        const mode = (element.closest("[data-cursor]") as HTMLElement | null)
+          ?.dataset.cursor;
+        if (mode === "view" || mode === "code" || mode === "live") {
+          nextMode = mode;
+        }
       }
 
-      currentMode.current = nextMode;
-
+      if (nextMode === currentMode) return;
+      currentMode = nextMode;
       setMode(nextMode);
     };
 
-    /**
-     * Initial check
-     */
-    updateCursorHover();
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(check);
+    };
 
-    /**
-     * Update whenever
-     * cursor physics changes.
-     *
-     * This includes:
-     *
-     * mouse movement
-     * magnetic offset
-     */
-    const unsubscribe = subscribe(updateCursorHover);
+    const handleMouseMove = () => {
+      hasMoved = true;
+      schedule();
+    };
+
+    const handleScroll = () => {
+      if (hasMoved) schedule();
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      unsubscribe();
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
+      if (frame) cancelAnimationFrame(frame);
     };
-  }, [getPosition, subscribe, setMode]);
+  }, [getMousePosition, setMode]);
 }

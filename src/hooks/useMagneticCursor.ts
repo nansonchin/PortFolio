@@ -1,255 +1,86 @@
 import { useEffect } from "react";
+import { createCursorMagneticAnimation } from "../animations/cursorMagneticAnimation";
+import { useCursorPhysics } from "../components/Cursor/CursorPhysicsContext";
 
-import {
-  createCursorMagneticAnimation,
-} from "../animations/cursorMagneticAnimation";
-
-import {
-  useCursorPhysics,
-} from "../components/Cursor/CursorPhysicsContext";
-
+const PULL = 0.3;       
+const MAX_OFFSET = 14;   
 
 export function useMagneticCursor() {
-
-  const {
-    setOffset,
-  } = useCursorPhysics();
-
+  const { setOffset } = useCursorPhysics();
 
   useEffect(() => {
+    const magnetic = createCursorMagneticAnimation({ setOffset });
 
-    const magnetic =
-      createCursorMagneticAnimation({
-        setOffset,
-      });
+    let isActive = false;
+    let frame = 0;
+    let mouseX = 0;
+    let mouseY = 0;
+    let hasMoved = false;
 
-
-    /**
-     * Used to know whether
-     * the Cursor is currently
-     * inside a magnetic range.
-     *
-     * This prevents the release
-     * animation from restarting
-     * on every mousemove.
-     */
-    let isMagneticActive =
-      false;
-
-
-    const handleMouseMove = (
-      event: MouseEvent,
-    ) => {
-
-      if(event.target instanceof Element && event.target.closest("[data-cursor-ignore]")){
-        if(isMagneticActive){
-          isMagneticActive= false;
-          magnetic.reset()
-        }
-        return;
+    const release = () => {
+      if (isActive) {
+        isActive = false;
+        magnetic.reset();
       }
-
-      const targets =
-        document.querySelectorAll<HTMLElement>(
-          "[data-magnetic]",
-        );
-
-
-      let closestTarget:
-        HTMLElement | null = null;
-
-
-      let closestDistance =
-        Infinity;
-
-
-      /**
-       * Find the closest
-       * magnetic target.
-       */
-      for (const element of targets) {
-
-        const rect =
-          element.getBoundingClientRect();
-
-
-        const centerX =
-          rect.left +
-          rect.width / 2;
-
-
-        const centerY =
-          rect.top +
-          rect.height / 2;
-
-
-        const distance =
-          Math.hypot(
-            event.clientX - centerX,
-            event.clientY - centerY,
-          );
-
-
-        if (
-          distance <
-          closestDistance
-        ) {
-
-          closestDistance =
-            distance;
-
-
-          closestTarget =
-            element;
-
-        }
-
-      }
-
-
-      /**
-       * No magnetic target exists.
-       */
-      if (!closestTarget) {
-
-        if (isMagneticActive) {
-
-          isMagneticActive =
-            false;
-
-          magnetic.reset();
-
-        }
-
-        return;
-
-      }
-
-
-      /**
-       * Magnetic activation radius.
-       */
-      const radius =
-        280;
-
-
-      /**
-       * Mouse is outside
-       * the magnetic range.
-       */
-      if (
-        closestDistance >
-        radius
-      ) {
-
-        if (isMagneticActive) {
-
-          isMagneticActive =
-            false;
-
-          magnetic.reset();
-
-        }
-
-        return;
-
-      }
-
-
-      /**
-       * We are inside a
-       * magnetic target.
-       */
-      isMagneticActive =
-        true;
-
-
-      const rect =
-        closestTarget.getBoundingClientRect();
-
-
-      const targetX =
-        rect.left +
-        rect.width / 2;
-
-
-      const targetY =
-        rect.top +
-        rect.height / 2;
-
-
-        const topElement = document.elementFromPoint(targetX,targetY)
-
-        if(!topElement || closestTarget.contains(topElement)){
-          if(isMagneticActive){
-            isMagneticActive=false;
-            magnetic.reset()
-          }
-        }
-      /**
-       * 0 = edge of range
-       * 1 = target center
-       */
-      const strength =
-        1 -
-        closestDistance / radius;
-
-
-      /**
-       * Overall magnetic strength.
-       */
-      const pullStrength =
-        2.35;
-
-
-      const offsetX =
-        (
-          targetX -
-          event.clientX
-        )
-        *
-        strength
-        *
-        pullStrength;
-
-
-      const offsetY =
-        (
-          targetY -
-          event.clientY
-        )
-        *
-        strength
-        *
-        pullStrength;
-
-
-      magnetic.animateTo(
-        offsetX,
-        offsetY,
-      );
-
     };
 
+    const evaluate = () => {
+      frame = 0;
 
-    window.addEventListener(
-      "mousemove",
-      handleMouseMove,
-    );
+      const element = document.elementFromPoint(mouseX, mouseY);
+      const target =
+        element && !element.closest("[data-cursor-ignore]")
+          ? element.closest<HTMLElement>("[data-magnetic]")
+          : null;
 
+      if (!target) {
+        release();
+        return;
+      }
+
+      const rect = target.getBoundingClientRect();
+      let offsetX = (rect.left + rect.width / 2 - mouseX) * PULL;
+      let offsetY = (rect.top + rect.height / 2 - mouseY) * PULL;
+
+      // 规则 3：像素上限
+      const length = Math.hypot(offsetX, offsetY);
+      if (length > MAX_OFFSET) {
+        const scale = MAX_OFFSET / length;
+        offsetX *= scale;
+        offsetY *= scale;
+      }
+
+      isActive = true;
+      magnetic.animateTo(offsetX, offsetY);
+    };
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(evaluate);
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      hasMoved = true;
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      schedule();
+    };
+
+    const handleScroll = () => {
+      if (hasMoved) schedule();
+    };
+
+    const handleLeave = () => release();
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    document.documentElement.addEventListener("mouseleave", handleLeave);
 
     return () => {
-
-      window.removeEventListener(
-        "mousemove",
-        handleMouseMove,
-      );
-
-
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
+      document.documentElement.removeEventListener("mouseleave", handleLeave);
+      if (frame) cancelAnimationFrame(frame);
       magnetic.destroy();
-
     };
-
   }, [setOffset]);
-
 }

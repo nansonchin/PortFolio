@@ -1,0 +1,22 @@
+@media (hover: hover) and (pointer: fine) {
+  html.custom-cursor-active,
+  html.custom-cursor-active *,
+  html.custom-cursor-active *::before,
+  html.custom-cursor-active *::after {
+    cursor: none !important;
+  }
+}
+
+.cursor-spin {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: cursor-spin 12s linear infinite;
+}
+
+@keyframes cursor-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-spin { animation: none; }
+}

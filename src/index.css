@@ -3,6 +3,7 @@
 @import "./styles/typography.css";
 @import "./styles/globals.css";
 @import "./styles/system.css";
+@import "./styles/cursor.css"; 
 
 @theme static {
   --color-ink: #0A0908;

@@ -19,7 +19,7 @@ export const cursorVisualConfig: Record<
 
   default: {
     svgClassName:
-      "text-[#D8BD83]",
+      "text-[#D8BD83] drop-shadow-[0_0_1.5px_rgba(10,9,8,0.9)]",
 
     glowClassName:
       "bg-[#D8BD83]/40",
@@ -31,7 +31,7 @@ export const cursorVisualConfig: Record<
 
   view: {
     svgClassName:
-      "text-[#D8BD83]",
+      "text-[#D8BD83] drop-shadow-[0_0_1.5px_rgba(10,9,8,0.9)]",
 
     glowClassName:
       "bg-[#D8BD83]/40",
@@ -43,7 +43,7 @@ export const cursorVisualConfig: Record<
 
   code: {
     svgClassName:
-      "text-[#F7F7F7]",
+      "text-[#D8BD83] drop-shadow-[0_0_1.5px_rgba(10,9,8,0.9)]",
 
     glowClassName:
       "bg-[#F7F7F7]/30",
