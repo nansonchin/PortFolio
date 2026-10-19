@@ -1,5 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import "@fontsource/noto-serif-sc/400.css";
+import "@fontsource/noto-sans-sc/400.css";
 import "@fontsource/instrument-serif/400.css";
 import "@fontsource/instrument-serif/400-italic.css";
 import "@fontsource-variable/jetbrains-mono";
@@ -20,19 +22,22 @@ import "@fontsource/instrument-serif/400-italic.css";
 import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/inter";
 import { IntroProvider } from "./components/Intro/IntroContext.tsx";
+import { LanguageProvider } from "./il8n/LanguageContext.tsx";
 setupAI();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <SmoothScrollProvider>
-      <CursorProvider>
-        <CursorPhysicsProvider>
-          <IntroProvider>
+    <LanguageProvider>
+      <SmoothScrollProvider>
+        <CursorProvider>
+          <CursorPhysicsProvider>
+            <IntroProvider>
               <Cursor />
               <RouterProvider router={router} />
-          </IntroProvider>
-        </CursorPhysicsProvider>
-      </CursorProvider>
-    </SmoothScrollProvider>
+            </IntroProvider>
+          </CursorPhysicsProvider>
+        </CursorProvider>
+      </SmoothScrollProvider>
+    </LanguageProvider>
   </StrictMode>,
 );

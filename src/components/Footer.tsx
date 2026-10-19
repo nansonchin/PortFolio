@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom";
 import { developerContext } from "../data/developerContext";
 import { getContactLinks } from "../data/profile";
+import { useLanguage } from "../il8n/LanguageContext";
+import type { TranslationKey } from "../il8n/locales/en";
 
-const navLinks = [
-  { to: "/projects", label: "PROJECTS" },
-  { to: "/about", label: "ABOUT" },
-  { to: "/contact", label: "CONTACT" },
+const navLinks: { to: string; label: TranslationKey }[] = [
+  { to: "/projects", label: "nav.projects" },
+  { to: "/about", label: "nav.about" },
+  { to: "/contact", label: "nav.contact" },
 ];
 
 const linkClass = "label text-gold-dim transition-colors hover:text-gold-bright";
 
 function Footer() {
+  const { t } = useLanguage();
   const year = new Date().getFullYear();
   const contactLinks = getContactLinks();
 
@@ -26,10 +29,10 @@ function Footer() {
           </p>
         </div>
 
-        <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2">
+        <nav aria-label={t("nav.footerAria")} className="flex flex-wrap gap-x-6 gap-y-2">
           {navLinks.map((item) => (
             <Link key={item.to} to={item.to} className={linkClass}>
-              {item.label}
+              {t(item.label)}
             </Link>
           ))}
         </nav>

@@ -1,0 +1,107 @@
+export const en = {
+  /* navigation */
+  "nav.home": "HOME",
+  "nav.projects": "PROJECTS",
+  "nav.about": "ABOUT",
+  "nav.contact": "CONTACT",
+  "nav.footerAria": "Footer",
+  "nav.switchLanguage": "Switch language",
+
+  /* shared */
+  "common.allProjects": "← ALL PROJECTS",
+  "common.backToProjects": "← Back to projects",
+  "common.askJarvis": "Ask JARVIS",
+  "common.openJarvis": "Open JARVIS assistant",
+  "common.github": "GitHub",
+  "common.githubLink": "GitHub ↗",
+  "common.liveDemo": "Live demo",
+  "common.liveDemoLink": "Live demo ↗",
+  "common.previous": "← Previous",
+  "common.next": "Next →",
+  "common.clear": "Clear",
+  "common.reset": "[ RESET ]",
+
+  /* home */
+  "hero.portfolio": "[ 00 ] PORTFOLIO / 2026",
+  "hero.scroll": "Scroll to explore",
+  "featured.label": "SELECTED WORK",
+  "featured.heading": "Featured projects",
+  "featured.viewAll": "View all projects",
+
+  /* /projects */
+  "projects.label": "PROJECTS",
+  "projects.explore": "Explore",
+  "projects.myWork": "my work.",
+  "projects.intro":
+    "A collection of frontend projects, experiments and engineering solutions built with React, TypeScript and modern web technologies.",
+  "projects.archive": "ARCHIVE",
+  "projects.all": "All projects",
+  "projects.filterAll": "All",
+  "projects.filterAria": "Filter by category",
+  "projects.searchPlaceholder": "search title or tech",
+  "projects.searchAria": "Search Projects",
+  "projects.noMatchTag": "[ NO MATCH ]",
+  "projects.noMatch":
+    "No project matches the current filter. Try another keyword, or reset the filters.",
+  "projects.resetFilters": "Reset filters",
+  "stats.projects": "Projects",
+  "stats.technologies": "Technologies",
+  "stats.featured": "Featured",
+  "summary.title": "[ SUMMARY ]",
+  "summary.loading": "> LOADING SUMMARY",
+
+  /* /projects/:slug */
+  "detail.label": "PROJECT",
+  "detail.year": "YEAR",
+  "detail.category": "CATEGORY",
+  "detail.stack": "STACK",
+  "detail.screens": "SCREENS",
+  "detail.overview": "OVERVIEW",
+  "detail.whatItDoes": "What it does",
+  "detail.features": "FEATURES",
+  "detail.responsibilities": "MY RESPONSIBILITIES",
+  "detail.technology": "TECHNOLOGY",
+  "detail.builtWith": "Built with",
+  "detail.gallery": "GALLERY",
+  "detail.showcase": "Project showcase",
+  "detail.notFound": "[ 404 ] PROJECT NOT FOUND",
+  "detail.next": "[ NEXT ]",
+  "story.label": "CASE STUDY",
+  "story.heading": "Behind the project",
+  "story.problem": "PROBLEM",
+  "story.approach": "APPROACH",
+  "story.outcome": "OUTCOME",
+  "story.log": "[ LOG ] CHALLENGES & SOLUTIONS",
+  "story.challenge": "CHALLENGE",
+  "story.solution": "SOLUTION",
+  "arch.label": "ARCHITECTURE",
+  "arch.select": "Select a node to explore",
+  "arch.selected": "Selected Module",
+  "arch.clear": "Clear selection",
+  "arch.explore": "Explore the architecture",
+  "arch.hint":
+    "Select any node to explore its responsibilities and highlight its related architecture branches.",
+  "lightbox.close": "ESC TO CLOSE",
+
+  /* /about */
+  "about.label": "ABOUT",
+  "about.name": "NAME",
+  "about.role": "ROLE",
+  "about.location": "LOCATION",
+  "about.focus": "FOCUS",
+  "about.status": "STATUS",
+  "about.buildLog": "BUILD LOG",
+  "about.background": "BACKGROUND",
+  "about.goals": "GOALS",
+  "about.skills": "SKILLS",
+  "about.whatIWorkWith": "What I work with",
+  "about.getInTouch": "Get in touch",
+
+  /* /contact */
+  "contact.label": "CONTACT",
+  "contact.build": "Let's build",
+  "contact.something": "something.",
+  "contact.copyEmailAria": "Copy email address {email}",
+} as const;
+
+export type TranslationKey = keyof typeof en;

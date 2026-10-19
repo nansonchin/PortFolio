@@ -1,71 +1,86 @@
 import { projects } from "../data/project";
 import type { Project } from "../entities/Project";
+import { projectsZh } from "../il8n/contents/zh";
+import { localizeProject, type ProjectTranslation } from "../il8n/localize";
+import { DEFAULT_LANGUAGE, type Language } from "../il8n/types";
 import type { ProjectStat } from "../models/ProjectStatsModel";
 
-export class ProjectRepository{
-    getAll():Project[]{
-        return projects
-    }
+const translations: Partial<Record<Language, Record<string, ProjectTranslation>>> = {
+  zh: projectsZh,
+};
 
-    getFeatures():Project[]{
-        return projects.filter(
-            project=>project.featured
-        )
-    }
-    getBySlug(slug:string):Project|undefined{
-        const key = slug.toLowerCase();
-        return projects.find(project=>project.slug===key)
-    }
+const cache = new Map<Language, Project[]>();
 
-    getNext(slug:string):Project|undefined{
-        const key = slug.toLowerCase()
-        const index = projects.findIndex(
-            project=>project.slug.toLowerCase() === key
-        )
+function listFor(lang: Language): Project[] {
+  if (lang === DEFAULT_LANGUAGE) {
+    return projects;
+  }
 
-        if(index ===-1 || projects.length<2){
-            return undefined
-        }
+  const cached = cache.get(lang);
 
-        return projects[(index+1) % projects.length]
-    }
+  if (cached) {
+    return cached;
+  }
 
-    getById(id:string):Project|undefined{
-        return projects.find(
-            project=>project.id === id
-        )
-    }
-    
-    getStats():ProjectStat[]{
-        const technologies = new Set<string>()
+  const localized = projects.map((project) =>
+    localizeProject(project, translations[lang]?.[project.slug]),
+  );
 
-        projects.forEach(
-            project=>{
-                project.technologies.forEach(
-                    tech=>{
-                        technologies.add(tech)
-                    }
-                )
-            }
-        )
+  cache.set(lang, localized);
 
-        return[
-            {
-                label:"Projects",
-                value:`${projects.length}`
-            },
-            {
-                label:"Technologies",
-                value:`${technologies.size}+`
-            },
-            {
-                label:"Featured",
-                value:`${
-                    projects.filter(project=>project.featured).length
-                }`
-            }
-        ]
-    }
+  return localized;
 }
 
-export const projectRepository = new ProjectRepository()
+export class ProjectRepository {
+  getAll(lang: Language = DEFAULT_LANGUAGE): Project[] {
+    return listFor(lang);
+  }
+
+  getFeatures(lang: Language = DEFAULT_LANGUAGE): Project[] {
+    return listFor(lang).filter((project) => project.featured);
+  }
+
+  getBySlug(slug: string, lang: Language = DEFAULT_LANGUAGE): Project | undefined {
+    const key = slug.toLowerCase();
+
+    return listFor(lang).find((project) => project.slug === key);
+  }
+
+  getNext(slug: string, lang: Language = DEFAULT_LANGUAGE): Project | undefined {
+    const list = listFor(lang);
+
+    const key = slug.toLowerCase();
+
+    const index = list.findIndex((project) => project.slug.toLowerCase() === key);
+
+    if (index === -1 || list.length < 2) {
+      return undefined;
+    }
+
+    return list[(index + 1) % list.length];
+  }
+
+  getById(id: string, lang: Language = DEFAULT_LANGUAGE): Project | undefined {
+    return listFor(lang).find((project) => project.id === id);
+  }
+
+  /** Returns translation KEYS as labels; the component calls t(label). */
+  getStats(): ProjectStat[] {
+    const technologies = new Set<string>();
+
+    projects.forEach((project) => {
+      project.technologies.forEach((tech) => technologies.add(tech));
+    });
+
+    return [
+      { label: "stats.projects", value: `${projects.length}` },
+      { label: "stats.technologies", value: `${technologies.size}+` },
+      {
+        label: "stats.featured",
+        value: `${projects.filter((project) => project.featured).length}`,
+      },
+    ];
+  }
+}
+
+export const projectRepository = new ProjectRepository();

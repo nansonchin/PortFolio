@@ -19,6 +19,9 @@
   --font-display: "Instrument Serif", "Times New Roman", serif;
   --font-system: "JetBrains Mono Variable", ui-monospace, Menlo, Consolas, monospace;
   --font-body: "Inter Variable", system-ui, sans-serif;
+  --font-display: "Instrument Serif", "Noto Serif SC", "Times New Roman", serif;
+  --font-system: "JetBrains Mono Variable", "Noto Sans SC", ui-monospace, Menlo, Consolas, monospace;
+  --font-body: "Inter Variable", "Noto Sans SC", system-ui, sans-serif;
 
   --color-black: #0A0908;
   --color-white: #E8E2D0;

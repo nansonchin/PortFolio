@@ -30,4 +30,21 @@
     scrollbar-width: thin;
     scrollbar-color: var(--color-gold-dim) transparent;
   }
+
+  /* CJK has no italic. The browser fakes a slant that looks broken. */
+:lang(zh) .italic,
+:lang(zh) em {
+  font-style: normal;
+}
+
+/* .label uses 0.22em letter-spacing, which is too airy for Chinese characters */
+:lang(zh) .label {
+  letter-spacing: 0.12em;
+}
+
+/* Instrument Serif is set very tight (-0.02em ~ -0.03em); Chinese glyphs would touch */
+:lang(zh) .heading-xl,
+:lang(zh) .heading-name {
+  letter-spacing: 0;
+}
 }
