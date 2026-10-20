@@ -103,7 +103,7 @@ export const projects: Project[] = [
 
     featured: true,
 
-    githubUrl: "https://github.com/your-github/portfolio",
+    githubUrl: "https://github.com/nansonchin/portfolio",
 
     demoUrl: "https://",
     thumbnail: "/images/projects/portfolio/",

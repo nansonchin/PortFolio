@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { collectBootFiles } from "./bootScript";
-import { introLog } from "./introLog";
 
 const MAX_WAIT_MS = 5000;
 
@@ -29,7 +28,6 @@ export function useBootAssets():BootAssets{
 
             const finish = (failed:boolean)=>{
                 if(cancelled) return;
-                if(failed) introLog("asset failed(counted as done",src)
                 setLoadedCount((count)=> count +1)
             }
 
@@ -44,7 +42,6 @@ export function useBootAssets():BootAssets{
 
         const timer = window.setTimeout(()=>{
             if(cancelled)return;
-            introLog("timeout, releasing intro")
             setTimedOut(true)
         },MAX_WAIT_MS)
 
@@ -59,15 +56,6 @@ export function useBootAssets():BootAssets{
     const rawProgress=Math.min(done/total,1)
     const ready = timedOut || rawProgress >=1
 
-    useEffect(()=>{
-        introLog("assets",{
-            loaded:loadedCount,
-            fontsReady,
-            total,
-            progress:Number(rawProgress.toFixed(2)),
-            ready,
-        })
-    },[loadedCount,fontsReady,total,rawProgress,ready])
 
     return  {files,progress:ready?1:rawProgress,ready}
 }

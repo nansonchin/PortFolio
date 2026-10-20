@@ -5,7 +5,6 @@ import { useLenis } from "lenis/react";
 import { developerContext } from "../../data/developerContext";
 import { projectRepository } from "../../repository/ProjectRepository";
 import { prefersReducedMotion } from "../../animations/glitch";
-import { heroLog } from "./heroLog";
 
 const SECONDS_PER_ITEM = 2.4; // 每个词约走过 2.4 秒（决定整体速度）
 const MAX_EXTRA_SPEED = 5;     // 滚动时最多额外加速几倍
@@ -42,7 +41,6 @@ function TechMarquee() {
         repeat: -1,
       });
 
-      heroLog("marquee", { items: items.length, secondsPerLoop: duration });
 
       return () => {
         loopRef.current = null;

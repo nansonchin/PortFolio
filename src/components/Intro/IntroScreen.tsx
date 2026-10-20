@@ -5,7 +5,6 @@ import { useLenis } from "lenis/react";
 import { useIntro } from "../../hooks/useIntro";
 import { useBootAssets } from "./useBootAssets";
 import { buildBootLines } from "./bootScript";
-import { introLog } from "./introLog";
 import {
   createBootSequence,
   createExitSequence,
@@ -55,7 +54,6 @@ function IntroStage() {
       const { timeline, pace } = createBootSequence(root);
       paceRef.current = pace;
       bootTimelineRef.current = timeline;
-      introLog("boot sequence start", { lines: lines.length });
     },
     { scope: rootRef },
   );
@@ -65,15 +63,12 @@ function IntroStage() {
     const root = rootRef.current;
     if (!root) return;
 
-    introLog("exit sequence start");
     createExitSequence({
       root,
       onReveal: () => {
-        introLog("reveal -> hero starts");
         startReveal();
       },
       onDone: () => {
-        introLog("intro done");
         completeIntro();
       },
     });
@@ -121,7 +116,6 @@ function IntroStage() {
   const skip = useCallback(() => {
     if (exitStartedRef.current) return;
 
-    introLog("skip requested");
     exitStartedRef.current = true;
     progressRef.current = 1;
 

@@ -6,7 +6,6 @@ import { heroReveal } from "../../animations/heroReveal";
 import { startHeroGlitch } from "../../animations/heroGlitch";
 import { developerContext } from "../../data/developerContext";
 import { useIntro } from "../../hooks/useIntro";
-import { heroLog } from "./heroLog";
 import GlitchText from "../GlitchText/GlitchText";
 import { openJarvis } from "../TerminalAssistant/terminalEvent";
 
@@ -25,7 +24,6 @@ function Hero() {
     () => {
       if (!canReveal) return;
 
-      heroLog("reveal start", { phase });
 
       const timeline = heroReveal();
       const nameElement =

@@ -1,4 +1,3 @@
-import { heroLog } from "../components/Hero/heroLog";
 import { glitchBurst, prefersReducedMotion } from "./glitch";
 
 const MIN_GAP = 3; // 秒
@@ -27,7 +26,6 @@ export function startHeroGlitch(
       if (!document.hidden && isInViewport(target)) {
         const double = Math.random() < 0.3;
 
-        heroLog("glitch burst", { double });
         glitchBurst(target);
 
         if (double) {

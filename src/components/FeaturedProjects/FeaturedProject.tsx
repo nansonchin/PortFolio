@@ -7,7 +7,7 @@ import { projectRepository } from "../../repository/ProjectRepository";
 import { prefersReducedMotion } from "../../animations/glitch";
 import WorkPreview from "./WorkPreview";
 import ProjectThumb from "./ProjectThumb";
-import { canHover, workLog } from "./workUtils";
+import { canHover } from "./workUtils";
 import SectionLabel from "../SectionLabel/SectionLabel";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -21,7 +21,6 @@ function FeaturedProjects() {
 
   useGSAP(
     () => {
-      workLog("rows", { count: projects.length });
 
       if (prefersReducedMotion()) return;
 
@@ -53,7 +52,6 @@ function FeaturedProjects() {
   const activate = (index: number) => {
     if (!canHover()) return;
 
-    workLog("hover", { index, slug: projects[index].slug });
     setActiveIndex(index);
   };
 

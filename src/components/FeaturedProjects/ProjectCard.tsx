@@ -65,7 +65,7 @@ function ProjectCard({ project, number }: ProjectCardProps) {
           </Link>
         </h3>
 
-        <p className="text-body mt-4 line-clamp-2 text-[1vw]">{project.summary}</p>
+        <p className="text-body mt-4 line-clamp-2 text-[14px] ">{project.summary}</p>
 
         <div className="mt-5 flex flex-wrap gap-2">
           {project.technologies.slice(0, MAX_TECH).map((tech) => (
