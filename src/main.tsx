@@ -8,6 +8,7 @@ import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/inter";
 import "./index.css";
 // import App from './App.tsx'
+import { Analytics } from '@vercel/analytics/next';
 import { RouterProvider } from "react-router-dom";
 import router from "./app/router.tsx";
 import SmoothScrollProvider from "./app/providers/SmoothScrollProvider.tsx";
@@ -33,6 +34,7 @@ createRoot(document.getElementById("root")!).render(
           <CursorPhysicsProvider>
             <IntroProvider>
               <Cursor />
+              <Analytics/>
               <RouterProvider router={router} />
             </IntroProvider>
           </CursorPhysicsProvider>
