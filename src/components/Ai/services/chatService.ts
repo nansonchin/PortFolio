@@ -28,18 +28,13 @@ export async function askJarvis(
   ctx:  ToolContext,
 ): Promise<string> {
   const provider = getAIProvider();
-  const systemPrompt = buildSystemPrompt(buildPortfolioContext());
   const checkpoint = history.length;
 
   history.push({ role: "user", text: input });
 
   try {
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
-      const res = await provider.generate({
-        systemPrompt,
-        messages: history,
-        tools: portfolioTools,
-      });
+      const res = await provider.generate({messages: history,});
 
       history.push({ role: "model", text: res.text, raw: res.raw });
 
@@ -48,9 +43,11 @@ export async function askJarvis(
         return res.text || "…";
       }
 
+      const results = res.toolCalls.map((call)=>executeTool(call,ctx));
+
       history.push({
         role: "tool",
-        results: res.toolCalls.map((call) => executeTool(call, ctx)),
+        results,
       });
     }
     return "Sorry, I got stuck on that one. Could you rephrase?";

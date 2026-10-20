@@ -4,6 +4,7 @@ import { askJarvis } from "../components/Ai/services/chatService";
 import { parseCommand } from "../components/TerminalAssistant/commands/parseCommand"; // 按你的实际路径改
 import type { TerminalMessage, TerminalMessageType } from "../types/terminal.types";
 import { JARVIS_OPEN_EVENT } from "../components/TerminalAssistant/terminalEvent";
+import { ProxyError } from "../components/Ai/provider/proxyProvider";
 
 const WELCOME: TerminalMessage = {
   id: "welcome",
@@ -78,9 +79,8 @@ export function useTerminal() {
       setHistory((prev) => prev.filter((m) => m.id !== pendingId));
       push("success", reply);
     } catch (error) {
-      console.error(error);
       setHistory((prev) => prev.filter((m) => m.id !== pendingId));
-      push("error", "JARVIS is unavailable right now. Try a command like: projects");
+      push("error", error instanceof ProxyError ? error.userMessage :"JARVIS is unavailable right now. Try a command like : `projects` " );
     } finally {
       setIsThinking(false);
     }

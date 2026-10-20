@@ -69,6 +69,7 @@ export default function TerminalInput({
       </label>
 
       <input
+      maxLength={500}
         id="terminal-command"
         type="text"
         value={value}

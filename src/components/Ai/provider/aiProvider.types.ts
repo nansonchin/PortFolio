@@ -20,9 +20,7 @@ export type AiMessage =
   | { role: "tool"; results: AiToolResult[] };
 
 export type AiRequest = {
-  systemPrompt: string;
   messages: AiMessage[];
-  tools?: AiToolDeclaration[];
 };
 
 export type AiResponse = {
