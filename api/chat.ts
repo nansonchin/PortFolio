@@ -25,7 +25,7 @@ type GeminiPart = {
 };
 
 const ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
-const TIMEOUT_MS = 20_000;
+const TIMEOUT_MS = 60_000;
 const TOOL_NAMES = new Set(TOOLS.map((tool) => tool.name));
 
 export default async function handler(req: Req, res: Res) {
@@ -62,7 +62,7 @@ export default async function handler(req: Req, res: Res) {
     return res.status(400).json({ error: "bad_request", detail: parsed.error });
   }
 
-  const model = process.env.GEMINI_MODEL || "gemini-3.5-flash";
+  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
