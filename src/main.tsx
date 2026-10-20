@@ -8,7 +8,7 @@ import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/inter";
 import "./index.css";
 // import App from './App.tsx'
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from '@vercel/analytics/react';
 import { RouterProvider } from "react-router-dom";
 import router from "./app/router.tsx";
 import SmoothScrollProvider from "./app/providers/SmoothScrollProvider.tsx";
