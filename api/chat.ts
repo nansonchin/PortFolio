@@ -87,7 +87,7 @@ export default async function handler(req: Req, res: Res) {
       return res.status(502).json({ error: "upstream_error" });
     }
 
-    const data = await upstream.json();
+    const data:any = await upstream.json();
     const content = data.candidates?.[0]?.content;
     const parts: GeminiPart[] = content?.parts ?? [];
 

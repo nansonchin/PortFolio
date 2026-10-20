@@ -26,13 +26,13 @@ export function useBootAssets():BootAssets{
         files.forEach((src)=>{
             const image = new Image()
 
-            const finish = (failed:boolean)=>{
+            const finish = ()=>{
                 if(cancelled) return;
                 setLoadedCount((count)=> count +1)
             }
 
-            image.onload = ()=>finish(false);
-            image.onerror= ()=>finish(true);
+            image.onload = finish;
+            image.onerror= finish;
             image.src=src
         })
 
@@ -55,7 +55,6 @@ export function useBootAssets():BootAssets{
     const done = loadedCount+(fontsReady?1:0)
     const rawProgress=Math.min(done/total,1)
     const ready = timedOut || rawProgress >=1
-
 
     return  {files,progress:ready?1:rawProgress,ready}
 }
