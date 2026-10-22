@@ -3,6 +3,66 @@ import { mangaReaderArchitecture } from "./mangaReaderArchitecture";
 
 export const projects: Project[] = [
   {
+    id: "book-fairies",
+    slug: "book-fairies",
+    title: "Book Fairies",
+    summary: "On Progress",
+    description:
+      "On Progress",
+    year: 2026,
+    category: "Frontend",
+    featured: true,
+    githubUrl: "https://github.com/nansonchin/BookFairy",
+    demoUrl: "",
+    thumbnail: "/images/projects//",
+    heroImage: {
+      src: "/images/projects/",
+      srcSet: `
+      /images/projects/ 480w,
+      /images/projects/ 768w,
+      /images/projects/ 1920w,
+      `,
+      sizes: "(max-width:768px) 100vw, 50vw",
+    },
+    technologies: [
+      "React",
+      "TypeScript",
+      "GSAP",
+      "SCSS",
+      "Vite",
+    ],
+    gallery: [
+      {
+        id: "gallery-1",
+        imageUrl: "/images/projects/mangaReader/Gallery/",
+        title: "Home Page",
+        description: "Landing page of Manga Reader.",
+      },
+
+    ],
+    features: [
+      "On Progress",
+      "On Progress",
+      "On Progress",
+    ],
+    responsibilities: [
+      "On Progress",
+      "On Progress",
+      "On Progress",
+    ],
+    challenges: [
+      "On Progress",
+      "On Progress",
+    ],
+    solutions: ["On Progress", "On Progress"],
+    story: {
+      problem: "",
+      approach: "",
+      architecture: [],
+      outcome: "",
+    },
+  },
+  {
     id: "manga-reader",
     slug: "manga-reader",
     title: "Manga Reader",
