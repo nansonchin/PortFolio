@@ -13,7 +13,7 @@ export const TOOLS = [
       "properties": {
         "slug": {
           "type": "string",
-          "description": "The exact slug of the project, taken from the project list. "
+          "description": "The exact slug of the project, taken from the project list."
         }
       },
       "required": [
