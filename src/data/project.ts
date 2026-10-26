@@ -6,361 +6,344 @@ export const projects: Project[] = [
     id: "book-fairies",
     slug: "book-fairies",
     title: "Book Fairies",
-    summary: "On Progress",
+    summary: "A runway-style web showcase built with React, GSAP, and route-based browsing.",
     description:
-      "On Progress",
+      "Book Fairies is a frontend web project built around a fashion and runway browsing experience. The repository includes multiple pages such as the home page, latest page, about page, and drop detail routes, with a structured data model for looks and collections.",
     year: 2026,
     category: "Frontend",
     featured: true,
     githubUrl: "https://github.com/nansonchin/BookFairy",
     demoUrl: "",
-    thumbnail: "/images/projects//",
+    thumbnail: "/images/projects/bookFairy/thumbnail.webp",
+    technologies: ["React", "TypeScript", "GSAP", "React Router", "Vite", "SCSS"],
     heroImage: {
-      src: "/images/projects/",
+      src: "/images/projects/bookFairy/hero.webp",
       srcSet: `
-      /images/projects/ 480w,
-      /images/projects/ 768w,
-      /images/projects/ 1920w,
+        /images/projects/bookFairy/hero.webp 480w,
+        /images/projects/bookFairy/hero.webp 768w,
+        /images/projects/bookFairy/hero.webp 1920w
       `,
       sizes: "(max-width:768px) 100vw, 50vw",
     },
-    technologies: [
-      "React",
-      "TypeScript",
-      "GSAP",
-      "SCSS",
-      "Vite",
-    ],
     gallery: [
       {
         id: "gallery-1",
-        imageUrl: "/images/projects/mangaReader/Gallery/",
+        imageUrl: "/images/projects/bookFairy/Gallery/G1.webp",
         title: "Home Page",
-        description: "Landing page of Manga Reader.",
+        description: "Landing experience for the Book Fairies concept.",
       },
-
+      {
+        id: "gallery-2",
+        imageUrl: "/images/projects/bookFairy/Gallery/G2.webp",
+        title: "Latest Collection",
+        description: "Browse latest looks and drops in a collection-style view.",
+      },
+      {
+        id: "gallery-3",
+        imageUrl: "/images/projects/bookFairy/Gallery/G3.webp",
+        title: "Drop Detail",
+        description: "Detailed viewing experience for an individual item or look.",
+      },
     ],
     features: [
-      "On Progress",
-      "On Progress",
-      "On Progress",
+      "Route-based web navigation",
+      "Runway and look browsing",
+      "Collection-style landing experience",
+      "Drop detail views",
+      "Motion and scroll-driven UI",
+      "Structured data-driven interface",
     ],
     responsibilities: [
-      "On Progress",
-      "On Progress",
-      "On Progress",
+      "Built the route structure for the application",
+      "Created the landing and detail page flow",
+      "Worked on the visual presentation and browsing experience",
+      "Structured content around look and drop data",
+      "Implemented interaction and animation details",
     ],
     challenges: [
-      "On Progress",
-      "On Progress",
+      "Designing a clean browsing experience for multiple pages and collections",
+      "Structuring data for runway looks and drop details",
+      "Managing motion and layout while keeping the UI readable",
+      "Creating a coherent flow between home, latest, and detail pages",
     ],
-    solutions: ["On Progress", "On Progress"],
+    solutions: [
+      "Used React Router to organize pages and detail routes",
+      "Created reusable UI components for cards, detail blocks, and navigation",
+      "Used GSAP to add motion and transition effects",
+      "Kept the data model simple and focused on looks and collections",
+    ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "A fashion-themed landing experience needs a clear way to present multiple looks, collections, and detail views without making the interface feel cluttered.",
+      approach:
+        "The project was structured around a collection-based browsing model with a consistent route flow, reusable UI pieces, and motion-enhanced transitions to improve the visual experience.",
+      architecture: [
+        "Home and landing page flow",
+        "Collection and latest browsing",
+        "Drop detail route structure",
+        "Look and runway data model",
+        "Motion and transition layer",
+      ],
+      outcome:
+        "The project became a complete frontend web experience that demonstrates route handling, motion design, and collection-style presentation in a cohesive interface.",
     },
   },
   {
     id: "manga-reader",
     slug: "manga-reader",
     title: "Manga Reader",
-    summary: "A high-performance manga reader build with React Query",
+    summary: "A manga reader web project built to practice React, data fetching, and reading flow.",
     description:
-      "A React project using TanStack Query, infinite scrolling, image preloading, virtualized rendering, and the MangaDex Api",
+      "A frontend web project focused on building a manga browsing and reading experience using React and TanStack Query. The app centers on fetching manga data, presenting chapter information, and creating a smooth reading flow.",
     year: 2026,
     category: "Frontend",
     featured: true,
     githubUrl: "https://github.com/nansonchin/manga-webReactQuery",
     demoUrl: "",
-    thumbnail: "/images/projects/mangaReader/",
+    thumbnail: "/images/projects/mangaReader/thumbnail.webp",
+    technologies: ["React", "TypeScript", "TanStack Query", "GSAP", "SCSS", "Vite"],
     heroImage: {
-      src: "/images/projects/mangaReader",
+      src: "/images/projects/mangaReader/hero.webp",
       srcSet: `
-      /images/projects/mangaReader 480w,
-      /images/projects/mangaReader 768w,
-      /images/projects/mangaReader 1920w,
+        /images/projects/mangaReader/hero.webp 480w,
+        /images/projects/mangaReader/hero.webp 768w,
+        /images/projects/mangaReader/hero.webp 1920w
       `,
       sizes: "(max-width:768px) 100vw, 50vw",
     },
-    technologies: [
-      "React",
-      "TypeScript",
-      "TanStack Query",
-      "GSAP",
-      "SCSS",
-      "Vite",
-    ],
     gallery: [
       {
         id: "gallery-1",
         imageUrl: "/images/projects/mangaReader/Gallery/gallery-1.webp",
         title: "Home Page",
-        description: "Landing page of Manga Reader.",
+        description: "Manga browsing layout.",
       },
-
       {
         id: "gallery-2",
         imageUrl: "/images/projects/mangaReader/Gallery/gallery-2.webp",
         title: "Detail Page",
-        description: "Project detail screen.",
+        description: "Manga details and metadata view.",
       },
-
       {
         id: "gallery-3",
         imageUrl: "/images/projects/mangaReader/Gallery/gallery-3.webp",
         title: "Reader",
-        description: "Long strip reading experience.",
+        description: "Reading interface and page flow.",
       },
-
       {
         id: "gallery-4",
         imageUrl: "/images/projects/mangaReader/Gallery/gallery-4.webp",
         title: "Chapter List",
-        description: "Infinite chapter loading.",
+        description: "Chapter list and browsing flow.",
       },
     ],
     features: [
-      "Infinite Chapter Loading",
-      "Optimized Image Rendering",
-      "Reader Performance System",
+      "Manga browsing UI",
+      "Chapter detail and list flow",
+      "Reading experience",
+      "Data fetching with TanStack Query",
+      "Image-heavy content handling",
     ],
     responsibilities: [
-      "Frontend Architecture",
-      "API Integration",
-      "Performance Optimization",
+      "Built the frontend interface",
+      "Worked with API data flow",
+      "Practiced query caching and data loading",
+      "Structured the reading experience",
     ],
     challenges: [
-      "Handling large manga images",
-      "Reducing unnecessary network requests",
+      "Handling a large number of images",
+      "Reducing unnecessary API requests",
+      "Keeping the reader readable and responsive",
     ],
-    solutions: ["React Query caching", "Browser image cache strategy"],
+    solutions: [
+      "Used React Query for caching and request management",
+      "Structured the app around manga data and reader flow",
+      "Focused on a simple and readable UI",
+    ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "A manga reader needs a clean browsing and reading flow while handling data and image-heavy content efficiently.",
+      approach:
+        "The project was built around a clear data-fetching layer, reader state, and a UI focused on browsing and reading.",
+      architecture: [
+        "MangaDex API integration",
+        "React Query caching",
+        "Reader state and page flow",
+        "Image rendering and loading strategy",
+        "UI navigation and chapter browsing",
+      ],
+      outcome:
+        "The project became a practical example of building a browsing and reading interface with focused data handling and UI structure.",
     },
-    architecture:mangaReaderArchitecture,
-
+    architecture: mangaReaderArchitecture,
   },
   {
     id: "portfolio",
-
     slug: "portfolio",
-
     title: "Developer Portfolio",
-
-    summary: "A modern portfolio inspired by Awwwards using React and GSAP.",
-
+    summary: "A portfolio website built with React and GSAP.",
     description:
-      "A portfolio website featuring premium animations, reusable architecture, AI chatbot integration, GitHub synchronization and responsive design.",
-
+      "A personal portfolio website with motion design, case-study style sections, and a terminal-style AI assistant. The project is organized around reusable frontend patterns and a data-driven project showcase.",
     year: 2026,
-
     category: "Frontend",
-
     featured: true,
-
-    githubUrl: "https://github.com/nansonchin/portfolio",
-
-    demoUrl: "https://",
-    thumbnail: "/images/projects/portfolio/",
+    githubUrl: "https://github.com/nansonchin/PortFolio",
+    demoUrl: "",
+    thumbnail: "/images/projects/portfolio/thumbnail.webp",
+    technologies: ["React", "TypeScript", "GSAP", "Tailwind CSS", "Lenis"],
     heroImage: {
-      src: "/images/projects/portfolio/",
+      src: "/images/projects/portfolio/hero.webp",
       srcSet: `
-      /images/projects/portfolio/ 480w,
-      /images/projects/portfolio/ 768w,
-      /images/projects/portfolio/ 1920w,
+        /images/projects/portfolio/hero.webp 480w,
+        /images/projects/portfolio/hero.webp 768w,
+        /images/projects/portfolio/hero.webp 1920w
       `,
       sizes: "(max-width:768px) 100vw, 50vw",
     },
-    technologies: ["React", "TypeScript", "GSAP", "Tailwind CSS", "Lenis"],
     gallery: [
       {
         id: "gallery-1",
         imageUrl: "/images/projects/portfolio/Gallery/gallery-1.webp",
-        title: "Home Page",
-        description: "Landing page of Manga Reader.",
+        title: "Landing Page",
+        description: "Portfolio homepage with motion-heavy design.",
       },
-
       {
         id: "gallery-2",
         imageUrl: "/images/projects/portfolio/Gallery/gallery-2.webp",
-        title: "Detail Page",
-        description: "Project detail screen.",
-      },
-
-      {
-        id: "gallery-3",
-        imageUrl: "/images/projects/portfolio/Gallery/gallery-3.webp",
-        title: "Reader",
-        description: "Long strip reading experience.",
-      },
-
-      {
-        id: "gallery-4",
-        imageUrl: "/images/projects/portfolio/Gallery/gallery-4.webp",
-        title: "Chapter List",
-        description: "Infinite chapter loading.",
+        title: "Project Detail",
+        description: "Project showcase and detail presentation.",
       },
     ],
     features: [
-      "Infinite Chapter Loading",
-      "Optimized Image Rendering",
-      "Reader Performance System",
+      "Motion-driven portfolio layout",
+      "Project showcase pages",
+      "Interactive UI",
+      "AI assistant integration",
     ],
     responsibilities: [
-      "Frontend Architecture",
-      "API Integration",
-      "Performance Optimization",
+      "Frontend architecture",
+      "Design implementation",
+      "Interactive animation work",
+      "Portfolio data structure",
     ],
     challenges: [
-      "Handling large manga images",
-      "Reducing unnecessary network requests",
+      "Balancing motion and usability",
+      "Structuring reusable portfolio data",
+      "Building a responsive interactive experience",
     ],
-    solutions: ["React Query caching", "Browser image cache strategy"],
+    solutions: [
+      "Reusable component structure",
+      "Project-driven data modeling",
+      "GSAP-based motion system",
+    ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "A portfolio needs to present work clearly while still feeling interactive and polished.",
+      approach:
+        "The project takes a component-based approach with motion, structured data, and a clear project narrative instead of a standard static portfolio page.",
+      architecture: [
+        "Portfolio data model",
+        "Reusable UI sections",
+        "Motion and interaction layer",
+        "Project showcase structure",
+      ],
+      outcome:
+        "The result is a portfolio experience that demonstrates both frontend implementation and visual presentation in a single project.",
     },
   },
   {
     id: "taskmanager-j",
     slug: "taskmanager-j",
     title: "Task Manager",
-
-    summary:
-      "A simple task manager built while revisiting React fundamentals and rebuilding my understanding of modern React development.",
-
+    summary: "A small React project built to practice state management and component structure.",
     description:
-      "A small React learning project created while restarting my React learning journey through Fireship's React content. The project focuses on practicing fundamental React concepts such as components, state management, event handling, list rendering, and user interactions through a simple task management application.",
-
+      "This project was created as a learning exercise to understand React fundamentals, especially component structure, events, and task state updates.",
+    year: 2026,
     category: "Frontend",
-
     featured: true,
-
     githubUrl: "https://github.com/nansonchin/taskManagerJ",
-
     demoUrl: "",
-
-    thumbnail: "/images/projects/taskManager",
-
+    thumbnail: "/images/projects/taskManager/thumbnail.webp",
+    technologies: ["React", "JavaScript", "Vite", "CSS"],
     heroImage: {
-      src: "/images/projects/taskManager",
+      src: "/images/projects/taskManager/hero.webp",
       srcSet: `
-      /images/projects/taskManager 480w,
-      /images/projects/taskManager 768w,
-      /images/projects/taskManager 1920w,
+        /images/projects/taskManager/hero.webp 480w,
+        /images/projects/taskManager/hero.webp 768w,
+        /images/projects/taskManager/hero.webp 1920w
       `,
       sizes: "(max-width:768px) 100vw, 50vw",
     },
-    year: 2026,
-    technologies: ["React", "JavaScript", "Vite", "CSS"],
-
     gallery: [
       {
         id: "gallery-1",
         imageUrl: "/images/projects/taskManager/Gallery/gallery-1.webp",
         title: "Task Manager",
-        description: "Main interface for managing tasks.",
+        description: "Main task interface.",
       },
-
       {
         id: "gallery-2",
         imageUrl: "/images/projects/taskManager/Gallery/gallery-2.webp",
         title: "Task Creation",
-        description: "Interface for adding new tasks.",
+        description: "Add task interaction.",
       },
-
       {
         id: "gallery-3",
         imageUrl: "/images/projects/taskManager/Gallery/gallery-3.webp",
         title: "Task Interaction",
-        description: "Managing and updating tasks through React interactions.",
-      },
-
-      {
-        id: "gallery-4",
-        imageUrl: "/images/projects/taskManager/Gallery/gallery-4.webp",
-        title: "Task List",
-        description: "Displaying and managing the current list of tasks.",
+        description: "Manage and update tasks through React interactions.",
       },
     ],
-
     features: [
-      "Create Tasks",
-      "Display Task List",
-      "Update Task State",
-      "Remove Tasks",
-      "React State Management",
-      "Interactive UI",
-      "Component-Based Architecture",
+      "Add task",
+      "Delete task",
+      "Update task state",
+      "Task list rendering",
+      "Simple React interaction model",
     ],
-
     responsibilities: [
-      "Revisited React fundamentals",
-      "Built reusable React components",
-      "Practiced state and event handling",
-      "Implemented task creation and management",
-      "Practiced rendering dynamic lists",
-      "Built the project using Vite",
+      "Built a basic task UI",
+      "Practiced React state updates",
+      "Structured the app into reusable components",
     ],
-
     challenges: [
-      "Rebuilding my understanding of React after struggling with the framework",
-      "Understanding how React state changes affect the UI",
-      "Learning how to structure a small React application into components",
-      "Understanding event handling and user interactions",
-      "Getting comfortable with React's component and rendering model",
+      "Understanding how state changes affect the UI",
+      "Learning to break the app into smaller components",
+      "Handling user events clearly",
     ],
-
     solutions: [
-      "Restarted with the fundamentals instead of jumping directly into complex projects",
-      "Used a small task manager as a practical project for applying React concepts",
-      "Practiced breaking the interface into smaller components",
-      "Used React state to manage task data and UI interactions",
-      "Followed Fireship's React learning material as a guide while implementing the project",
+      "Kept the app small and focused",
+      "Used React state for task logic",
+      "Built the interface in simple, understandable components",
     ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "A small React app is a good way to learn how state, components, and events work together.",
+      approach:
+        "The project focused on a simple task workflow: add, update, and remove items while reinforcing the core React mental model.",
+      architecture: [
+        "Component structure",
+        "Task list state",
+        "Event handlers",
+        "Dynamic rendering",
+      ],
+      outcome:
+        "The project became a practical way to rebuild confidence in React fundamentals.",
     },
   },
   {
-    id: "Ai-resume",
+    id: "ai-resume",
     slug: "ai-resume",
     title: "AI Resume Analysis",
-
-    summary:
-      "A tutorial-based AI resume analysis web application built to explore React, TypeScript, PDF processing, authentication, and AI integration.",
-
+    summary: "A tutorial-based AI resume analysis app built to explore React, AI, and file upload flow.",
     description:
-      "A React and TypeScript resume analysis application built by following a YouTube tutorial. The project allows users to upload a resume, provide a target company, job title, and job description, and receive AI-generated feedback including an overall score, ATS score, and category-based recommendations. This project was primarily used as a learning experience to understand how modern React applications can integrate authentication, file uploads, PDF processing, cloud storage, and AI services.",
-
-    category: "AI / Frontend",
-
-    featured: true,
-
-    githubUrl: "https://github.com/nansonchin/AI_Resume_Analysis",
-
-    demoUrl: "",
+      "This project was built as a learning exercise to understand how a React app can integrate AI analysis, resume upload, PDF handling, and user feedback flow.",
     year: 2025,
+    category: "AI / Frontend",
+    featured: true,
+    githubUrl: "https://github.com/nansonchin/AI_Resume_Analysis",
+    demoUrl: "",
     thumbnail: "/images/projects/AiResume/Thumbnail.webp",
-    heroImage: {
-      src: "/images/projects/AiResume/Hero.webp",
-      srcSet: `
-      /images/projects/AiResume/Hero.webp 480w,
-      /images/projects/AiResume/Hero.webp 768w,
-      /images/projects/AiResume/Hero.webp 1920w,
-      `,
-      sizes: "(max-width:768px) 100vw, 50vw",
-    },
     technologies: [
       "React",
       "TypeScript",
@@ -372,359 +355,251 @@ export const projects: Project[] = [
       "PDF.js",
       "React Dropzone",
     ],
+    heroImage: {
+      src: "/images/projects/AiResume/Hero.webp",
+      srcSet: `
+        /images/projects/AiResume/Hero.webp 480w,
+        /images/projects/AiResume/Hero.webp 768w,
+        /images/projects/AiResume/Hero.webp 1920w
+      `,
+      sizes: "(max-width:768px) 100vw, 50vw",
+    },
     gallery: [
       {
         id: "gallery-1",
         imageUrl: "/images/projects/AiResume/Gallery/G1.webp",
         title: "Resume Dashboard",
-        description:
-          "Dashboard for viewing analyzed resumes and their generated feedback.",
+        description: "Dashboard for viewing analyzed resumes.",
       },
-
       {
         id: "gallery-2",
         imageUrl: "/images/projects/AiResume/Gallery/G2.webp",
         title: "Resume Upload",
-        description:
-          "Upload interface for providing a resume and target job information.",
+        description: "Uploading resume and role information.",
       },
-
       {
         id: "gallery-3",
         imageUrl: "/images/projects/AiResume/Gallery/G3.webp",
-        title: "AI Resume Analysis",
-        description:
-          "Resume analysis results including overall and ATS scores.",
+        title: "AI Analysis",
+        description: "Generated resume feedback and scoring.",
       },
-
       {
         id: "gallery-4",
         imageUrl: "/images/projects/AiResume/Gallery/G4.webp",
-        title: "Feedback Details",
-        description:
-          "Detailed AI-generated feedback covering resume content, structure, tone, and skills.",
+        title: "Feedback Detail",
+        description: "Detailed summary of strengths and improvements.",
       },
     ],
-
     features: [
-      "AI-Powered Resume Analysis",
-      "ATS Compatibility Scoring",
-      "Job Description-Based Resume Evaluation",
-      "PDF Resume Upload",
-      "Resume Preview",
-      "Overall Resume Scoring",
-      "Tone & Style Feedback",
-      "Content Feedback",
-      "Resume Structure Feedback",
-      "Skills Analysis",
-      "Improvement Suggestions",
-      "Resume History",
-      "User Authentication",
-      "Cloud File Storage",
+      "Resume upload",
+      "PDF handling",
+      "AI analysis flow",
+      "Resume scoring and feedback",
+      "Upload and review workflow",
     ],
-
     responsibilities: [
-      "Followed and implemented the project from a YouTube tutorial",
-      "Practiced React and TypeScript development",
-      "Implemented resume file upload and PDF processing",
-      "Integrated AI-powered resume analysis",
-      "Worked with authentication and cloud storage",
-      "Built and styled the resume analysis interface",
-      "Learned state management using Zustand",
-      "Worked with React Router for application navigation",
+      "Followed tutorial implementation",
+      "Built the frontend flow",
+      "Used AI and upload features in a practical app",
+      "Practiced state management",
     ],
-
     challenges: [
-      "Understanding how AI services can be integrated into a React application",
-      "Learning how PDF files can be processed and displayed in the browser",
-      "Understanding the flow between file upload, AI processing, and stored results",
-      "Working with authentication and cloud-based application services",
-      "Understanding how structured AI responses can be displayed in reusable React components",
+      "Understanding AI feature integration",
+      "Working with PDF and file upload logic",
+      "Understanding how results are presented to users",
     ],
-
     solutions: [
-      "Followed the tutorial implementation step by step while studying how each part of the application worked",
-      "Used PDF.js to understand PDF processing and resume previews",
-      "Used React Dropzone to handle resume file uploads",
-      "Used Zustand to practice client-side state management",
-      "Used React Router to organize application routes",
-      "Used Puter.js to learn about authentication, storage, and AI service integration",
+      "Followed a structured tutorial path",
+      "Used PDF.js and upload tools to handle files",
+      "Built a clean result-display flow",
     ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "AI-assisted resume review is a useful concept, but it needs a clear user flow and good UI structure to be understandable.",
+      approach:
+        "The project followed a tutorial-style architecture: upload resume, parse and summarize data, analyze against a role, and present feedback in a usable interface.",
+      architecture: [
+        "Upload flow",
+        "PDF processing",
+        "AI analysis layer",
+        "State management",
+        "Results UI",
+      ],
+      outcome:
+        "The project served as a practical exercise in combining frontend development, AI integration, and user interaction.",
     },
   },
   {
     id: "gsap_mojito",
     slug: "gsap_mojito",
     title: "GSAP Mojito",
-
-    summary:
-      "A tutorial-based React project created to learn GSAP animations and interactive web motion.",
-
+    summary: "A GSAP learning project focused on motion and landing-page animation.",
     description:
-      "A React project built by following a YouTube tutorial focused on creating an animated Mojito landing page. The main goal of the project was to learn how to integrate GSAP with React and understand techniques for creating smooth, timeline-based animations, scroll interactions, transitions, and engaging UI motion.",
-
+      "A React project created to study GSAP animation, motion timing, and page transitions in a landing page layout.",
+    year: 2025,
     category: "Frontend / Animation",
-
     featured: true,
-
     githubUrl: "https://github.com/nansonchin/Gsap_Mojito",
-
     demoUrl: "",
-
     thumbnail: "/images/projects/Mojito/thumbnail.webp",
-
+    technologies: ["React", "TypeScript", "GSAP", "Vite"],
     heroImage: {
       src: "/images/projects/Mojito/Hero.webp",
       srcSet: `
-      /images/projects/Mojito/Hero.webp 480w,
-      /images/projects/Mojito/Hero.webp 768w,
-      /images/projects/Mojito/Hero.webp 1920w,
+        /images/projects/Mojito/Hero.webp 480w,
+        /images/projects/Mojito/Hero.webp 768w,
+        /images/projects/Mojito/Hero.webp 1920w
       `,
       sizes: "(max-width:768px) 100vw, 50vw",
     },
-    year: 2025,
-    technologies: ["React", "TypeScript", "GSAP", "Vite"],
-
     gallery: [
       {
         id: "gallery-1",
         imageUrl: "/images/projects/Mojito/Gallery/G1.webp",
-        title: "Mojito Landing Page",
-        description:
-          "Animated landing page built as part of the GSAP learning project.",
+        title: "Landing Page",
+        description: "Animated landing page build.",
       },
-
       {
         id: "gallery-2",
         imageUrl: "/images/projects/Mojito/Gallery/G2.webp",
         title: "Product Section",
-        description:
-          "Interactive product section with animated visual elements.",
+        description: "Motion-driven product presentation.",
       },
-
       {
         id: "gallery-3",
         imageUrl: "/images/projects/Mojito/Gallery/G3.webp",
         title: "Animated Sections",
-        description:
-          "Page sections demonstrating GSAP-powered transitions and motion.",
-      },
-
-      {
-        id: "gallery-4",
-        imageUrl: "/images/projects/Mojito/Gallery/G4.webp",
-        title: "Responsive Layout",
-        description:
-          "Responsive React layout combined with animated UI interactions.",
-      },
-      {
-        id: "gallery-5",
-        imageUrl: "/images/projects/Mojito/Gallery/G5.webp",
-        title: "Responsive Layout",
-        description:
-          "Responsive React layout combined with animated UI interactions.",
+        description: "GSAP-based section transitions.",
       },
     ],
-
     features: [
-      "GSAP Animations",
-      "Timeline-Based Animations",
-      "Scroll-Based Animations",
-      "Animated Page Transitions",
-      "Interactive UI Elements",
-      "Responsive Landing Page",
-      "Smooth Visual Transitions",
+      "GSAP animation",
+      "Timeline control",
+      "Animated product section",
+      "Landing page motion design",
     ],
-
     responsibilities: [
-      "Followed the project from a YouTube tutorial",
-      "Practiced integrating GSAP with React",
-      "Learned GSAP animation timelines",
-      "Implemented animated UI interactions",
-      "Practiced coordinating multiple animations",
-      "Worked with responsive React layouts",
+      "Practiced animation timing",
+      "Built an animated landing page",
+      "Studied GSAP-driven transitions",
     ],
-
     challenges: [
-      "Understanding how GSAP works alongside React's component lifecycle",
-      "Learning how to coordinate multiple animations using GSAP timelines",
-      "Understanding animation sequencing and timing",
-      "Managing animated elements without interfering with React rendering",
-      "Learning how to create smoother and more engaging user interactions",
+      "Understanding how GSAP interacts with React",
+      "Timing different animation sequences",
+      "Creating smooth page motion without overcomplicating the structure",
     ],
-
     solutions: [
-      "Followed the tutorial implementation while studying the purpose of each GSAP animation",
-      "Practiced using GSAP timelines to control animation sequences",
-      "Used React refs to target DOM elements for animation",
-      "Experimented with animation timing, easing, and transitions",
-      "Applied the learned animation techniques to different sections of the page",
+      "Used GSAP timelines to coordinate motion",
+      "Kept the page layout simple and animation-focused",
+      "Targeted DOM elements with refs and animation logic",
     ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "Animated landing pages need timing, structure, and user flow to feel polished without becoming chaotic.",
+      approach:
+        "The project focused on learning GSAP through a single-page product layout by splitting the content into animated sections and timing interactions carefully.",
+      architecture: [
+        "Page layout",
+        "GSAP timeline",
+        "Scroll and motion layers",
+        "Content sections",
+      ],
+      outcome:
+        "The project became a study in how animation can shape a webpage's tone and pacing.",
     },
   },
   {
     id: "gsap_award",
     slug: "gsap_award",
     title: "GSAP Award Winning",
-
-    summary:
-      "A tutorial-based React project created to explore advanced GSAP animations, page transitions, and interactive web experiences.",
-
+    summary: "A GSAP practice project for advanced motion design and animated storytelling.",
     description:
-      "A React project built by following a YouTube tutorial focused on creating an award-style interactive website. The project was used as a learning exercise to explore advanced GSAP animation techniques, smooth page transitions, scroll-based interactions, animated UI elements, and the process of building a visually engaging frontend experience.",
-
-    category: "Frontend / Animation",
-
-    featured: true,
+      "This project was built as a motion-design learning exercise using React and GSAP. The emphasis was on timing, transitions, and page flow rather than business logic.",
     year: 2025,
+    category: "Frontend / Animation",
+    featured: true,
     githubUrl: "https://github.com/nansonchin/Gsap_Award_Winning",
-
     demoUrl: "",
-
     thumbnail: "/images/projects/GsapAward/thumbnail.webp",
-
+    technologies: ["React", "TypeScript", "GSAP", "Vite"],
     heroImage: {
       src: "/images/projects/GsapAward/hero.webp",
       srcSet: `
-      /images/projects/GsapAward/hero.webp 480w,
-      /images/projects/GsapAward/hero.webp 768w,
-      /images/projects/GsapAward/hero.webp 1920w,
+        /images/projects/GsapAward/hero.webp 480w,
+        /images/projects/GsapAward/hero.webp 768w,
+        /images/projects/GsapAward/hero.webp 1920w
       `,
       sizes: "(max-width:768px) 100vw, 50vw",
     },
-
-    technologies: ["React", "TypeScript", "GSAP", "Vite"],
-
     gallery: [
       {
         id: "gallery-1",
         imageUrl: "/images/projects/GsapAward/Gallery/G1.webp",
         title: "Interactive Landing Page",
-        description:
-          "Visually focused landing page built to explore advanced web animation techniques.",
+        description: "Motion-focused landing page layout.",
       },
-
       {
         id: "gallery-2",
         imageUrl: "/images/projects/GsapAward/Gallery/G2.webp",
-        title: "Animated Sections",
-        description:
-          "Page sections enhanced with GSAP-powered transitions and interactive motion.",
+        title: "Animated Section",
+        description: "Section-based GSAP transition.",
       },
-
       {
         id: "gallery-3",
         imageUrl: "/images/projects/GsapAward/Gallery/G3.webp",
-        title: "Scroll Animations",
-        description:
-          "Scroll-based animations used to create a more dynamic browsing experience.",
-      },
-
-      {
-        id: "gallery-4",
-        imageUrl: "/images/projects/GsapAward/Gallery/G4.webp",
-        title: "Page Transitions",
-        description:
-          "Animated transitions connecting different sections of the interactive experience.",
-      },
-      {
-        id: "gallery-5",
-        imageUrl: "/images/projects/GsapAward/Gallery/G5.webp",
-        title: "Page Transitions",
-        description:
-          "Animated transitions connecting different sections of the interactive experience.",
-      },
-      {
-        id: "gallery-6",
-        imageUrl: "/images/projects/GsapAward/Gallery/G6.webp",
-        title: "Page Transitions",
-        description:
-          "Animated transitions connecting different sections of the interactive experience.",
+        title: "Scroll Motion",
+        description: "Scroll-based motion experiments.",
       },
     ],
-
     features: [
-      "Advanced GSAP Animations",
-      "Scroll-Based Animations",
-      "Page Transitions",
-      "Interactive UI Elements",
-      "Animation Timelines",
-      "Smooth Visual Transitions",
-      "Responsive Layout",
+      "Animated storytelling sections",
+      "Section transitions",
+      "Motion-driven landing page",
+      "Scroll-based interaction",
     ],
-
     responsibilities: [
-      "Followed the project from a YouTube tutorial",
-      "Practiced advanced GSAP techniques",
-      "Implemented animation timelines",
-      "Worked with scroll-based interactions",
-      "Practiced creating page transitions",
-      "Integrated GSAP animations into React components",
+      "Studied advanced motion design concepts",
+      "Implemented timeline-based animation sequences",
+      "Built the page as a practice project",
     ],
-
     challenges: [
-      "Understanding more complex GSAP animation sequences",
-      "Coordinating multiple animations across different sections",
-      "Understanding scroll-based animation behavior",
-      "Integrating animation logic with React components",
-      "Maintaining smooth transitions while creating visually complex interactions",
+      "Managing more complex animation timing",
+      "Coordinating multiple moving elements",
+      "Keeping animations readable instead of overly dense",
     ],
-
     solutions: [
-      "Followed the tutorial while studying how each animation was structured",
-      "Used GSAP timelines to coordinate complex animation sequences",
-      "Practiced using React refs to control DOM elements",
-      "Experimented with animation timing, easing, and sequencing",
-      "Applied GSAP techniques to create smoother page and scroll interactions",
+      "Used GSAP timeline sequencing",
+      "Built the experience around motion hierarchy",
+      "Kept the structure simple enough to manage",
     ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "A premium-looking landing page requires careful motion design so it feels intentional and not noisy.",
+      approach:
+        "The build focused on motion composition, section transitions, and timing experiments to create a strong visual rhythm.",
+      architecture: [
+        "Animated sections",
+        "Timeline sequencing",
+        "Visual pacing",
+        "Transition layer",
+      ],
+      outcome:
+        "The project served as a practical study in motion design language and timing.",
     },
   },
   {
     id: "mika_pikazo",
     slug: "mika_pikazo",
     title: "Mika Pikazo",
-    year: 2025,
-    summary:
-      "A self-designed artist portfolio website built with React and TypeScript, featuring responsive layouts, artwork presentation, routing, and a full-stack application structure.",
-
+    summary: "A portfolio-style project built to explore visual presentation and full-stack basics.",
     description:
-      "A personal artist portfolio website inspired by Mika Pikazo's visual style and artwork. I designed and developed the project myself using React, TypeScript, and Vite, focusing on creating a visually driven browsing experience for presenting artwork and artist information. The project also explores full-stack web development through a separate Express server, database integration, authentication-related functionality, and API communication.",
-
+      "This project was developed as a portfolio-style web application with a visual focus, routing, and basic backend structure. It combines frontend presentation with API and database-related setup.",
+    year: 2025,
     category: "Full Stack",
-
     featured: true,
-
     githubUrl: "https://github.com/nansonchin/mikaPikazo",
-
     demoUrl: "",
-
     thumbnail: "/images/projects/Mika/thumbnail.webp",
-
-    heroImage: {
-      src: "/images/projects/Mika/hero.webp",
-      srcSet: `
-      /images/projects/Mika/hero.webp 480w,
-      /images/projects/Mika/hero.webp 768w,
-      /images/projects/Mika/hero.webp 1920w,
-      `,
-      sizes: "(max-width:768px) 100vw, 50vw",
-    },
-
     technologies: [
       "React",
       "TypeScript",
@@ -739,323 +614,217 @@ export const projects: Project[] = [
       "React Router",
       "Swiper",
     ],
-
+    heroImage: {
+      src: "/images/projects/Mika/hero.webp",
+      srcSet: `
+        /images/projects/Mika/hero.webp 480w,
+        /images/projects/Mika/hero.webp 768w,
+        /images/projects/Mika/hero.webp 1920w
+      `,
+      sizes: "(max-width:768px) 100vw, 50vw",
+    },
     gallery: [
       {
         id: "gallery-1",
         imageUrl: "/images/projects/Mika/Gallery/G1.webp",
         title: "Artist Landing Page",
-        description:
-          "A visually focused landing page designed around the artist's artwork and visual identity.",
+        description: "Landing page for a visual portfolio concept.",
       },
-
       {
         id: "gallery-2",
         imageUrl: "/images/projects/Mika/Gallery/G2.webp",
         title: "Artwork Showcase",
-        description:
-          "Artwork-focused interface for presenting visual content in an organized portfolio layout.",
+        description: "Presentation of artwork and portfolio sections.",
       },
-
       {
         id: "gallery-3",
         imageUrl: "/images/projects/Mika/Gallery/G3.webp",
         title: "Portfolio Experience",
-        description:
-          "Responsive portfolio sections combining artwork, navigation, and supporting content.",
-      },
-
-      {
-        id: "gallery-4",
-        imageUrl: "/images/projects/Mika/Gallery/G4.webp",
-        title: "Interactive Content",
-        description:
-          "Interactive content presentation using routing and carousel-based UI components.",
-      },
-      {
-        id: "gallery-5",
-        imageUrl: "/images/projects/Mika/Gallery/G5.webp",
-        title: "Interactive Content",
-        description:
-          "Interactive content presentation using routing and carousel-based UI components.",
-      },
-      {
-        id: "gallery-6",
-        imageUrl: "/images/projects/Mika/Gallery/G6.webp",
-        title: "Interactive Content",
-        description:
-          "Interactive content presentation using routing and carousel-based UI components.",
-      },
-      {
-        id: "gallery-7",
-        imageUrl: "/images/projects/Mika/Gallery/G7.webp",
-        title: "Interactive Content",
-        description:
-          "Interactive content presentation using routing and carousel-based UI components.",
+        description: "Responsive portfolio sections combining artwork, navigation, and supporting content.",
       },
     ],
-
     features: [
-      "Artist Portfolio Website",
-      "Responsive Design",
-      "Artwork Showcase",
-      "React-Based UI",
-      "Client-Side Routing",
-      "Interactive Image Sliders",
-      "API Communication",
-      "Backend Server",
-      "Database Integration",
-      "Authentication Infrastructure",
+      "Visual portfolio UI",
+      "Responsive layout",
+      "Artwork showcase",
+      "Client-side routing",
+      "Backend and API setup",
     ],
-
     responsibilities: [
-      "Designed the website from scratch",
-      "Developed the frontend using React and TypeScript",
-      "Structured the application using reusable components",
-      "Implemented responsive layouts",
-      "Built the artist and artwork presentation interface",
-      "Implemented client-side routing",
-      "Integrated frontend API communication",
-      "Worked with the Express backend",
-      "Explored PostgreSQL database integration",
-      "Implemented authentication-related functionality",
+      "Built the frontend interface",
+      "Worked on visual presentation and layout",
+      "Explored backend integration and auth structure",
     ],
-
     challenges: [
-      "Turning a strong visual concept into a functional web interface",
-      "Balancing artwork presentation with usability and navigation",
-      "Building a responsive layout around image-heavy content",
-      "Connecting the React frontend with a backend server",
-      "Working with database and authentication infrastructure",
-      "Managing both frontend and backend concerns within the same project",
+      "Balancing visual design and usability",
+      "Handling image-heavy portfolio content",
+      "Linking frontend and backend pieces together",
     ],
-
     solutions: [
-      "Structured the frontend into reusable React components",
-      "Used responsive layouts to adapt the artwork presentation across screen sizes",
-      "Used React Router to organize application navigation",
-      "Used Axios for communication between the frontend and backend",
-      "Used Express to provide the server-side application structure",
-      "Used PostgreSQL for database connectivity",
-      "Used JWT and bcrypt as part of the authentication infrastructure",
-      "Used Swiper for interactive artwork/content presentation",
+      "Structured the project around reusable UI sections",
+      "Used routing and content organization for clarity",
+      "Added backend and auth-related infrastructure for practice",
     ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "A visual portfolio needs both strong presentation and a clean structure so the content remains usable across devices.",
+      approach:
+        "The project combined a frontend portfolio experience with a backend scaffold to practice how data and presentation can fit together in a full-stack project.",
+      architecture: [
+        "Frontend portfolio",
+        "Routing layer",
+        "API and backend setup",
+        "Database and auth structure",
+        "Content presentation",
+      ],
+      outcome:
+        "The project served as a practical exploration of portfolio design and full-stack project structure.",
     },
   },
   {
     id: "komori-met",
     slug: "komori_met",
     title: "Komori Met Landing Page",
-
-    summary:
-      "A simple landing page project built to practice React UI development and interactive frontend components.",
-
+    summary: "A simple landing page built to practice React UI and section layout.",
     description:
-      "A small landing page project created as a practical exercise in building a React-based user interface. The project focuses on presenting content through a simple visual layout while practicing interactive frontend elements such as navigation, icons, and image sliders.",
-
+      "A small landing page project created to practice React layout, component structure, and basic interactive UI work.",
     year: 2023,
-
     category: "Frontend",
-
     featured: false,
-
     githubUrl: "https://github.com/nansonchin/KomoriMet-React",
-
     demoUrl: "",
-
     thumbnail: "/images/projects/KomoriM/thumbnail.webp",
-
+    technologies: ["React", "JavaScript", "Swiper", "Font Awesome"],
     heroImage: {
       src: "/images/projects/KomoriM/hero.webp",
       srcSet: `
-      /images/projects/KomoriM/hero.webp 480w,
-      /images/projects/KomoriM/hero.webp 768w,
-      /images/projects/KomoriM/hero.webp 1920w,
+        /images/projects/KomoriM/hero.webp 480w,
+        /images/projects/KomoriM/hero.webp 768w,
+        /images/projects/KomoriM/hero.webp 1920w
       `,
       sizes: "(max-width:768px) 100vw, 50vw",
     },
-
-    technologies: ["React", "JavaScript", "Swiper", "Font Awesome"],
-
     gallery: [
       {
         id: "gallery-1",
         imageUrl: "/images/projects/KomoriM/Gallery/G1.webp",
         title: "Landing Page",
-        description:
-          "Main landing page presenting the site's content and visual design.",
+        description: "Main landing page with content sections.",
       },
-
       {
         id: "gallery-2",
         imageUrl: "/images/projects/KomoriM/Gallery/G2.webp",
         title: "Content Section",
-        description:
-          "Content-focused section demonstrating the page layout and structure.",
-      },
-
-      {
-        id: "gallery-3",
-        imageUrl: "/images/projects/KomoriM/Gallery/G3.webp",
-        title: "Image Slider",
-        description: "Interactive content presentation using Swiper.",
-      },
-
-      {
-        id: "gallery-4",
-        imageUrl: "/images/projects/KomoriM/Gallery/G4.webp",
-        title: "UI Elements",
-        description: "Simple interface elements using Font Awesome icons.",
+        description: "Basic UI layout and content presentation.",
       },
     ],
-
     features: [
-      "Responsive Landing Page",
-      "Interactive Image Slider",
-      "Swiper Carousel",
-      "Font Awesome Icons",
-      "React UI Components",
-      "Simple Content Presentation",
+      "Landing page layout",
+      "Basic React UI",
+      "Slider interaction",
+      "Simple content sections",
     ],
-
     responsibilities: [
-      "Built the landing page interface",
-      "Structured the React UI",
-      "Implemented interactive content sections",
-      "Integrated Swiper for slider functionality",
-      "Integrated Font Awesome icons",
-      "Practiced frontend layout and component development",
+      "Built the landing page",
+      "Practiced layout and simple UI structure",
+      "Used third-party components for the interaction layer",
     ],
-
     challenges: [
-      "Building a clean layout while keeping the project simple",
-      "Understanding how interactive UI components work in React",
-      "Integrating a third-party slider library into the page",
-      "Organizing the page into reusable frontend sections",
+      "Keeping the structure simple and clear",
+      "Integrating reusable UI elements",
+      "Learning how a small frontend app is organized",
     ],
-
     solutions: [
-      "Used React components to structure the interface",
-      "Integrated Swiper for interactive slider functionality",
-      "Used Font Awesome for reusable interface icons",
-      "Kept the project focused on simple and maintainable frontend implementation",
+      "Used component-based layout",
+      "Added a slider and icons to enrich the interface",
+      "Kept the implementation straightforward and focused",
     ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "A simple landing page is a good project for learning how frontend layouts and components work together in a small app.",
+      approach:
+        "The project focused on building a clear visual structure and adding a few interactive elements without turning the app into something too complex.",
+      architecture: [
+        "Section layout",
+        "Component structure",
+        "UI interaction",
+        "Simple landing-page flow",
+      ],
+      outcome:
+        "The work helped sharpen the basics of React layout and UI composition.",
     },
-
   },
   {
     id: "slotmachine",
     slug: "slotmachine",
     title: "Slot Machine",
-    year: 2025,
-    summary:
-      "A small interactive slot machine game created as a fun experiment with React and AI-assisted development.",
-
+    summary: "A small browser game built to experiment with React interactivity and game logic.",
     description:
-      "A small browser-based slot machine game created as a fun side project while exploring interactive development with React. I used AI as a development partner to discuss the idea, explore possible implementations, and work through the game logic. The project gave me an opportunity to experiment with React state, user interactions, conditional rendering, and basic game logic in a simple and enjoyable project.",
-
+      "A small frontend game project used as a practice exercise in basic interactive design, state transitions, and simple game logic.",
+    year: 2025,
     category: "Frontend / Game",
-
     featured: false,
-
     githubUrl: "https://github.com/nansonchin/Slotmachine",
-
     demoUrl: "",
-
-    thumbnail: "/images/projects/mangaReader",
-
+    thumbnail: "/images/projects/Slot/thumbnail.webp",
+    technologies: ["React", "JavaScript", "Vite"],
     heroImage: {
-      src: "/images/projects/mangaReader",
+      src: "/images/projects/Slot/hero.webp",
       srcSet: `
-      /images/projects/mangaReader 480w,
-      /images/projects/mangaReader 768w,
-      /images/projects/mangaReader 1920w,
+        /images/projects/Slot/hero.webp 480w,
+        /images/projects/Slot/hero.webp 768w,
+        /images/projects/Slot/hero.webp 1920w
       `,
       sizes: "(max-width:768px) 100vw, 50vw",
     },
-
-    technologies: ["React", "JavaScript", "Vite"],
-
     gallery: [
       {
         id: "gallery-1",
-        imageUrl: "/images/projects/slot-machine/gallery-1.webp",
-        title: "Slot Machine",
-        description: "Main game interface for the browser-based slot machine.",
+        imageUrl: "/images/projects/Slot/Screenshot_7-10-2026_2326_localhost.webp",
+        title: "Game Screen",
+        description: "Main game interface.",
       },
-
       {
         id: "gallery-2",
-        imageUrl: "/images/projects/slot-machine/gallery-2.webp",
+        imageUrl: "/images/projects/Slot/Screenshot_7-10-2026_23331_localhost.webp",
         title: "Game Interaction",
-        description:
-          "Interactive interface for starting and playing the slot machine.",
-      },
-
-      {
-        id: "gallery-3",
-        imageUrl: "/images/projects/slot-machine/gallery-3.webp",
-        title: "Game Result",
-        description:
-          "Displays the result after the slot machine completes a spin.",
-      },
-
-      {
-        id: "gallery-4",
-        imageUrl: "/images/projects/slot-machine/gallery-4.webp",
-        title: "Game Interface",
-        description: "Simple game-focused UI built with React.",
+        description: "User interaction and slot behavior.",
       },
     ],
-
     features: [
-      "Interactive Slot Machine",
-      "Randomized Game Results",
-      "Game State Management",
-      "User Interaction",
-      "Dynamic UI Updates",
-      "Browser-Based Gameplay",
+      "Slot machine interaction",
+      "Game screen and buttons",
+      "State-driven gameplay",
+      "Simple browser game logic",
     ],
-
     responsibilities: [
-      "Came up with the idea for the project",
-      "Used AI to discuss and explore the implementation",
-      "Built the interface using React",
-      "Implemented the game interaction and logic",
-      "Managed game state and UI updates",
-      "Experimented with interactive frontend development",
+      "Built the game interface",
+      "Created interactive state transitions",
+      "Explored React interactivity in a playful project",
     ],
-
     challenges: [
-      "Turning a simple idea into a working interactive game",
-      "Understanding how to manage game state in React",
-      "Handling random game outcomes",
-      "Keeping the game logic simple while making the interaction enjoyable",
-      "Using AI effectively as a development and problem-solving partner",
+      "Designing a clear game flow",
+      "Managing state updates during gameplay",
+      "Keeping the game simple and understandable",
     ],
-
     solutions: [
-      "Used React state to manage the changing game values",
-      "Implemented randomized results for each game interaction",
-      "Used conditional rendering to update the UI based on the game state",
-      "Discussed implementation approaches with AI before refining the code",
-      "Kept the project small so I could focus on experimenting with React and game logic",
+      "Used a simple game loop and state model",
+      "Structured the UI around clear actions and feedback",
+      "Kept the project lightweight and easy to reason about",
     ],
     story: {
-      problem: "",
-      approach: "",
-      architecture: [],
-      outcome: "",
+      problem:
+        "A browser game is a practical way to learn interactive state handling and UI feedback.",
+      approach:
+        "The project focused on a small, game-like interaction model where state changes drive the result and the interface responds in real time.",
+      architecture: [
+        "Game UI",
+        "State flow",
+        "User interaction",
+        "Result handling",
+      ],
+      outcome:
+        "The project became a simple learning exercise for interactive React logic and UI response.",
     },
   },
 ];
