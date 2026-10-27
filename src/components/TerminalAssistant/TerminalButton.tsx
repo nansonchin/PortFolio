@@ -1,32 +1,23 @@
 type TerminalButtonProps = {
-    isOpen:boolean;
-    onToggle:()=>void;
+  isOpen: boolean;
+  onToggle: () => void;
 };
 
-
 export default function TerminalButton({
-    isOpen,
-    onToggle
-}:TerminalButtonProps){
-
-    return(
-
-        <button
-            type="button"
-            aria-label={
-                isOpen
-                ?
-                "Close terminal"
-                :
-                "Open terminal"
-            }
-            aria-expanded={isOpen}
-            onClick={onToggle}
-            className="
+  isOpen,
+  onToggle,
+}: TerminalButtonProps) {
+  return (
+    <button
+      type="button"
+      aria-label={isOpen ? "Close terminal" : "Open terminal"}
+      aria-expanded={isOpen}
+      onClick={onToggle}
+      className="
             fixed
-            bottom-6
-            left-6
-            z-[10000]
+  bottom-6
+  right-6
+  z-[10000]
             flex
             h-14
             items-center
@@ -38,39 +29,27 @@ export default function TerminalButton({
             px-5
             text-[#D8BD83]
             "
-        >
+    >
+      <span>&gt;</span>
 
-            <span>
-                &gt;
-            </span>
-
-
-            <span className="
+      <span
+        className="
                 text-xs
                 tracking-[0.18em]
-            ">
-                TERMINAL
-            </span>
+            "
+      >
+        TERMINAL
+      </span>
 
-
-            <span
-                className={`
+      <span
+        className={`
                 h-2
                 w-2
                 rounded-full
                 bg-[#D8BD83]
-                ${
-                    isOpen
-                    ?
-                    "opacity-100"
-                    :
-                    "animate-pulse opacity-70"
-                }
+                ${isOpen ? "opacity-100" : "animate-pulse opacity-70"}
                 `}
-            />
-
-        </button>
-
-    )
-
+      />
+    </button>
+  );
 }

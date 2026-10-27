@@ -59,11 +59,12 @@ export default function TerminalPanel({
       className="
       fixed
       bottom-24
-      left-4
+      left-3
+right-3
+w-auto
       z-[9999]
       flex
       h-[min(500px,65vh)]
-      w-[min(92vw,480px)]
       flex-col
       overflow-hidden
       rounded-xl

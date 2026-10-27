@@ -1,11 +1,13 @@
+import { useCallback, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { developerContext } from "../data/developerContext";
-import type { TranslationKey } from "../il8n/locales/en";
-import { useLanguage } from "../il8n/LanguageContext";
+import NavHamburger from "./Navbar/NavHamburger";
+import MobileMenu from "./Navbar/MobileMenu";
 import LanguageSwitch from "../il8n/LanguageSwitch";
+import { useLanguage } from "../il8n/LanguageContext";
+import type { TranslationKey } from "../il8n/locales/en";
 
-// labels are now KEYS, not text
-const links: { to: string; label: TranslationKey; end: boolean }[] = [
+const NAV_LINKS : { to: string; label: TranslationKey; end: boolean }[] = [
   { to: "/", label: "nav.home", end: true },
   { to: "/projects", label: "nav.projects", end: false },
   { to: "/about", label: "nav.about", end: false },
@@ -13,35 +15,61 @@ const links: { to: string; label: TranslationKey; end: boolean }[] = [
 ];
 
 function Navbar() {
-  const { t } = useLanguage();
+  const [menuOpen, setMenuOpen] = useState(false);
 
+  const close = useCallback(() => setMenuOpen(false), []);
+  const toggle = useCallback(() => setMenuOpen((prev) => !prev), []);
+ const { t } = useLanguage();
   return (
-    <nav className="fixed left-0 top-0 z-50 flex w-full items-center justify-between border-b border-line bg-ink/60 px-6 py-4 backdrop-blur-sm md:px-10">
-      <Link to="/" className="font-system text-sm tracking-[0.3em] text-gold-bright">
-        [ {developerContext.name.toUpperCase()}
-        <span className="blink">_</span> ]
-      </Link>
+    <>
+      <nav
+        className="
+          fixed left-0 top-0
+          z-[9997]
+          flex w-full items-center justify-between
+          border-b border-line
+          bg-ink/60 px-6 py-4
+          backdrop-blur-sm
+          md:px-10
+        "
+      >
+        <Link
+          to="/"
+          onClick={close}
+          className="font-system text-sm tracking-[0.3em] text-gold-bright"
+        >
+          [{developerContext.name.toUpperCase()}
+          <span className="blink">_</span>]
+        </Link>
 
-      <ul className="hidden items-center gap-2 md:flex">
-        {links.map((item, i) => (
-          <li key={item.to}>
-            <NavLink to={item.to} end={item.end} className="bar-select label block px-4 py-2">
-              <span className="mr-2 opacity-60">{String(i + 1).padStart(2, "0")}</span>
-              {t(item.label)}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
+        <ul className="hidden items-center gap-2 md:flex">
+          {NAV_LINKS.map((item, i) => (
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                end={item.end}
+                className="bar-select label block px-4 py-2"
+              >
+                <span className="mr-2 opacity-60">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {t(item.label)}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
 
-      <div className="flex items-center gap-6">
-        {/* system status stays English on purpose: it is the "OS voice" */}
-        <p className="label hidden text-gold-dim md:block">
-          SYS <span className="text-gold-bright">ONLINE</span>
-        </p>
+        <div className="flex items-center gap-4">
+          <p className="label hidden text-gold-dim md:block">
+            SYS <span className="text-gold-bright">ONLINE</span>
+          </p>
+           <LanguageSwitch />
+          <NavHamburger isOpen={menuOpen} onClick={toggle} />
+        </div>
+      </nav>
 
-        <LanguageSwitch />
-      </div>
-    </nav>
+      <MobileMenu isOpen={menuOpen} onClose={close} />
+    </>
   );
 }
 

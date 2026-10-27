@@ -8,7 +8,7 @@ import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/inter";
 import "./index.css";
 // import App from './App.tsx'
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
 import { RouterProvider } from "react-router-dom";
 import router from "./app/router.tsx";
 import SmoothScrollProvider from "./app/providers/SmoothScrollProvider.tsx";
@@ -26,6 +26,10 @@ import { IntroProvider } from "./components/Intro/IntroContext.tsx";
 import { LanguageProvider } from "./il8n/LanguageContext.tsx";
 setupAI();
 
+const isTouch = window.matchMedia(
+  "(hover: none) and (pointer: coarse)",
+).matches;
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <LanguageProvider>
@@ -33,9 +37,11 @@ createRoot(document.getElementById("root")!).render(
         <CursorProvider>
           <CursorPhysicsProvider>
             <IntroProvider>
-              <Cursor />
-              <Analytics/>
-              <RouterProvider router={router} />
+              <Analytics />
+              <div className={isTouch ? "" : "cursor-none"}>
+                {!isTouch && <Cursor />}
+                <RouterProvider router={router} />
+              </div>
             </IntroProvider>
           </CursorPhysicsProvider>
         </CursorProvider>
