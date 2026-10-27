@@ -1,75 +1,109 @@
-# React + TypeScript + Vite
+<!-- README.md -->
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Chin Portfolio
 
-Currently, two official plugins are available:
+> Frontend Developer portfolio with an AI assistant — built with React, TypeScript, GSAP and Google Gemini.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+🔗 **Live:** https://chin-portfolio-02.vercel.app
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Highlights
 
-## Expanding the ESLint configuration
+- **JARVIS** — an AI assistant (Google Gemini) that can answer questions about the portfolio and navigate to any page or project on command.
+- **NieR:Automata-inspired UI** — black and gold, CRT scan lines, glitch effects, custom cursor with magnetic buttons.
+- **GSAP animations** — boot screen, masked title reveals, scroll parallax, Flip grid transitions.
+- **Secure by design** — Gemini API key lives server-side (Vercel Function). The browser never touches Google directly.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Layer | Stack |
+|---|---|
+| Framework | React 18 + TypeScript + Vite |
+| Styling | Tailwind CSS v4 |
+| Animation | GSAP (ScrollTrigger, Flip), Lenis |
+| AI | Google Gemini (via server-side proxy) |
+| Deployment | Vercel (static + serverless function) |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## JARVIS Architecture
 
 ```
+Browser (Terminal UI)
+    │  POST /api/chat  { messages }   ← no key, no system prompt
+    ▼
+Vercel Function  /api/chat
+    │  ① rate limit  ② sanitise input  ③ attach system prompt + tools
+    ▼
+Google Gemini API
+    │  text reply  OR  tool call (navigate / open link)
+    ▼
+Browser executes tool (React Router navigate, window.open)
+    │
+    ▼
+Gemini confirms → final text reply shown in Terminal
+```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Local Development
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Create your local env file (never committed)
+cp .env.example .env.local
+# Fill in GEMINI_API_KEY in .env.local
+
+# 3. Generate the server-side prompt (run after changing project data)
+npm run gen:server
+
+# 4. Start dev server (runs gen:server automatically)
+npm run dev
+```
+
+> **Note:** `api/_generated.ts` must be committed — it contains the pre-built system prompt that the Vercel Function uses. Run `npm run gen:server` whenever you update project data, then commit the result.
+
+---
+
+## Project Structure
 
 ```
+├── api/
+│   ├── chat.ts           # Vercel serverless function (Gemini proxy)
+│   ├── _guard.ts         # Rate limiting, input sanitisation, origin check
+│   └── _generated.ts     # Auto-generated: system prompt + tool declarations
+├── scripts/
+│   └── generate-server-data.ts  # Builds _generated.ts from src data
+├── src/
+│   ├── components/
+│   │   ├── Ai/           # JARVIS: provider, chat service, tools, prompt
+│   │   ├── Intro/        # Boot screen
+│   │   ├── TerminalAssistant/
+│   │   └── ...
+│   ├── data/             # Project data, developer context, profile
+│   ├── hooks/            # useTerminal, useReveal, useSEO, ...
+│   └── pages/
+└── public/
+    ├── og-image.png      # 1200×630 Open Graph share image
+    └── favicon.svg
+```
+
+---
+
+## Adding a Project
+
+1. Add a new entry to `src/data/project.ts`.
+2. Run `npm run gen:server` to rebuild the JARVIS system prompt.
+3. Commit both files.
+4. Push — Vercel auto-deploys.
+
+---
+
+## Licence
+
+Personal portfolio — source code available for reference. Please do not deploy as your own portfolio without modification.

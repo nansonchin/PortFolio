@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { startHeroGlitch } from "../animations/heroGlitch";
 import GlitchText from "../components/GlitchText/GlitchText";
+import { useSEO } from "../hooks/useSEO";
 
 function NotFound() {
+  useSEO({ title: "404 – Not Found" });
   const numberRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {

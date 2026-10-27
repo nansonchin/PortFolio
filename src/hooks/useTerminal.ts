@@ -6,18 +6,25 @@ import type { TerminalMessage, TerminalMessageType } from "../types/terminal.typ
 import { JARVIS_OPEN_EVENT } from "../components/TerminalAssistant/terminalEvent";
 import { ProxyError } from "../components/Ai/provider/proxyProvider";
 
-const WELCOME: TerminalMessage = {
-  id: "welcome",
+const WELCOMES_MESSAGES:TerminalMessage[]=[
+  {
+    id: "welcome-1",
   type: "system",
   text: 'JARVIS online. Ask me anything about this portfolio, or type "help".',
-};
+  },{
+    id:"welcome-2",
+    type:"system",
+    text:"[ NOTICE ] Questions are processed by Google Gemini. Free plan: content may be used to improve Google's products."
+  }
+]
+
 
 export function useTerminal() {
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
   const [command, setCommand] = useState("");
-  const [history, setHistory] = useState<TerminalMessage[]>([WELCOME]);
+  const [history, setHistory] = useState<TerminalMessage[]>(WELCOMES_MESSAGES);
   const [isThinking, setIsThinking] = useState(false);
 
   const inputHistory = useRef<string[]>([]);

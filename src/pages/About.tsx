@@ -8,13 +8,18 @@ import { profile } from "../data/profile";
 import { useReveal } from "../hooks/useReveal";
 import { projectRepository } from "../repository/ProjectRepository";
 import { useGlitchLoop } from "../hooks/useGlitchLoop";
+import { useSEO } from "../hooks/useSEO";
 
 function About() {
+  useSEO({
+    title: "About",
+    description: "Learn about Chin's background, skills and what he's built.",
+  });
   const pageRef = useRef<HTMLElement | null>(null);
 
   useReveal(pageRef);
 
-useGlitchLoop(pageRef)
+  useGlitchLoop(pageRef);
   return (
     <main ref={pageRef} className="bg-ink">
       <AboutIntro />

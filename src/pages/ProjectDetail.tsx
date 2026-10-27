@@ -14,6 +14,7 @@ import ProjectTechStack from "../components/ProjectDetails/ProjectTechStack";
 import ProjectGallery from "../components/ProjectDetails/ProjectGallery";
 import NextProject from "../components/FeaturedProjects/NextProject";
 import { useGlitchLoop } from "../hooks/useGlitchLoop";
+import { useSEO } from "../hooks/useSEO";
 
 type ProjectDetailViewProps = {
   project: Project;
@@ -44,6 +45,10 @@ function ProjectDetailView({ project }: ProjectDetailViewProps) {
   const hasTech = detail.technologies.length > 0;
   const hasGallery = detail.gallery.length > 0;
 
+  useSEO({
+    title: detail.title,
+    description: detail.description.slice(0, 150),
+  });
   let counter = 0;
   const nextIndex = () => `04.${++counter}`;
 

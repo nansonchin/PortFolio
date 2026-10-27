@@ -13,7 +13,7 @@ export const projects: Project[] = [
     category: "Frontend",
     featured: true,
     githubUrl: "https://github.com/nansonchin/BookFairy",
-    demoUrl: "",
+    demoUrl: "https://book-fairy.vercel.app/",
     thumbnail: "/images/projects/bookFairy/thumbnail.webp",
     technologies: ["React", "TypeScript", "GSAP", "React Router", "Vite", "SCSS"],
     heroImage: {
