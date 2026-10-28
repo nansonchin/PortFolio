@@ -1,6 +1,5 @@
 import { projectRepository } from "../../../repository/ProjectRepository";
 import { resolveNavigationPath } from "../../TerminalAssistant/Navigations/navigationService";
-import { emitJarvisNavigate } from "../../TerminalAssistant/terminalEvent";
 import type { AiToolCall, AiToolResult } from "../provider/aiProvider.types";
 
 export type ToolContext = {
@@ -29,7 +28,6 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
       const path = resolveNavigationPath({ type: "project", slug });
 
       /* 先闪烁，同时导航 */
-      emitJarvisNavigate(path);
       ctx.navigate(path);
 
       return {
@@ -52,7 +50,6 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
 
       const path = resolveNavigationPath({ type: "page", target: page });
 
-      emitJarvisNavigate(path);
       ctx.navigate(path);
 
       return { name: call.name, response: { success: true, opened: page } };
@@ -109,7 +106,6 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
       const queryString = params.toString();
       const url = queryString.length > 0 ? "/projects?" + queryString : "/projects";
 
-      emitJarvisNavigate(url);
       ctx.navigate(url);
 
       return {

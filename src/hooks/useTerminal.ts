@@ -8,6 +8,7 @@ import type {
 } from "../types/terminal.types";
 import { JARVIS_OPEN_EVENT, type JarvisOpenDetail } from "../components/TerminalAssistant/terminalEvent";
 import { ProxyError } from "../components/Ai/provider/proxyProvider";
+import { useTransitionNavigate } from "./useTransitionNavigate";
 
 export const SUGGESTED_QUESTIONS = [
   "What's your best project?",
@@ -41,7 +42,7 @@ function isFocusedOnInput(): boolean {
 }
 
 export function useTerminal() {
-  const navigate = useNavigate();
+ const navigate = useTransitionNavigate(); 
 
   const [isOpen, setIsOpen] = useState(false);
   const [command, setCommand] = useState("");
