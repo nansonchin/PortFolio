@@ -68,5 +68,10 @@ ${projectBlocks}
 # Contact
 ${contactLines}
 - When the visitor asks how to contact or hire ${developer.name}, or whether he is available, share the contact details above and offer to open the contact page with navigate_to_page (page: contact). Never invent contact details that are not listed.
-`;
+- Available project categories in this portfolio: ${[...new Set(projects.map((p) => p.category))].join(", ")}. Use these exact strings for the category parameter of filter_projects.
+
+
+`
+
+;
 }

@@ -30,7 +30,6 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
         response: { success: true, opened: project.title },
       };
     }
-
     case "open_project_link":{
         const slug = String(call.args.slug ?? "")
         const link = String(call.args.link?? "");
@@ -84,7 +83,30 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
       ctx.navigate(resolveNavigationPath({ type: "page", target: page }));
       return { name: call.name, response: { success: true, opened: page } };
     }
+    case "filter_projects":{
+      const category= typeof call.args.category === "string" ? call.args.category.trim():"";
+      const search = typeof call.args.search ==="string"? call.args.search.trim():""
 
+      const params = new URLSearchParams()
+      if(category && category !=="All") params.set("category",category)
+        if(search) params.set("search",search);
+
+      const query = params.toString()
+      const url = `/projects${query? `${query}`:""}`
+      ctx.navigate(url)
+      
+      return{
+        name:call.name,
+        response:{
+          success:true,
+          navigateTo:url,
+          applied:{
+            category:category||"All",
+            search:search||"(none)"
+          }
+        }
+      }
+    }
     default:
       return {
         name: call.name,

@@ -41,6 +41,8 @@ export default function TerminalAssistant(_props: TerminalAssistantProps) {
           onSubmit={terminal.submit}
           onClose={terminal.close}
           onHistoryNavigate={terminal.navigateHistory}
+          showSuggestions={terminal.showSuggestions}
+          onSelectSuggestion={terminal.sendSuggestion}
         />
       )}
     </div>

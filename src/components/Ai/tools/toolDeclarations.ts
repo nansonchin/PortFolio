@@ -54,4 +54,32 @@ export const portfolioTools: AiToolDeclaration[] = [
       required: ["slug", "link"],
     },
   },
+
+  {
+    name: "filter_projects",
+    description:
+      "Navigate to the projects page and apply a filter to show only relevant projects. " +
+      "Use when the visitor asks to see projects of a specific type, category, or technology — " +
+      "for example: 'show me your frontend projects', 'do you have any React work', " +
+      "'show me animation projects', 'what Vue projects have you built'. " +
+      "Prefer this over navigate_to_page when the visitor is asking about a category or technology.",
+    parameters: {
+      type: "object",
+      properties: {
+        category: {
+          type: "string",
+          description:
+            "The project category to filter by. Must match exactly one of the categories in the project list. " +
+            "Use 'All' to show all projects. Leave empty if filtering by search keyword instead.",
+        },
+        search: {
+          type: "string",
+          description:
+            "A keyword to search by — matches project titles and technologies. " +
+            "Use this when the visitor mentions a specific technology (e.g. 'Vue', 'GSAP', 'TypeScript') " +
+            "that may not be a category name.",
+        },
+      },
+    },
+  },
 ];

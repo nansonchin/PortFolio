@@ -13,6 +13,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "../../../../animations/glitch";
+import { useSearchParams } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -97,6 +98,20 @@ function ProjectExplorer() {
 
   const isFiltered = activeCategory !== "All" || searchQuery.trim() !== "";
 
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    const searchParam = searchParams.get("search");
+
+    if (categoryParam) {
+      setActiveCategory(categoryParam);
+    }
+    if (searchParam) {
+      setSearchQuery(searchParam.trim());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <section ref={sectionRef} className="px-6 pb-24 md:px-10 md:pb-32">
       <div className="mx-auto max-w-7xl">
