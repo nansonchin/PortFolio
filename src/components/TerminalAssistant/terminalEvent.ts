@@ -6,6 +6,20 @@ export type JarvisOpenDetail = {
 
 export function openJarvis(prompt?: string) {
   window.dispatchEvent(
-    new CustomEvent<JarvisOpenDetail>(JARVIS_OPEN_EVENT, { detail: { prompt } }),
+    new CustomEvent<JarvisOpenDetail>(JARVIS_OPEN_EVENT, {
+      detail: { prompt },
+    }),
+  );
+}
+
+export const JARVIS_NAVIGATE_EVENT = "jarvis:navigate";
+
+export type JarvisNavigateDetail = {
+  path: string;
+};
+
+export function emitJarvisNavigate(path: string) {
+  window.dispatchEvent(
+    new CustomEvent<JarvisNavigateDetail>(JARVIS_NAVIGATE_EVENT, { detail: { path } }),
   );
 }

@@ -9,6 +9,7 @@ import ProjectFrame from "./ProjectFrame";
 import SectionLabel from "../SectionLabel/SectionLabel";
 import { openJarvis } from "../TerminalAssistant/terminalEvent";
 import GlitchText from "../GlitchText/GlitchText";
+import { useSharedImage } from "../PageTransition/SharedImageContext";
 
 type ProjectHeroProps = {
   project: ProjectDetailModel;
@@ -21,11 +22,55 @@ const buttonClass =
   "bar-select label inline-flex items-center gap-3 border border-gold/60 px-5 py-3";
 
 function ProjectHero({ project, position }: ProjectHeroProps) {
+  const {consume} = useSharedImage()
   const heroRef = useRef<HTMLElement | null>(null);
 
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
+   
+    const shared = consume();
+    const frameEl = heroRef.current?.querySelector<HTMLElement>(".detail-frame");
+    const heroImg = frameEl?.querySelector<HTMLImageElement>("img");
+
+    if (
+      shared &&
+      shared.slug === project.slug &&
+      heroImg &&
+      !prefersReducedMotion()
+    ) {
+      const heroRect = heroImg.getBoundingClientRect();
+      const parentRect = heroImg.offsetParent
+        ? (heroImg.offsetParent as HTMLElement).getBoundingClientRect()
+        : { left: 0, top: 0 };
+
+      const scaleX = shared.rect.width / heroRect.width;
+      const scaleY = shared.rect.height / heroRect.height;
+      const startX = shared.rect.left - parentRect.left - (heroRect.left - parentRect.left);
+      const startY = shared.rect.top - parentRect.top - (heroRect.top - parentRect.top);
+
+      gsap.fromTo(
+        heroImg,
+        {
+          x: startX,
+          y: startY,
+          scaleX,
+          scaleY,
+          transformOrigin: "top left",
+          autoAlpha: 1,
+          clipPath: "none",
+        },
+        {
+          x: 0,
+          y: 0,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 0.85,
+          ease: "power3.inOut",
+          clearProps: "x,y,scaleX,scaleY,transformOrigin",
+        },
+      );
+    }
 
       gsap
         .timeline({ defaults: { ease: "power4.out" } })

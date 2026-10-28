@@ -24,6 +24,7 @@ import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/inter";
 import { IntroProvider } from "./components/Intro/IntroContext.tsx";
 import { LanguageProvider } from "./il8n/LanguageContext.tsx";
+import { SharedImageProvider } from "./components/PageTransition/SharedImageContext.tsx";
 setupAI();
 
 const isTouch = window.matchMedia(
@@ -37,11 +38,13 @@ createRoot(document.getElementById("root")!).render(
         <CursorProvider>
           <CursorPhysicsProvider>
             <IntroProvider>
-              <Analytics />
-              <div className={isTouch ? "" : "cursor-none"}>
-                {!isTouch && <Cursor />}
-                <RouterProvider router={router} />
-              </div>
+              <SharedImageProvider>
+                <Analytics />
+                <div className={isTouch ? "" : "cursor-none"}>
+                  {!isTouch && <Cursor />}
+                  <RouterProvider router={router} />
+                </div>
+              </SharedImageProvider>
             </IntroProvider>
           </CursorPhysicsProvider>
         </CursorProvider>
