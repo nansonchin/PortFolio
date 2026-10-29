@@ -44,6 +44,7 @@ export default function TerminalAssistant(_props: TerminalAssistantProps) {
           showSuggestions={terminal.showSuggestions}
           onSelectSuggestion={terminal.sendSuggestion}
           isThinking={terminal.isThinking}
+          onStop={terminal.stop}
         />
       )}
     </div>

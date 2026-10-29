@@ -13,6 +13,7 @@ type TerminalPanelProps = {
   onChangeCommand: (value: string) => void;
   onHistoryNavigate: (direction: "up" | "down") => void;
   onSubmit: () => void;
+  onStop:()=>void;
   onClose: () => void;
   showSuggestions: boolean;
   onSelectSuggestion: (question: string) => void;
@@ -25,6 +26,7 @@ export default function TerminalPanel({
   onChangeCommand,
   onHistoryNavigate,
   onSubmit,
+  onStop,
   onClose,
   showSuggestions,
   onSelectSuggestion,
@@ -32,7 +34,8 @@ export default function TerminalPanel({
   // 消息数量、thinking 状态、最后一条消息的长度（流式输出时它会一直变长）变化时才跟随滚动。
   // 不要把 command（输入框内容）放进依赖，否则每敲一个字都会触发。
   // 是否真的滚动由 useTerminalScroll 决定：用户在底部附近才跟随。
-  const lastLength = history[history.length - 1]?.text.length ?? 0;
+   const last = history[history.length - 1];
+  const lastLength = last?.text.length ?? 0;
   const terminalRef = useTerminalScroll(`${history.length}:${isThinking}:${lastLength}`);
   const panelRef = useRef<HTMLElement | null>(null);
 
@@ -119,6 +122,8 @@ export default function TerminalPanel({
         onChange={onChangeCommand}
         onSubmit={onSubmit}
         onHistoryNavigate={onHistoryNavigate}
+        isBusy={isThinking}
+        onStop={onStop}
       />
 
       <footer className="border-t border-white/5 px-4 py-2 text-[10px] text-neutral-600">

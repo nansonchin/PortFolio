@@ -10,7 +10,7 @@ const STICK_THRESHOLD = 48;
  * 如果无条件滚到底，用户往上翻着看之前的回复，就会被一次次强行拉回去，
  * 这是流式 UI 里最让人火大的细节之一（ChatGPT 的做法就是“贴底才跟随”）。
  */
-export function useTerminalScroll(dependency: unknown) {
+export function useTerminalScroll(dependency: unknown,forceStick = false) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stickRef = useRef(true);
 
@@ -31,6 +31,10 @@ export function useTerminalScroll(dependency: unknown) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container || !stickRef.current) return;
+
+    if(forceStick){
+      stickRef.current=true;
+    }
 
     container.scrollTop = container.scrollHeight;
   }, [dependency]);

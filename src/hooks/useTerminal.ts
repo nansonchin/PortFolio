@@ -5,9 +5,16 @@ import type {
   TerminalMessage,
   TerminalMessageType,
 } from "../types/terminal.types";
-import { JARVIS_OPEN_EVENT, type JarvisOpenDetail } from "../components/TerminalAssistant/terminalEvent";
-import { ProxyError, isAbortError } from "../components/Ai/provider/proxyProvider";
+import {
+  JARVIS_OPEN_EVENT,
+  type JarvisOpenDetail,
+} from "../components/TerminalAssistant/terminalEvent";
+import {
+  ProxyError,
+  isAbortError,
+} from "../components/Ai/provider/proxyProvider";
 import { useTransitionNavigate } from "./useTransitionNavigate";
+import { createSmoothWriter } from "../components/TerminalAssistant/smoothWritter";
 
 export const SUGGESTED_QUESTIONS = [
   "What's your best project?",
@@ -58,7 +65,7 @@ export function useTerminal() {
 
   const inputHistory = useRef<string[]>([]);
   const cursor = useRef(-1);
-  const abortRef = useRef<AbortController | null>(null);
+  const cancelRef = useRef<(() => void) | null>(null);
 
   const push = useCallback((type: TerminalMessageType, text: string) => {
     setHistory((prev) => [...prev, { id: crypto.randomUUID(), type, text }]);
@@ -67,8 +74,10 @@ export function useTerminal() {
   const toggle = useCallback(() => setIsOpen((v) => !v), []);
   const close = useCallback(() => setIsOpen(false), []);
 
+  const stop = useCallback(() => cancelRef.current?.(), []);
+
   // 组件卸载时取消还在进行的请求，不要让它在后台继续跑
-  useEffect(() => () => abortRef.current?.abort(), []);
+  useEffect(() => () => cancelRef.current?.(), []);
 
   const submitText = useCallback(
     async (input: string) => {
@@ -98,7 +107,6 @@ export function useTerminal() {
       setIsThinking(true);
 
       const controller = new AbortController();
-      abortRef.current = controller;
 
       // 这条流式回复在 history 里对应的消息 id
       const replyId = crypto.randomUUID();
@@ -107,27 +115,21 @@ export function useTerminal() {
       const upsertReply = (update: (previous: string) => string) =>
         setHistory((prev) =>
           prev.some((m) => m.id === replyId)
-            ? prev.map((m) => (m.id === replyId ? { ...m, text: update(m.text) } : m))
+            ? prev.map((m) =>
+                m.id === replyId ? { ...m, text: update(m.text) } : m,
+              )
             : [...prev, { id: replyId, type: "success", text: update("") }],
         );
 
-      // 一个 token 一次 setState 会让整个面板疯狂重渲染。
-      // 把这一帧内收到的所有 delta 合并，每帧最多更新一次。
-      let pending = "";
-      let frame = 0;
-
-      const flush = () => {
-        frame = 0;
-        if (!pending) return;
-        const chunk = pending;
-        pending = "";
-        upsertReply((previous) => previous + chunk);
+      const writer = createSmoothWriter((chunk) =>
+        upsertReply((previous) => previous + chunk),
+      );
+      const cancel = () => {
+        controller.abort();
+        writer.flush();
       };
 
-      const onTextDelta = (delta: string) => {
-        pending += delta;
-        if (!frame) frame = requestAnimationFrame(flush);
-      };
+      cancelRef.current = cancel;
 
       try {
         const reply = await askJarvis(
@@ -137,19 +139,20 @@ export function useTerminal() {
             openExternal: (url) =>
               window.open(url, "_blank", "noopener,noreferrer"),
           },
-          { onTextDelta, signal: controller.signal },
+          { onTextDelta: writer.push, signal: controller.signal },
         );
 
-        // 以最终结果为准，覆盖流式过程中累积的文字（也顺便丢掉没来得及 flush 的 pending）
-        cancelAnimationFrame(frame);
-        pending = "";
+        // 网络已经收完，等打字机把队列里剩下的播完（点“停止”会让它立刻播完）
+        await writer.drain();
+
+        // 以最终结果为准，确保屏幕上的文字和最终回复完全一致
         upsertReply(() => reply);
       } catch (error) {
-        // 把已经收到的文字先显示出来，再决定怎么处理错误
-        cancelAnimationFrame(frame);
-        flush();
-
-        if (isAbortError(error)) return; // 用户主动取消 / 组件卸载：不需要报错
+        writer.flush();
+        if (isAbortError(error)) {
+          push("system", "— stopped —");
+          return;
+        }
 
         console.error(error);
         push(
@@ -159,7 +162,7 @@ export function useTerminal() {
             : "JARVIS is unavailable right now. Try a command like: projects",
         );
       } finally {
-        if (abortRef.current === controller) abortRef.current = null;
+        if (cancelRef.current === cancel) cancelRef.current = null;
         setIsThinking(false);
       }
     },
@@ -167,8 +170,15 @@ export function useTerminal() {
   );
 
   const submit = useCallback(async () => {
+    if(isThinking){
+      return
+    }
+
     const text = command.trim();
-    setCommand("");
+    if(!text){
+      return
+    }
+    setCommand('')
     await submitText(text);
   }, [command, submitText]);
 
@@ -240,6 +250,7 @@ export function useTerminal() {
     command,
     setCommand,
     submit,
+    stop,
     navigateHistory,
     isThinking,
     showSuggestions,

@@ -40,6 +40,9 @@ function SuggestedQuestions({ questions, onSelect, visible }: SuggestedQuestions
           autoAlpha: 0,
           duration: 0.2,
           ease: "power2.in",
+          onComplete:()=>{
+            gsap.set(container,{display:"none"})
+          }
         });
       }
     },

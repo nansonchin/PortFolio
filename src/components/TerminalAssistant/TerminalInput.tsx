@@ -8,6 +8,8 @@ type TerminalInputProps = {
   onSubmit: () => void;
 
   onHistoryNavigate: (direction: "up" | "down") => void;
+  isBusy: boolean;
+  onStop: () => void;
 };
 
 export default function TerminalInput({
@@ -15,6 +17,8 @@ export default function TerminalInput({
   onChange,
   onSubmit,
   onHistoryNavigate,
+  isBusy,
+  onStop,
 }: TerminalInputProps) {
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "ArrowUp") {
@@ -32,6 +36,10 @@ export default function TerminalInput({
     if (event.key === "Enter") {
       event.preventDefault();
 
+      if (isBusy) {
+        return;
+      }
+
       onSubmit();
     }
   }
@@ -40,12 +48,13 @@ export default function TerminalInput({
       onSubmit={(event) => {
         event.preventDefault();
 
-        if (!value.trim()) {
+        if (isBusy || !value.trim()) {
           return;
         }
 
         onSubmit();
       }}
+      aria-busy={isBusy}
       className="
             flex
             items-center
@@ -69,7 +78,7 @@ export default function TerminalInput({
       </label>
 
       <input
-      maxLength={500}
+        maxLength={500}
         id="terminal-command"
         type="text"
         value={value}
@@ -78,7 +87,7 @@ export default function TerminalInput({
         autoComplete="off"
         spellCheck={false}
         autoFocus
-        placeholder="Type a command..."
+        placeholder={isBusy ? "Jarvis is responding..." : "Type a command ..."}
         className="
                 min-w-0
                 flex-1
@@ -90,10 +99,31 @@ export default function TerminalInput({
                 placeholder:text-neutral-600
                 "
       />
-
-      <button
-        type="submit"
-        className="
+      {isBusy ? (
+        <button
+          type="button"
+          onClick={onStop}
+          aria-label="Stop generating"
+          className="
+                rounded
+                border
+                border-[#C9A96E]/60
+                bg-[#C9A96E]/10
+                px-2
+                py-1
+                text-[10px]
+                tracking-wider
+                text-[#D8BD83]
+                transition-colors
+                hover:bg-[#C9A96E]/20
+                "
+        >
+          ■ STOP
+        </button>
+      ) : (
+        <button
+          type="submit"
+          className="
                 rounded
                 border
                 border-[#C9A96E]/30
@@ -105,9 +135,10 @@ export default function TerminalInput({
                 transition-colors
                 hover:bg-[#C9A96E]/10
                 "
-      >
-        ENTER
-      </button>
+        >
+          ENTER
+        </button>
+      )}
     </form>
   );
 }
