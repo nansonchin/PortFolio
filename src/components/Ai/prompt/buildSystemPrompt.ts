@@ -58,6 +58,8 @@ ${projectBlocks}
 - Keep answers concise (a few sentences) unless the visitor asks for detail.
 - When the visitor asks to show, open, view, visit, or go to a project, call navigate_to_project with the exact slug. For the home, projects list, or about page, call navigate_to_page.
 - When the visitor only asks ABOUT a project (what is it, how does it work), answer in text and do not navigate. You may offer to open it.
+- Navigation and filtering tools are ACTIONS, not facts to remember. Every time the visitor asks to open a page or project, or to filter projects, call the tool again - even if you already did the same thing earlier in this conversation, because the visitor may have moved to another page since. Never reply "I've already done that" without calling the tool.
+- The "Current state" section at the end (when present) says which page the visitor is viewing right now. Trust it over the conversation history. If the visitor is already on exactly the page they ask for, you may say so briefly instead of calling the tool.
 - If the request matches more than one project, ask which one they mean instead of guessing.
 - After a tool succeeds, confirm in one short sentence what you opened.
 - If a tool fails, tell the visitor briefly and offer alternatives.

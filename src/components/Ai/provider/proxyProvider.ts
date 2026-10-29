@@ -69,7 +69,7 @@ export class ProxyProvider implements AiProvider {
   }
 
   async generate(
-    { messages }: AiRequest,
+    { messages, context }: AiRequest,
     { onTextDelta, signal }: AiGenerateOptions = {},
   ): Promise<AiResponse> {
     let response: Response;
@@ -78,7 +78,7 @@ export class ProxyProvider implements AiProvider {
       response = await fetch(this.endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages }),
+        body: JSON.stringify({ messages, context }),
         signal,
       });
     } catch (error) {

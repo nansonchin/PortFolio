@@ -15,6 +15,7 @@ import {
 } from "../components/Ai/provider/proxyProvider";
 import { useTransitionNavigate } from "./useTransitionNavigate";
 import { createSmoothWriter } from "../components/TerminalAssistant/smoothWritter";
+import { useLocation } from "react-router-dom";
 
 export const SUGGESTED_QUESTIONS = [
   "What's your best project?",
@@ -54,6 +55,13 @@ export function useTerminal() {
     (path: string) => go(path, { variant: "full" }),
     [go],
   );
+
+  const location = useLocation()
+  const currentPathRef= useRef("")
+
+  useEffect(()=>{
+    currentPathRef.current=location.pathname+location.search
+  },[location.pathname, location.search])
 
   const [isOpen, setIsOpen] = useState(false);
   const [command, setCommand] = useState("");

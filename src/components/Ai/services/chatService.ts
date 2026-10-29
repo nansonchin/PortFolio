@@ -1,5 +1,5 @@
 import { getAIProvider } from "../provider/aiProvider";
-import type { AiMessage } from "../provider/aiProvider.types";
+import type { AiMessage, AiRequest, AiRequestContext } from "../provider/aiProvider.types";
 import { executeTool, type ToolContext } from "../tools/toolHandlers";
 
 const MAX_TOOL_ROUNDS = 4;
@@ -7,12 +7,12 @@ const MAX_USER_TURNS = 10;
 
 let history: AiMessage[] = [];
 
-function trimHistory() {
+function trimHistory(keepUserTurns=MAX_USER_TURNS) {
   const userIndexes = history
     .map((m, i) => (m.role === "user" ? i : -1))
     .filter((i) => i >= 0);
-  if (userIndexes.length > MAX_USER_TURNS) {
-    history = history.slice(userIndexes[userIndexes.length - MAX_USER_TURNS]);
+  if (userIndexes.length > keepUserTurns) {
+    history = history.slice(userIndexes[userIndexes.length - keepUserTurns]);
   }
 }
 
@@ -25,6 +25,7 @@ export type AskJarvisOptions = {
   onTextDelta?: (delta: string) => void;
   /** 用来取消整个对话轮次（包括正在进行的流） */
   signal?: AbortSignal;
+  getContext?:()=>AiRequestContext
 };
 
 /**
@@ -38,9 +39,10 @@ export type AskJarvisOptions = {
 export async function askJarvis(
   input: string,
   ctx: ToolContext,
-  { onTextDelta, signal }: AskJarvisOptions = {},
+  { onTextDelta, signal, getContext }: AskJarvisOptions = {},
 ): Promise<string> {
   const provider = getAIProvider();
+  trimHistory(MAX_USER_TURNS-1)
   const checkpoint = history.length;
 
   history.push({ role: "user", text: input });

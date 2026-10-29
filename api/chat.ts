@@ -82,7 +82,9 @@ class ModelContentBuilder {
     if (part.functionCall) {
       this.parts.push({
         functionCall: part.functionCall,
-        ...(part.thoughtSignature ? { thoughtSignature: part.thoughtSignature } : {}),
+        ...(part.thoughtSignature
+          ? { thoughtSignature: part.thoughtSignature }
+          : {}),
       });
       return "";
     }
@@ -92,11 +94,14 @@ class ModelContentBuilder {
 
       if (last && typeof last.text === "string" && !last.thoughtSignature) {
         last.text += part.text;
-        if (part.thoughtSignature) last.thoughtSignature = part.thoughtSignature;
+        if (part.thoughtSignature)
+          last.thoughtSignature = part.thoughtSignature;
       } else {
         this.parts.push({
           text: part.text,
-          ...(part.thoughtSignature ? { thoughtSignature: part.thoughtSignature } : {}),
+          ...(part.thoughtSignature
+            ? { thoughtSignature: part.thoughtSignature }
+            : {}),
         });
       }
 
@@ -131,6 +136,15 @@ class ModelContentBuilder {
   }
 }
 
+function buildStateBlock(body: unknown): string {
+  const path = (body as { context?: { path?: unknown } } | null)?.context?.path;
+
+  if (typeof path !== "string" || path.length > 200) return "";
+  if (!/^\/[\w\-./?=&%+]*$/.test(path)) return "";
+
+  return `\n\n# Current state\nThe visitor is currently viewing this page of the portfolio: ${path}`;
+}
+
 function safeJson(text: string): any {
   try {
     return JSON.parse(text);
@@ -151,7 +165,13 @@ export default async function handler(req: Req, res: Res) {
 
   const isProduction = process.env.VERCEL_ENV === "production";
 
-  if (!isAllowedOrigin(req.headers, isProduction, process.env.ALLOWED_ORIGINS ?? "")) {
+  if (
+    !isAllowedOrigin(
+      req.headers,
+      isProduction,
+      process.env.ALLOWED_ORIGINS ?? "",
+    )
+  ) {
     return res.status(403).json({ error: "forbidden" });
   }
 
@@ -166,7 +186,9 @@ export default async function handler(req: Req, res: Res) {
 
   if (!limit.ok) {
     res.setHeader("Retry-After", String(limit.retryAfter));
-    return res.status(429).json({ error: "rate_limited", retryAfter: limit.retryAfter });
+    return res
+      .status(429)
+      .json({ error: "rate_limited", retryAfter: limit.retryAfter });
   }
 
   const parsed = parseMessages(req.body, TOOL_NAMES);
@@ -213,26 +235,37 @@ export default async function handler(req: Req, res: Res) {
   armIdle();
 
   try {
-    const upstream = await fetch(`${ENDPOINT}/${model}:streamGenerateContent?alt=sse`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-      signal: controller.signal,
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: toGeminiContents(parsed.messages),
-        tools: [{ functionDeclarations: TOOLS }],
-        generationConfig: buildGenerationConfig(model, thinkingLevel),
-      }),
-    });
+    const upstream = await fetch(
+      `${ENDPOINT}/${model}:streamGenerateContent?alt=sse`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT + buildStateBlock(req.body)}] },
+          contents: toGeminiContents(parsed.messages),
+          tools: [{ functionDeclarations: TOOLS }],
+          generationConfig: buildGenerationConfig(model, thinkingLevel),
+        }),
+      },
+    );
 
     // 还没开始流：这里的错误依然可以用正常状态码返回
     if (!upstream.ok || !upstream.body) {
       const detail = await upstream.text().catch(() => "");
-      console.error("[chat] upstream error", upstream.status, detail.slice(0, 500));
+      console.error(
+        "[chat] upstream error",
+        upstream.status,
+        detail.slice(0, 500),
+      );
 
       // 注意：前端 toErrorCode 是用 === "upstream_busy" 比较的，
       // 原来写成 "upstream_busy, Quote_Limit_Reached" 会永远匹配不上。
-      if (upstream.status === 429) return res.status(503).json({ error: "upstream_busy" });
+      if (upstream.status === 429)
+        return res.status(503).json({ error: "upstream_busy" });
 
       return res.status(502).json({ error: "upstream_error" });
     }
@@ -255,7 +288,10 @@ export default async function handler(req: Req, res: Res) {
 
       // Gemini 也可能在流中间报错
       if (chunk.error) {
-        console.error("[chat] mid-stream upstream error", JSON.stringify(chunk.error).slice(0, 500));
+        console.error(
+          "[chat] mid-stream upstream error",
+          JSON.stringify(chunk.error).slice(0, 500),
+        );
         send({
           type: "error",
           error: chunk.error.code === 429 ? "upstream_busy" : "upstream_error",

@@ -19,8 +19,14 @@ export type AiMessage =
   | { role: "model"; text: string; raw?: unknown }
   | { role: "tool"; results: AiToolResult[] };
 
+  export type AiRequestContext = {
+  /** 访客此刻所在的页面，例如 "/about" 或 "/projects?category=Frontend" */
+  path: string;
+};
+
 export type AiRequest = {
   messages: AiMessage[];
+  context?: AiRequestContext;
 };
 
 export type AiResponse = {

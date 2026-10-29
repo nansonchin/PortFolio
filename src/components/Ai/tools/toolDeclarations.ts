@@ -20,7 +20,7 @@ export const portfolioTools: AiToolDeclaration[] = [
   {
     name: "navigate_to_page",
     description:
-      "Open a main page of the portfolio: home, the projects list, or the about page.",
+      "Open a main page of the portfolio: home, the projects list, the about page, or the contact page.",
     parameters: {
       type: "object",
       properties: {
@@ -62,7 +62,8 @@ export const portfolioTools: AiToolDeclaration[] = [
       "Use when the visitor asks to see projects of a specific type, category, or technology — " +
       "for example: 'show me your frontend projects', 'do you have any React work', " +
       "'show me animation projects', 'what Vue projects have you built'. " +
-      "Prefer this over navigate_to_page when the visitor is asking about a category or technology.",
+      "Prefer this over navigate_to_page when the visitor is asking about a category or technology." +
+       "Call it every time the visitor asks, even if the same filter was applied earlier in the conversation - they may have left the projects page since.",
     parameters: {
       type: "object",
       properties: {
