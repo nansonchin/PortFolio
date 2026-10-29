@@ -3,6 +3,7 @@ import { developerContext } from "../data/developerContext";
 import { getContactLinks } from "../data/profile";
 import { useLanguage } from "../il8n/LanguageContext";
 import type { TranslationKey } from "../il8n/locales/en";
+import TransitionLink from "./PageTransition/TransitionLink";
 
 const navLinks: { to: string; label: TranslationKey }[] = [
   { to: "/projects", label: "nav.projects" },
@@ -31,9 +32,9 @@ function Footer() {
 
         <nav aria-label={t("nav.footerAria")} className="flex flex-wrap gap-x-6 gap-y-2">
           {navLinks.map((item) => (
-            <Link key={item.to} to={item.to} className={linkClass}>
+            <TransitionLink key={item.to} to={item.to} className={linkClass}>
               {t(item.label)}
-            </Link>
+            </TransitionLink>
           ))}
         </nav>
 

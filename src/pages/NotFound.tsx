@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { startHeroGlitch } from "../animations/heroGlitch";
 import GlitchText from "../components/GlitchText/GlitchText";
 import { useSEO } from "../hooks/useSEO";
+import TransitionLink from "../components/PageTransition/TransitionLink";
 
 function NotFound() {
   useSEO({ title: "404 – Not Found" });
@@ -30,12 +31,12 @@ function NotFound() {
       </p>
 
       <div className="flex flex-wrap justify-center gap-4">
-        <Link to="/" className="bar-select label border border-gold/60 px-5 py-3">
+        <TransitionLink to="/" className="bar-select label border border-gold/60 px-5 py-3">
           Home
-        </Link>
-        <Link to="/projects" className="bar-select label border border-gold/60 px-5 py-3">
+        </TransitionLink>
+        <TransitionLink to="/projects" className="bar-select label border border-gold/60 px-5 py-3">
           Projects
-        </Link>
+        </TransitionLink>
       </div>
     </main>
   );

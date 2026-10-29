@@ -6,6 +6,8 @@ import MobileMenu from "./Navbar/MobileMenu";
 import LanguageSwitch from "../il8n/LanguageSwitch";
 import { useLanguage } from "../il8n/LanguageContext";
 import type { TranslationKey } from "../il8n/locales/en";
+import TransitionLink from "./PageTransition/TransitionLink";
+import TransitionNavLink from "./PageTransition/TransitionNavLink";
 
 const NAV_LINKS : { to: string; label: TranslationKey; end: boolean }[] = [
   { to: "/", label: "nav.home", end: true },
@@ -33,19 +35,19 @@ function Navbar() {
           md:px-10
         "
       >
-        <Link
+        <TransitionLink
           to="/"
           onClick={close}
           className="font-system text-sm tracking-[0.3em] text-gold-bright"
         >
           [{developerContext.name.toUpperCase()}
           <span className="blink">_</span>]
-        </Link>
+        </TransitionLink>
 
         <ul className="hidden items-center gap-2 md:flex">
           {NAV_LINKS.map((item, i) => (
             <li key={item.to}>
-              <NavLink
+              <TransitionNavLink
                 to={item.to}
                 end={item.end}
                 className="bar-select label block px-4 py-2"
@@ -54,7 +56,7 @@ function Navbar() {
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 {t(item.label)}
-              </NavLink>
+              </TransitionNavLink>
             </li>
           ))}
         </ul>

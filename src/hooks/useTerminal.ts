@@ -42,7 +42,8 @@ function isFocusedOnInput(): boolean {
 }
 
 export function useTerminal() {
- const navigate = useTransitionNavigate(); 
+ const go = useTransitionNavigate();
+const navigate = useCallback((path: string) => go(path, { variant: "full" }), [go]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [command, setCommand] = useState("");

@@ -6,6 +6,7 @@ import SectionLabel from "../SectionLabel/SectionLabel";
 import React, { useState } from "react";
 import WorkPreview from "../FeaturedProjects/WorkPreview";
 import { canHover } from "../FeaturedProjects/workUtils";
+import TransitionLink from "../PageTransition/TransitionLink";
 
 function groupByYear(projects: Project[]): [number, Project[]][] {
   const map = new Map<number, Project[]>();
@@ -76,7 +77,7 @@ function BuildLog() {
                   <ul>
                     {items.map((project, index) => (
                       <li key={project.id}>
-                        <Link
+                        <TransitionLink
                           to={`/project/${project.slug}`}
                           data-cursor="view"
                           onMouseEnter={() => {
@@ -91,7 +92,7 @@ function BuildLog() {
                           <span className="label hidden opacity-60 sm:block">
                             {project.category}
                           </span>
-                        </Link>
+                        </TransitionLink>
                       </li>
                     ))}
                   </ul>

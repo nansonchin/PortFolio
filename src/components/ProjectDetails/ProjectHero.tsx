@@ -10,6 +10,7 @@ import SectionLabel from "../SectionLabel/SectionLabel";
 import { openJarvis } from "../TerminalAssistant/terminalEvent";
 import GlitchText from "../GlitchText/GlitchText";
 import { useSharedImage } from "../PageTransition/SharedImageContext";
+import TransitionLink from "../PageTransition/TransitionLink";
 
 type ProjectHeroProps = {
   project: ProjectDetailModel;
@@ -115,12 +116,12 @@ function ProjectHero({ project, position }: ProjectHeroProps) {
 
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="detail-eyebrow mb-10 flex items-center justify-between gap-6">
-          <Link
+          <TransitionLink
             to="/projects"
             className="label text-gold-dim transition-colors hover:text-gold-bright"
           >
             ← ALL PROJECTS
-          </Link>
+          </TransitionLink>
           <p className="label text-gold-dim">
             {pad(position.index)} / {pad(position.total)}
           </p>

@@ -1,25 +1,17 @@
-import { forwardRef, type MouseEvent } from "react";
-import { Link, useLocation, type LinkProps } from "react-router-dom";
-import { useTransitionNavigate } from "../../hooks/useTransitionNavigate";
+import { forwardRef } from "react";
+import { Link, type LinkProps } from "react-router-dom";
+import type { TransitionVariant } from "./transitionRunner";
+import { useTransitionClick } from "../../hooks/useTransitionClick";
 
-type TransitionLinkProps = Omit<LinkProps, "to"> & { to: string };
+type TransitionLinkProps = Omit<LinkProps, "to"> & {
+  to: string;
+  variant?: TransitionVariant;
+};
+
 
 const TransitionLink = forwardRef<HTMLAnchorElement, TransitionLinkProps>(
-  function TransitionLink({ to, onClick, target, ...rest }, ref) {
-    const go = useTransitionNavigate();
-    const { pathname, search } = useLocation();
-
-    const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
-      onClick?.(event);
-
-      if (event.defaultPrevented) return;
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      if (target && target !== "_self") return;
-      if (to === pathname + search) return;
-
-      event.preventDefault(); 
-      go(to);
-    };
+  function TransitionLink({ to, onClick, target, variant, ...rest }, ref) {
+    const handleClick = useTransitionClick(to, { onClick, target, variant });
 
     return <Link ref={ref} to={to} target={target} onClick={handleClick} {...rest} />;
   },

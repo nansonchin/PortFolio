@@ -15,6 +15,7 @@ import ProjectGallery from "../components/ProjectDetails/ProjectGallery";
 import NextProject from "../components/FeaturedProjects/NextProject";
 import { useGlitchLoop } from "../hooks/useGlitchLoop";
 import { useSEO } from "../hooks/useSEO";
+import TransitionLink from "../components/PageTransition/TransitionLink";
 
 type ProjectDetailViewProps = {
   project: Project;
@@ -91,12 +92,12 @@ function ProjectDetail() {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-ink px-6 text-center">
         <p className="label text-alert">[ 404 ] PROJECT NOT FOUND</p>
-        <Link
+        <TransitionLink
           to="/projects"
           className="bar-select label border border-gold/60 px-5 py-3"
         >
           ← Back to projects
-        </Link>
+        </TransitionLink>
       </main>
     );
   }

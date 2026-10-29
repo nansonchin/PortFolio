@@ -4,6 +4,7 @@ import { useImagePreload } from "../../hooks/useImagePreload";
 import type { ProjectCardModel } from "../../models/ProjectCardModel";
 import ProjectThumb from "./ProjectThumb";
 import { useSharedImage } from "../PageTransition/SharedImageContext";
+import TransitionLink from "../PageTransition/TransitionLink";
 
 type ProjectCardProps = {
   project: ProjectCardModel;
@@ -60,7 +61,7 @@ function ProjectCard({ project, number }: ProjectCardProps) {
         <p className="label text-gold">{project.category}</p>
 
         <h3 className="mt-3 font-display text-3xl uppercase leading-[0.95] text-paper md:text-4xl">
-          <Link
+          <TransitionLink
             to={`/project/${project.slug}`}
             onClick={(event) => {
               const article = (event.currentTarget as HTMLElement).closest(
@@ -79,7 +80,7 @@ function ProjectCard({ project, number }: ProjectCardProps) {
             className="after:absolute after:inset-0 after:content-[''] text-[clamp(1rem,2.2vw,2.75rem)]"
           >
             {project.title}
-          </Link>
+          </TransitionLink>
         </h3>
 
         <p className="text-body mt-4 line-clamp-2 text-[14px] ">

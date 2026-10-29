@@ -9,6 +9,7 @@ import WorkPreview from "./WorkPreview";
 import ProjectThumb from "./ProjectThumb";
 import { canHover } from "./workUtils";
 import SectionLabel from "../SectionLabel/SectionLabel";
+import TransitionLink from "../PageTransition/TransitionLink";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -83,7 +84,7 @@ function FeaturedProjects() {
         >
           {projects.map((project, index) => (
             <li key={project.id} className="work-row border-b border-line">
-              <Link
+              <TransitionLink
                 to={`/project/${project.slug}`}
                 data-cursor="view"
                 onMouseEnter={() => activate(index)}
@@ -115,19 +116,19 @@ function FeaturedProjects() {
                     alt={`${project.title} preview`}
                   />
                 </span>
-              </Link>
+              </TransitionLink>
             </li>
           ))}
         </ul>
 
-        <Link
+        <TransitionLink
           to="/projects"
           data-magnetic
           className="bar-select label mt-12 inline-flex items-center gap-3 border border-gold/60 px-5 py-3"
         >
           View all projects
           <span className="opacity-60">→</span>
-        </Link>
+        </TransitionLink>
       </div>
 
       <WorkPreview items={projects} activeIndex={activeIndex} showSummary/>

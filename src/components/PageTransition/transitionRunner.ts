@@ -1,4 +1,10 @@
-type Runner = (commit: () => void, label: string) => void;
+export type TransitionVariant = "full" | "standard" | "quick";
+
+type Runner = (
+  commit: () => void,
+  label: string,
+  variant: TransitionVariant,
+) => void;
 
 let runner: Runner | null = null;
 
@@ -9,10 +15,14 @@ export function registerTransitionRunner(fn: Runner) {
   };
 }
 
-export function runPageTransition(commit: () => void, label: string) {
+export function runPageTransition(
+  commit: () => void,
+  label: string,
+  variant: TransitionVariant = "quick",
+) {
   if (!runner) {
     commit();
     return;
   }
-  runner(commit, label);
+  runner(commit, label, variant);
 }

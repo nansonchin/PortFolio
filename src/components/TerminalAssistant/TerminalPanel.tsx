@@ -5,9 +5,11 @@ import SuggestedQuestions, {
 } from "./SuggestedQuestions";
 import TerminalInput from "./TerminalInput";
 import { SUGGESTED_QUESTIONS } from "../../hooks/useTerminal";
+import TerminalMessages from "./TerminalMessages";
 
 type TerminalPanelProps = {
   history: TerminalMessage[];
+  isThinking:boolean,
   command: string;
   onChangeCommand: (value: string) => void;
   onHistoryNavigate: (direction: "up" | "down") => void;
@@ -17,26 +19,10 @@ type TerminalPanelProps = {
   onSelectSuggestion: (question: string) => void;
 };
 
-function renderText(text: string) {
-  return text.split(/(https?:\/\/\S+)/g).map((part, i) =>
-    /^https?:\/\//.test(part) ? (
-      <a
-        key={i}
-        href={part}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline underline-offset-2 hover:text-white"
-      >
-        {part}
-      </a>
-    ) : (
-      part
-    ),
-  );
-}
 
 export default function TerminalPanel({
   history,
+  isThinking,
   command,
   onChangeCommand,
   onHistoryNavigate,
@@ -114,25 +100,7 @@ export default function TerminalPanel({
           Portfolio System <span className="text-neutral-500">[UI]</span>
         </p>
 
-        {history.map((message) => (
-          <p
-            key={message.id}
-            className={`
-              break-words whitespace-pre-wrap
-              ${
-                message.type === "command"
-                  ? "text-[#F5F5F5]"
-                  : message.type === "success"
-                    ? "text-[#D8BD83]"
-                    : message.type === "error"
-                      ? "text-red-400"
-                      : "text-neutral-400"
-              }
-            `}
-          >
-            {renderText(message.text)}
-          </p>
-        ))}
+        <TerminalMessages history={history} isThinking={isThinking} />
 
         <SuggestedQuestions
           questions={[...SUGGESTED_QUESTIONS]}

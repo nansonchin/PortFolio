@@ -1,13 +1,30 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { prefersReducedMotion } from "../../animations/glitch";
-import {registerTransitionRunner} from "./transitionRunner"
-const COVER = 0.35;
-const TYPE_AT = 0.25;
-const TYPE_DURATION = 0.7;
-const COMMIT_AT = 1.4;
-const FADE_AT = 1.5;
-const FADE = 0.5; // FADE_AT + FADE = 2.0s
+import { registerTransitionRunner, type TransitionVariant } from "./transitionRunner";
+
+type Preset = {
+  cover: number;
+  typeAt: number;
+  typeDur: number;
+  okAt: number;
+  commitAt: number;
+  fadeAt: number;
+  fade: number;
+};
+
+const PRESETS: Record<TransitionVariant, Preset> = {
+  // 2.0s
+  full: { cover: 0.35, typeAt: 0.25, typeDur: 0.7, okAt: 1.05, commitAt: 1.4, fadeAt: 1.5, fade: 0.5 },
+  // 1.3s
+  standard: { cover: 0.25, typeAt: 0.15, typeDur: 0.4, okAt: 0.6, commitAt: 0.8, fadeAt: 0.9, fade: 0.4 },
+  // 0.8s
+  quick: { cover: 0.2, typeAt: 0.1, typeDur: 0.2, okAt: 0.33, commitAt: 0.45, fadeAt: 0.5, fade: 0.3 },
+};
+
+function buildLabel(variant: TransitionVariant, path: string) {
+  return variant === "quick" ? `> ${path} ` : `> navigate ${path} ........ `;
+}
 
 function PageTransition() {
   const curtainRef = useRef<HTMLDivElement>(null);
@@ -25,7 +42,7 @@ function PageTransition() {
       commit?.();
     };
 
-    const run = (commit: () => void, label: string) => {
+    const run = (commit: () => void, label: string, variant: TransitionVariant) => {
       if (tlRef.current?.isActive()) {
         pendingRef.current = commit;
         return;
@@ -41,10 +58,11 @@ function PageTransition() {
         return;
       }
 
-      pendingRef.current = commit;
-
-      const prefix = `> navigate ${label} ........ `;
+      const p = PRESETS[variant];
+      const prefix = buildLabel(variant, label);
       const counter = { n: 0 };
+
+      pendingRef.current = commit;
       text.textContent = "";
 
       const tl = gsap.timeline({
@@ -55,25 +73,25 @@ function PageTransition() {
         },
       });
 
-      tl.set(curtain, { pointerEvents: "auto" }, 0)
+      tl.set(curtain, { pointerEvents: "auto" }, 0) 
         .set(ok, { autoAlpha: 0 }, 0)
-        .to(curtain, { autoAlpha: 1, duration: COVER, ease: "power2.out" }, 0)
-        .set(panel, { autoAlpha: 1 }, TYPE_AT)
+        .to(curtain, { autoAlpha: 1, duration: p.cover, ease: "power2.out" }, 0)
+        .set(panel, { autoAlpha: 1 }, p.typeAt)
         .to(
           counter,
           {
             n: prefix.length,
-            duration: TYPE_DURATION,
+            duration: p.typeDur,
             ease: `steps(${prefix.length})`,
             onUpdate: () => {
               text.textContent = prefix.slice(0, Math.round(counter.n));
             },
           },
-          TYPE_AT,
+          p.typeAt,
         )
-        .set(ok, { autoAlpha: 1 }, TYPE_AT + TYPE_DURATION + 0.1)
-        .call(flushPending, [], COMMIT_AT)
-        .to([curtain, panel], { autoAlpha: 0, duration: FADE, ease: "power2.in" }, FADE_AT);
+        .set(ok, { autoAlpha: 1 }, p.okAt)
+        .call(flushPending, [], p.commitAt)
+        .to([curtain, panel], { autoAlpha: 0, duration: p.fade, ease: "power2.in" }, p.fadeAt);
 
       tlRef.current = tl;
     };
@@ -84,7 +102,7 @@ function PageTransition() {
       unregister();
       tlRef.current?.kill();
       tlRef.current = null;
-      flushPending(); // 组件卸载时别吞掉还没执行的跳转
+      flushPending(); 
     };
   }, []);
 
