@@ -1,5 +1,6 @@
 import { getAIProvider } from "../provider/aiProvider";
-import type { AiMessage, AiRequest, AiRequestContext } from "../provider/aiProvider.types";
+import type { AiMessage, AiRequest, AiRequestContext, AiToolResult } from "../provider/aiProvider.types";
+import { isAbortError } from "../provider/proxyProvider";
 import { executeTool, type ToolContext } from "../tools/toolHandlers";
 
 const MAX_TOOL_ROUNDS = 4;
@@ -18,6 +19,18 @@ function trimHistory(keepUserTurns=MAX_USER_TURNS) {
 
 export function resetChat() {
   history = [];
+}
+
+function describeAction({response}:AiToolResult):string|null{
+  if(response.success!==true){
+    return null;
+  }
+
+  if(typeof response.opened === "string"){
+    return `Opened ${response.opened}.`;
+  }
+  if (typeof response.navigatedTo === "string") return `Opened ${response.navigatedTo}.`;
+  return "Done."
 }
 
 export type AskJarvisOptions = {
@@ -50,7 +63,7 @@ export async function askJarvis(
   // 用户实际看到的完整文字（多轮的文字会拼在一起，轮与轮之间空一行）
   let displayed = "";
   let needsBreak = false;
-
+const completedActions: string[] = [];
   const emit = (delta: string) => {
     if (!delta) return;
 
@@ -67,7 +80,7 @@ export async function askJarvis(
   try {
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
       const res = await provider.generate(
-        { messages: history },
+        { messages: history, context:getContext?.() },
         { onTextDelta: emit, signal },
       );
 
@@ -82,12 +95,33 @@ export async function askJarvis(
 
       const results = res.toolCalls.map((call) => executeTool(call, ctx));
 
+      for(const result of results){
+        const action = describeAction(result)
+        if(action) completedActions.push(action)
+      }
+
       history.push({ role: "tool", results });
     }
 
     return "Sorry, I got stuck on that one. Could you rephrase?";
   } catch (error) {
-    // 失败 / 取消：回滚这一轮写进去的历史，避免留下半截对话
+      if (!isAbortError(error) && completedActions.length > 0) {
+      console.warn("[jarvis] confirmation round failed after a successful action", error);
+ 
+      // 如果那一轮已经流出了一部分文字，先隔一行再接
+      if (displayed) needsBreak = true;
+ 
+      const fallback = completedActions.join(" ");
+      emit(fallback);
+ 
+      // 保持历史完整：... → tool → model，下一轮对话才不会接在一个悬空的 tool 结果后面
+      history.push({ role: "model", text: fallback });
+      trimHistory();
+ 
+      return displayed;
+    }
+ 
+    // 用户主动取消 / 动作还没发生就失败了：回滚这一轮写进去的历史，避免留下半截对话
     history.length = checkpoint;
     throw error;
   }
