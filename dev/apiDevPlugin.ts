@@ -28,7 +28,11 @@ export function apiDevPlugin(): Plugin {
     apply: "serve",
 
     configureServer(server) {
-      const env = loadEnv(server.config.mode, server.config.envDir || process.cwd(), "");
+      const env = loadEnv(
+        server.config.mode,
+        server.config.envDir || process.cwd(),
+        "",
+      );
 
       for (const [key, value] of Object.entries(env)) {
         if (process.env[key] === undefined) process.env[key] = value;
@@ -55,7 +59,9 @@ export function apiDevPlugin(): Plugin {
         } catch (error) {
           console.error("[api-dev]", error);
 
-          if (!res.writableEnded) res.status(500).json({ error: "dev_server_error" });
+          if (!res.headersSent)
+            res.status(500).json({ error: "dev_server_error" });
+          else if (!res.writableEnded) res.end();
         }
       });
     },

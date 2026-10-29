@@ -1,15 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useTerminalScroll } from "../../hooks/useTerminalScroll";
 import type { TerminalMessage } from "../../types/terminal.types";
-import SuggestedQuestions, {
-} from "./SuggestedQuestions";
+import SuggestedQuestions from "./SuggestedQuestions";
 import TerminalInput from "./TerminalInput";
-import { SUGGESTED_QUESTIONS } from "../../hooks/useTerminal";
 import TerminalMessages from "./TerminalMessages";
+import { SUGGESTED_QUESTIONS } from "../../hooks/useTerminal";
 
 type TerminalPanelProps = {
   history: TerminalMessage[];
-  isThinking:boolean,
+  isThinking: boolean;
   command: string;
   onChangeCommand: (value: string) => void;
   onHistoryNavigate: (direction: "up" | "down") => void;
@@ -18,7 +17,6 @@ type TerminalPanelProps = {
   showSuggestions: boolean;
   onSelectSuggestion: (question: string) => void;
 };
-
 
 export default function TerminalPanel({
   history,
@@ -31,7 +29,11 @@ export default function TerminalPanel({
   showSuggestions,
   onSelectSuggestion,
 }: TerminalPanelProps) {
-  const terminalRef = useTerminalScroll(history);
+  // 消息数量、thinking 状态、最后一条消息的长度（流式输出时它会一直变长）变化时才跟随滚动。
+  // 不要把 command（输入框内容）放进依赖，否则每敲一个字都会触发。
+  // 是否真的滚动由 useTerminalScroll 决定：用户在底部附近才跟随。
+  const lastLength = history[history.length - 1]?.text.length ?? 0;
+  const terminalRef = useTerminalScroll(`${history.length}:${isThinking}:${lastLength}`);
   const panelRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -94,9 +96,12 @@ export default function TerminalPanel({
       <div
         ref={terminalRef}
         data-lenis-prevent
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions"
         className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 font-mono text-xs leading-6 sm:text-sm"
       >
-        <p className="mb-3 text-[#D8BD83]">
+        <p className="mb-4 text-[#D8BD83]">
           Portfolio System <span className="text-neutral-500">[UI]</span>
         </p>
 

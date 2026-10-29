@@ -1,5 +1,10 @@
-import type { AiProvider, AiRequest, AiResponse } from "./aiProvider.types";
-
+import type {
+  AiGenerateOptions,
+  AiProvider,
+  AiRequest,
+  AiResponse,
+} from "./aiProvider.types";
+import { readSseData } from "./sse";
 
 export type ProxyErrorCode =
   | "rate_limited"
@@ -38,6 +43,24 @@ function toErrorCode(status: number, error?: string): ProxyErrorCode {
   return "unavailable";
 }
 
+export function isAbortError(error: unknown) {
+  return error instanceof DOMException && error.name === "AbortError";
+}
+
+/** 服务端 → 浏览器的事件（和 api/chat.ts 里的 StreamEvent 一一对应） */
+type StreamEvent =
+  | { type: "text"; delta: string }
+  | { type: "done"; text: string; toolCalls: AiResponse["toolCalls"]; raw: unknown }
+  | { type: "error"; error: string };
+
+function parseEvent(data: string): StreamEvent | null {
+  try {
+    return JSON.parse(data) as StreamEvent;
+  } catch {
+    return null; // 单个坏事件不应该让整条回复失败
+  }
+}
+
 export class ProxyProvider implements AiProvider {
   private endpoint: string;
 
@@ -45,8 +68,10 @@ export class ProxyProvider implements AiProvider {
     this.endpoint = endpoint;
   }
 
-  async generate({ messages }: AiRequest): Promise<AiResponse> {
-
+  async generate(
+    { messages }: AiRequest,
+    { onTextDelta, signal }: AiGenerateOptions = {},
+  ): Promise<AiResponse> {
     let response: Response;
 
     try {
@@ -54,18 +79,61 @@ export class ProxyProvider implements AiProvider {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages }),
+        signal,
       });
-    } catch {
+    } catch (error) {
+      if (isAbortError(error)) throw error; // 用户主动取消：不是“服务不可用”
       throw new ProxyError("unavailable", 0);
     }
 
+    // 流开始之前的错误：服务端用的是正常 HTTP 状态码 + JSON
     if (!response.ok) {
       const body = (await response.json().catch(() => null)) as { error?: string } | null;
       throw new ProxyError(toErrorCode(response.status, body?.error), response.status);
     }
 
-    const data = (await response.json()) as AiResponse;
+    // 降级：如果中间某一层没有走流式（返回的是普通 JSON），照旧能用
+    const contentType = response.headers.get("content-type") ?? "";
+    if (!contentType.includes("text/event-stream") || !response.body) {
+      const data = (await response.json()) as AiResponse;
+      if (data.text) onTextDelta?.(data.text);
+      return { text: data.text ?? "", toolCalls: data.toolCalls ?? [], raw: data.raw };
+    }
 
-    return { text: data.text ?? "", toolCalls: data.toolCalls ?? [], raw: data.raw };
+    return this.readStream(response.body, onTextDelta);
+  }
+
+  private async readStream(
+    body: ReadableStream<Uint8Array>,
+    onTextDelta?: (delta: string) => void,
+  ): Promise<AiResponse> {
+    let result: AiResponse | null = null;
+
+    try {
+      for await (const data of readSseData(body)) {
+        const event = parseEvent(data);
+        if (!event) continue;
+
+        if (event.type === "text") {
+          onTextDelta?.(event.delta);
+        } else if (event.type === "done") {
+          result = {
+            text: event.text ?? "",
+            toolCalls: event.toolCalls ?? [],
+            raw: event.raw,
+          };
+        } else if (event.type === "error") {
+          throw new ProxyError(toErrorCode(0, event.error), 0);
+        }
+      }
+    } catch (error) {
+      if (error instanceof ProxyError || isAbortError(error)) throw error;
+      throw new ProxyError("unavailable", 0); // 流读到一半网络断了
+    }
+
+    // ★ 关键：连接正常关闭 ≠ 成功。没有收到 done，说明回复被截断了。
+    if (!result) throw new ProxyError("unavailable", 0);
+
+    return result;
   }
 }

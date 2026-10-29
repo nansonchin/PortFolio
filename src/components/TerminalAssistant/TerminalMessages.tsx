@@ -14,6 +14,7 @@ type Group = {
 
 type TerminalMessagesProps = {
   history: TerminalMessage[];
+  /** 从发送到回复完全结束（包含流式输出期间） */
   isThinking: boolean;
 };
 
@@ -41,6 +42,11 @@ function roleOf(message: TerminalMessage): Role {
   return "assistant";
 }
 
+/**
+ * 把连续的非用户消息合并成一个气泡。
+ * 例如 `help` 会一次 push 很多行 output，聊天里应该是“一条回复”而不是十几个气泡。
+ * 用户自己的消息每条一个气泡。
+ */
 function groupMessages(history: TerminalMessage[]): Group[] {
   const groups: Group[] = [];
 
@@ -64,6 +70,7 @@ function lineClass(type: TerminalMessage["type"]) {
   return "text-neutral-400";
 }
 
+/** 每一行聊天进场时的小动画：用户从右边滑入，JARVIS 从左边滑入。 */
 function ChatRow({ role, children }: { role: Role; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -96,8 +103,20 @@ function AssistantBubble({ children }: { children: ReactNode }) {
   );
 }
 
+function Cursor() {
+  return <span className="blink ml-0.5 text-[#D8BD83]"> ▌</span>;
+}
+
 export default function TerminalMessages({ history, isThinking }: TerminalMessagesProps) {
   const groups = groupMessages(history);
+  const lastGroup = groups[groups.length - 1];
+
+  // 三种状态：
+  //  1. 发出去了，但第一个字还没回来 → 最后一组是用户消息 → 显示 “thinking▌” 气泡
+  //  2. 正在流式输出 → 最后一组是 JARVIS 的回复 → 在文字末尾显示闪烁光标
+  //  3. 空闲 → 什么都不显示
+  const waitingForFirstToken = isThinking && lastGroup?.role === "user";
+  const streamingGroupId = isThinking && lastGroup?.role === "assistant" ? lastGroup.id : null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -131,12 +150,15 @@ export default function TerminalMessages({ history, isThinking }: TerminalMessag
           );
         }
 
+        const isStreaming = group.id === streamingGroupId;
+
         return (
           <ChatRow key={group.id} role="assistant">
             <AssistantBubble>
-              {group.messages.map((m) => (
+              {group.messages.map((m, index) => (
                 <p key={m.id} className={`break-words whitespace-pre-wrap ${lineClass(m.type)}`}>
                   {renderText(m.text)}
+                  {isStreaming && index === group.messages.length - 1 && <Cursor />}
                 </p>
               ))}
             </AssistantBubble>
@@ -144,11 +166,12 @@ export default function TerminalMessages({ history, isThinking }: TerminalMessag
         );
       })}
 
-      {isThinking && (
+      {waitingForFirstToken && (
         <ChatRow key="thinking" role="assistant">
           <AssistantBubble>
             <p className="text-neutral-400">
-              thinking<span className="blink ml-1 text-[#D8BD83]">▌</span>
+              thinking
+              <Cursor />
             </p>
           </AssistantBubble>
         </ChatRow>

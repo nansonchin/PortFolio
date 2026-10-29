@@ -26,9 +26,19 @@ export type AiRequest = {
 export type AiResponse = {
   text: string;
   toolCalls: AiToolCall[];
-  raw: unknown; 
+  raw: unknown;
+};
+
+/**
+ * 可选项：不传就和以前完全一样（等整段回复）。
+ * 传了 onTextDelta 就会在文字生成的过程中逐段回调。
+ * 返回值依然是完整的 AiResponse —— 调用方的工具调用循环不用改。
+ */
+export type AiGenerateOptions = {
+  onTextDelta?: (delta: string) => void;
+  signal?: AbortSignal;
 };
 
 export interface AiProvider {
-  generate(request: AiRequest): Promise<AiResponse>;
+  generate(request: AiRequest, options?: AiGenerateOptions): Promise<AiResponse>;
 }
