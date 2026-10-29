@@ -43,6 +43,7 @@ export default function TerminalAssistant(_props: TerminalAssistantProps) {
           onHistoryNavigate={terminal.navigateHistory}
           showSuggestions={terminal.showSuggestions}
           onSelectSuggestion={terminal.sendSuggestion}
+          isThinking={terminal.isThinking}
         />
       )}
     </div>
