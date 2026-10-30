@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from "react";
+import { memo, useRef, type ReactNode } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { prefersReducedMotion } from "../../animations/glitch";
@@ -107,7 +107,7 @@ function Cursor() {
   return <span className="blink ml-0.5 text-[#D8BD83]"> ▌</span>;
 }
 
-export default function TerminalMessages({ history, isThinking }: TerminalMessagesProps) {
+function TerminalMessages({ history, isThinking }: TerminalMessagesProps) {
   const groups = groupMessages(history);
   const lastGroup = groups[groups.length - 1];
 
@@ -179,3 +179,5 @@ export default function TerminalMessages({ history, isThinking }: TerminalMessag
     </div>
   );
 }
+
+export default memo(TerminalMessages)
