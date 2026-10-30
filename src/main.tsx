@@ -18,14 +18,15 @@ import { CursorProvider } from "./components/Cursor/CursorContext.tsx";
 import { CursorPhysicsProvider } from "./components/Cursor/CursorPhysicsContext.tsx";
 import TerminalAssistant from "./components/TerminalAssistant/TerminalAssistant.tsx";
 import { setupAI } from "./components/Ai/provider/setupAI.ts";
-import "@fontsource/instrument-serif/400.css";
-import "@fontsource/instrument-serif/400-italic.css";
-import "@fontsource-variable/jetbrains-mono";
-import "@fontsource-variable/inter";
 import { IntroProvider } from "./components/Intro/IntroContext.tsx";
 import { LanguageProvider } from "./il8n/LanguageContext.tsx";
 import { SharedImageProvider } from "./components/PageTransition/SharedImageContext.tsx";
 setupAI();
+
+// if ("scrollRestoration" in window.history) {
+//   window.history.scrollRestoration = "manual";
+// }
+// window.scrollTo(0, 0);
 
 const isTouch = window.matchMedia(
   "(hover: none) and (pointer: coarse)",

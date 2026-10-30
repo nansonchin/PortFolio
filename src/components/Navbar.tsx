@@ -30,8 +30,7 @@ function Navbar() {
           z-[9997]
           flex w-full items-center justify-between
           border-b border-line
-          bg-ink/60 px-6 py-4
-          backdrop-blur-sm
+          bg-ink/90 px-6 py-4
           md:px-10
         "
       >

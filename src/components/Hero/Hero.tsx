@@ -43,7 +43,7 @@ function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative flex min-h-screen flex-col overflow-hidden bg-ink"
+      className="relative flex min-h-svh flex-col overflow-hidden bg-ink"
     >
       <GoldLight />
 

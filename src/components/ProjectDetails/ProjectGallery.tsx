@@ -11,6 +11,7 @@ type ProjectGalleryProps = {
 };
 
 const pad = (value: number) => String(value).padStart(2, "0");
+const toFrameUrl = (url: string) => url.replace(/\.webp$/i, "-frame.webp");
 
 function ProjectGallery({ index, project }: ProjectGalleryProps) {
   const { selectedItem, currentIndex, total, open, close, next, previous } =
@@ -42,7 +43,7 @@ function ProjectGallery({ index, project }: ProjectGalleryProps) {
                   className={`block text-left lg:col-span-8 ${even ? "" : "lg:order-2"}`}
                 >
                   <ProjectFrame
-                    image={{ src: image.imageUrl }}
+                    image={{ src: toFrameUrl(image.imageUrl) }}
                     alt={image.title}
                     parallax
                   />

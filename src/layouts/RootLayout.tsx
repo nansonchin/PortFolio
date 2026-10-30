@@ -8,10 +8,10 @@ import PageTransition from "../components/PageTransition/PageTransition";
 export default function RootLayout() {
   return (
     <>
+      <ScrollToTop />
       <SystemOverlay />
       <IntroScreen />
       <PageTransition />
-      <ScrollToTop />
       <TerminalAssistant />
       <Outlet />
     </>
