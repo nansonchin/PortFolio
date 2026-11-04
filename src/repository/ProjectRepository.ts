@@ -11,9 +11,11 @@ const translations: Partial<Record<Language, Record<string, ProjectTranslation>>
 
 const cache = new Map<Language, Project[]>();
 
+let source: Project[] = projects;
+
 function listFor(lang: Language): Project[] {
   if (lang === DEFAULT_LANGUAGE) {
-    return projects;
+    return source;
   }
 
   const cached = cache.get(lang);
@@ -22,7 +24,7 @@ function listFor(lang: Language): Project[] {
     return cached;
   }
 
-  const localized = projects.map((project) =>
+  const localized = source.map((project) =>
     localizeProject(project, translations[lang]?.[project.slug]),
   );
 
@@ -32,6 +34,12 @@ function listFor(lang: Language): Project[] {
 }
 
 export class ProjectRepository {
+   setProjects(next: Project[]): void {
+    source = next;
+    cache.clear();
+  }
+
+
   getAll(lang: Language = DEFAULT_LANGUAGE): Project[] {
     return listFor(lang);
   }
@@ -68,16 +76,16 @@ export class ProjectRepository {
   getStats(): ProjectStat[] {
     const technologies = new Set<string>();
 
-    projects.forEach((project) => {
+    source.forEach((project) => {
       project.technologies.forEach((tech) => technologies.add(tech));
     });
 
     return [
-      { label: "stats.projects", value: `${projects.length}` },
+      { label: "stats.projects", value: `${source.length}` },
       { label: "stats.technologies", value: `${technologies.size}+` },
       {
         label: "stats.featured",
-        value: `${projects.filter((project) => project.featured).length}`,
+        value: `${source.filter((project) => project.featured).length}`,
       },
     ];
   }

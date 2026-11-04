@@ -21,35 +21,12 @@ import { setupAI } from "./components/Ai/provider/setupAI.ts";
 import { IntroProvider } from "./components/Intro/IntroContext.tsx";
 import { LanguageProvider } from "./il8n/LanguageContext.tsx";
 import { SharedImageProvider } from "./components/PageTransition/SharedImageContext.tsx";
-setupAI();
+import { loadPortfolioData } from "./data/remote/loadPortfolioData.ts";
 
-// if ("scrollRestoration" in window.history) {
-//   window.history.scrollRestoration = "manual";
-// }
-// window.scrollTo(0, 0);
+async function start(){
+  await loadPortfolioData();
 
-const isTouch = window.matchMedia(
-  "(hover: none) and (pointer: coarse)",
-).matches;
+  await import("./mountApp.tsx")
+}
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <LanguageProvider>
-      <SmoothScrollProvider>
-        <CursorProvider>
-          <CursorPhysicsProvider>
-            <IntroProvider>
-              <SharedImageProvider>
-                <Analytics />
-                <div className={isTouch ? "" : "cursor-none"}>
-                  {!isTouch && <Cursor />}
-                  <RouterProvider router={router} />
-                </div>
-              </SharedImageProvider>
-            </IntroProvider>
-          </CursorPhysicsProvider>
-        </CursorProvider>
-      </SmoothScrollProvider>
-    </LanguageProvider>
-  </StrictMode>,
-);
+void start()
