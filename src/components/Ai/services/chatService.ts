@@ -22,13 +22,11 @@ export function resetChat() {
   history = [];
 }
 
-/** 输入里有中文就用中文确认，否则英文（和模型“跟随访客语言”的行为保持一致） */
 const hasCjk = (text: string) => /[\u4e00-\u9fff]/.test(text);
 
 function describeAction({ response }: AiToolResult, zh: boolean): string | null {
   if (response.success !== true) return null;
 
-  // get_project_details 这类“只读取信息”的工具不是动作，需要模型继续回答
   if ("details" in response) return null;
 
   const target =
