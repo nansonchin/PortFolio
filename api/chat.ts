@@ -4,7 +4,7 @@ import {
   isAllowedOrigin,
   parseMessages,
   rateLimit,
-  toGeminiContents,
+  toGroqMessages,
 } from "./_guard.js";
 import { readSseData } from "./_sse.js";
 
@@ -27,112 +27,129 @@ type Res = {
   readonly writableEnded: boolean;
 };
 
-type GeminiPart = {
-  text?: string;
-  thought?: boolean;
-  thoughtSignature?: string;
-  functionCall?: { name: string; args?: Record<string, unknown> };
-};
-
 type ToolCall = { name: string; args: Record<string, unknown> };
 
+/** Groq（OpenAI 兼容）流式 chunk 里 choices[0].delta 的形状 */
+type GroqDelta = {
+  content?: string | null;
+  tool_calls?: {
+    index?: number;
+    id?: string;
+    function?: { name?: string; arguments?: string };
+  }[];
+};
+
 /**
- * 浏览器 ⇄ 我们的 API 之间的事件协议（SSE，每个事件一行 `data: {json}`）
- *
- *  text   一段新增文字（delta，不是累计值）
- *  done   ★ 唯一的“成功结束”标记，带最终的 text / toolCalls / raw
- *  error  流开始之后才发生的错误（此时 HTTP 状态码已经是 200，只能用事件通知）
+ * 浏览器 ⇄ 我们的 API 之间的事件协议——和 Gemini 版完全一样，前端一行都不用改：
+ *  text   一段新增文字（delta）
+ *  done   唯一的“成功结束”标记，带最终的 text / toolCalls / raw
+ *  error  流开始之后才发生的错误
  */
 type StreamEvent =
   | { type: "text"; delta: string }
   | { type: "done"; text: string; toolCalls: ToolCall[]; raw: unknown }
   | { type: "error"; error: string };
 
-function buildGenerationConfig(model: string, level: string) {
-  if (!level || level === "default") {
-    return undefined;
-  }
+const ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
+const DEFAULT_MODEL = "qwen/qwen3.8-27b";
+const HARD_TIMEOUT_MS = 60_000;
+const IDLE_TIMEOUT_MS = 25_000;
 
-  return { thinkingConfig: { thinkingLevel: level } };
-}
+// Qwen3.8 有 thinking / instruct 两种模式：
+//  "none" = instruct（快、省 token，适合这种导航 + 问答的小终端）
+//  "low" | "medium" | "high" | "default" = thinking（会多吃很多输出 token）
+const DEFAULT_REASONING = "none";
 
-const ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
-const HARD_TIMEOUT_MS = 60_000; // 整个请求的上限
-const IDLE_TIMEOUT_MS = 25_000; // 上游多久没有任何数据就放弃（防止流“挂住”）
-const DEFAULT_THINKING = "low";
+// 免费档 TPM 只有 8K，限制输出长度能省额度（终端里本来也只要几句话）
+const MAX_OUTPUT_TOKENS = 800;
+
 const TOOL_NAMES = new Set(TOOLS.map((tool) => tool.name));
 
+/** 我们的 TOOLS 声明 → OpenAI 的 tools 格式（多包一层 type/function） */
+const GROQ_TOOLS = TOOLS.map((tool) => ({
+  type: "function" as const,
+  function: {
+    name: tool.name,
+    description: tool.description,
+    parameters: tool.parameters,
+  },
+}));
+
 /**
- * 把流式 chunk 里零散的 parts 重新拼成一条完整的 model content。
+ * 把流式 chunk 拼回一条完整的 assistant 消息。
  *
- * 这一步必须在服务端做，而且要小心：
- *  - 文字是一小段一小段来的 → 相邻的文字 part 要合并
- *  - functionCall 是完整的一个 part → 原样保留，不能合并
- *  - thoughtSignature 必须跟着它所属的 part 原样带回去，
- *    否则下一轮把历史发回 Gemini 时，多步 function calling 可能报错
- *  - thought 摘要 part（如果有）不是给用户看的 → 丢掉
+ *  - 文字：content 一小段一小段来 → 累加，同时把这一段立刻推给前端
+ *  - 工具调用：和 Gemini 不一样！Gemini 的 functionCall 是整块来的，
+ *    OpenAI 格式里 tool_calls 是“碎片”：同一个 index 的 id/name 先到，
+ *    arguments 是一个被切成很多段的 JSON 字符串，要自己按 index 拼接，
+ *    流结束后才能 JSON.parse。
  */
-class ModelContentBuilder {
-  private parts: GeminiPart[] = [];
+class AssistantBuilder {
+  private text = "";
+  private calls = new Map<number, { id: string; name: string; args: string }>();
 
-  /** 返回这个 part 里需要立刻推给前端的文字（没有则返回空字符串） */
-  add(part: GeminiPart): string {
-    if (part.thought) return "";
+  /** 返回需要立刻推给前端的文字（没有则返回空字符串） */
+  add(delta: GroqDelta): string {
+    for (const piece of delta.tool_calls ?? []) {
+      const index = typeof piece.index === "number" ? piece.index : 0;
+      const current = this.calls.get(index) ?? { id: "", name: "", args: "" };
 
-    if (part.functionCall) {
-      this.parts.push({
-        functionCall: part.functionCall,
-        ...(part.thoughtSignature
-          ? { thoughtSignature: part.thoughtSignature }
-          : {}),
-      });
-      return "";
-    }
-
-    if (typeof part.text === "string") {
-      const last = this.parts[this.parts.length - 1];
-
-      if (last && typeof last.text === "string" && !last.thoughtSignature) {
-        last.text += part.text;
-        if (part.thoughtSignature)
-          last.thoughtSignature = part.thoughtSignature;
-      } else {
-        this.parts.push({
-          text: part.text,
-          ...(part.thoughtSignature
-            ? { thoughtSignature: part.thoughtSignature }
-            : {}),
-        });
+      if (piece.id) current.id = piece.id;
+      if (piece.function?.name) current.name = piece.function.name;
+      if (typeof piece.function?.arguments === "string") {
+        current.args += piece.function.arguments;
       }
 
-      return part.text;
+      this.calls.set(index, current);
     }
 
-    // 只有 signature、没有文字也没有 functionCall 的 part（常出现在最后一个 chunk）
-    if (part.thoughtSignature) {
-      const last = this.parts[this.parts.length - 1];
-
-      if (last && !last.thoughtSignature) {
-        last.thoughtSignature = part.thoughtSignature;
-      } else {
-        this.parts.push({ text: "", thoughtSignature: part.thoughtSignature });
-      }
+    if (typeof delta.content === "string" && delta.content !== "") {
+      this.text += delta.content;
+      return delta.content;
     }
 
     return "";
   }
 
   result() {
-    if (this.parts.length === 0) return null;
+    const toolCalls: ToolCall[] = [];
+    const rawCalls: {
+      id: string;
+      type: "function";
+      function: { name: string; arguments: string };
+    }[] = [];
 
-    const text = this.parts.map((part) => part.text ?? "").join("");
-    const toolCalls: ToolCall[] = this.parts.flatMap((part) =>
-      part.functionCall
-        ? [{ name: part.functionCall.name, args: part.functionCall.args ?? {} }]
-        : [],
-    );
+    [...this.calls.entries()]
+      .sort(([a], [b]) => a - b)
+      .forEach(([index, call]) => {
+        if (!TOOL_NAMES.has(call.name)) return; // 模型编了个不存在的工具 → 丢掉
 
-    return { text, toolCalls, raw: { role: "model", parts: this.parts } };
+        const parsed = safeJson(call.args || "{}");
+        const args =
+          parsed && typeof parsed === "object" && !Array.isArray(parsed)
+            ? (parsed as Record<string, unknown>)
+            : {};
+
+        toolCalls.push({ name: call.name, args });
+        rawCalls.push({
+          id: call.id || `call_${index}_${Date.now()}`,
+          type: "function",
+          // 存回去的 arguments 用“重新序列化后的合法 JSON”，避免模型吐出半截 JSON 毒害后续轮次
+          function: { name: call.name, arguments: JSON.stringify(args) },
+        });
+      });
+
+    if (this.text === "" && toolCalls.length === 0) return null;
+
+    return {
+      text: this.text,
+      toolCalls,
+      raw: {
+        role: "assistant",
+        content: this.text,
+        ...(rawCalls.length > 0 ? { tool_calls: rawCalls } : {}),
+      },
+    };
   }
 }
 
@@ -156,7 +173,7 @@ function safeJson(text: string): any {
 export default async function handler(req: Req, res: Res) {
   res.setHeader("Cache-Control", "no-store");
 
-  /* ───────── 1. 流开始之前：所有检查都用“真正的 HTTP 状态码”返回 ───────── */
+  /* ───────── 1. 流开始之前：所有检查都用真正的 HTTP 状态码返回 ───────── */
 
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -165,20 +182,14 @@ export default async function handler(req: Req, res: Res) {
 
   const isProduction = process.env.VERCEL_ENV === "production";
 
-  if (
-    !isAllowedOrigin(
-      req.headers,
-      isProduction,
-      process.env.ALLOWED_ORIGINS ?? "",
-    )
-  ) {
+  if (!isAllowedOrigin(req.headers, isProduction, process.env.ALLOWED_ORIGINS ?? "")) {
     return res.status(403).json({ error: "forbidden" });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
-    console.error("[chat] GEMINI_API_KEY is not set");
+    console.error("[chat] GROQ_API_KEY is not set");
     return res.status(500).json({ error: "server_misconfigured" });
   }
 
@@ -186,9 +197,7 @@ export default async function handler(req: Req, res: Res) {
 
   if (!limit.ok) {
     res.setHeader("Retry-After", String(limit.retryAfter));
-    return res
-      .status(429)
-      .json({ error: "rate_limited", retryAfter: limit.retryAfter });
+    return res.status(429).json({ error: "rate_limited", retryAfter: limit.retryAfter });
   }
 
   const parsed = parseMessages(req.body, TOOL_NAMES);
@@ -197,8 +206,8 @@ export default async function handler(req: Req, res: Res) {
     return res.status(400).json({ error: "bad_request", detail: parsed.error });
   }
 
-  const model = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
-  const thinkingLevel = process.env.GEMINI_THINKING_LEVEL ?? DEFAULT_THINKING;
+  const model = process.env.GROQ_MODEL || DEFAULT_MODEL;
+  const reasoningEffort = process.env.GROQ_REASONING_EFFORT ?? DEFAULT_REASONING;
 
   /* ───────── 2. 取消与超时 ───────── */
 
@@ -217,9 +226,7 @@ export default async function handler(req: Req, res: Res) {
     idleTimer = setTimeout(() => abort("timeout"), IDLE_TIMEOUT_MS);
   };
 
-  // 注意是 res 的 close，不是 req 的：
-  // Node 里 req 的 close 在“请求体读完”时就会触发，并不代表用户离开了。
-  // 用户关掉标签页 / 点了取消 → 我们要马上停掉对 Gemini 的请求，省额度。
+  // 是 res 的 close，不是 req 的（req 的 close 在请求体读完时就触发了）
   res.on("close", () => {
     if (!res.writableEnded) abort("client");
   });
@@ -235,37 +242,37 @@ export default async function handler(req: Req, res: Res) {
   armIdle();
 
   try {
-    const upstream = await fetch(
-      `${ENDPOINT}/${model}:streamGenerateContent?alt=sse`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
-        },
-        signal: controller.signal,
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT + buildStateBlock(req.body)}] },
-          contents: toGeminiContents(parsed.messages),
-          tools: [{ functionDeclarations: TOOLS }],
-          generationConfig: buildGenerationConfig(model, thinkingLevel),
-        }),
+    const upstream = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`, // Gemini 是 x-goog-api-key，Groq 是标准 Bearer
       },
-    );
+      signal: controller.signal,
+      body: JSON.stringify({
+        model,
+        stream: true,
+        messages: toGroqMessages(parsed.messages, SYSTEM_PROMPT + buildStateBlock(req.body)),
+        tools: GROQ_TOOLS,
+        tool_choice: "auto",
+        temperature: 0.7,
+        max_completion_tokens: MAX_OUTPUT_TOKENS,
+        ...(reasoningEffort && reasoningEffort !== "unset"
+          ? { reasoning_effort: reasoningEffort }
+          : {}),
+      }),
+    });
 
     // 还没开始流：这里的错误依然可以用正常状态码返回
     if (!upstream.ok || !upstream.body) {
       const detail = await upstream.text().catch(() => "");
-      console.error(
-        "[chat] upstream error",
-        upstream.status,
-        detail.slice(0, 500),
-      );
+      console.error("[chat] upstream error", upstream.status, detail.slice(0, 500));
 
-      // 注意：前端 toErrorCode 是用 === "upstream_busy" 比较的，
-      // 原来写成 "upstream_busy, Quote_Limit_Reached" 会永远匹配不上。
-      if (upstream.status === 429)
+      // 429 = 触发了 RPM/RPD/TPM/TPD 之一；
+      // 413 = 单个请求本身就超过了 TPM 上限（免费档 8K，prompt 太长时会遇到）
+      if (upstream.status === 429 || upstream.status === 413) {
         return res.status(503).json({ error: "upstream_busy" });
+      }
 
       return res.status(502).json({ error: "upstream_error" });
     }
@@ -274,40 +281,39 @@ export default async function handler(req: Req, res: Res) {
 
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
-    res.setHeader("Cache-Control", "no-store, no-transform"); // no-transform：别让中间层压缩 / 缓冲
-    res.setHeader("X-Accel-Buffering", "no"); // 告诉 nginx 类代理不要缓冲
+    res.setHeader("Cache-Control", "no-store, no-transform");
+    res.setHeader("X-Accel-Buffering", "no");
     res.flushHeaders?.();
 
-    const builder = new ModelContentBuilder();
+    const builder = new AssistantBuilder();
 
     for await (const data of readSseData(upstream.body)) {
       armIdle();
 
+      // OpenAI 格式的流以 `data: [DONE]` 结束（Gemini 没有这个）
+      if (data === "[DONE]") break;
+
       const chunk = safeJson(data);
       if (!chunk) continue;
 
-      // Gemini 也可能在流中间报错
       if (chunk.error) {
-        console.error(
-          "[chat] mid-stream upstream error",
-          JSON.stringify(chunk.error).slice(0, 500),
-        );
+        console.error("[chat] mid-stream upstream error", JSON.stringify(chunk.error).slice(0, 500));
         send({
           type: "error",
-          error: chunk.error.code === 429 ? "upstream_busy" : "upstream_error",
+          error:
+            chunk.error.code === 429 || chunk.error.type === "rate_limit_exceeded"
+              ? "upstream_busy"
+              : "upstream_error",
         });
         return;
       }
 
-      const parts: GeminiPart[] = chunk.candidates?.[0]?.content?.parts ?? [];
+      const delta: GroqDelta = chunk.choices?.[0]?.delta ?? {};
+      const text = builder.add(delta);
 
-      for (const part of parts) {
-        const delta = builder.add(part);
-
-        if (delta) {
-          firstTokenAt ??= Date.now();
-          send({ type: "text", delta });
-        }
+      if (text) {
+        firstTokenAt ??= Date.now();
+        send({ type: "text", delta: text });
       }
     }
 
@@ -319,13 +325,12 @@ export default async function handler(req: Req, res: Res) {
       return;
     }
 
-    // 只有走到这里才算成功。前端看不到 done 就必须当作失败（被截断）。
     send({ type: "done", ...result });
 
     console.info("[chat] done", {
       model,
-      thinkingLevel,
-      ttfbMs: firstTokenAt ? firstTokenAt - startedAt : null, // 首字延迟：流式体验好不好看这个数字
+      reasoningEffort,
+      ttfbMs: firstTokenAt ? firstTokenAt - startedAt : null,
       totalMs: Date.now() - startedAt,
       toolCalls: result.toolCalls.length,
     });
@@ -334,17 +339,16 @@ export default async function handler(req: Req, res: Res) {
 
     console.error("[chat] failed", {
       model,
-      thinkingLevel,
+      reasoningEffort,
       ms: Date.now() - startedAt,
       abortReason,
       error,
     });
 
-    if (abortReason === "client") return; // 用户已经走了，没人听
+    if (abortReason === "client") return;
 
     const code = aborted ? "timeout" : "upstream_error";
 
-    // 流已经开始 → 状态码改不了了，只能发事件
     if (res.headersSent) {
       send({ type: "error", error: code });
       return;

@@ -5,22 +5,19 @@ export function buildSystemPrompt({
   developer,
   projects,
 }: PortfolioContext): string {
+
+  const MAX_FEATURES = 5;
+
   const projectBlocks = projects
     .map((p) =>
       [
-        `### ${p.title}`,
-        `slug: ${p.slug}`,
-        `category: ${p.category} | year: ${p.year}`,
-        `summary: ${p.summary}`,
-        `description: ${p.description}`,
-        `technologies: ${p.technologies.join(", ")}`,
-        `features: ${p.features.join("; ")}`,
-        `responsibilities: ${p.responsibilities.join("; ")}`,
-        `challenges: ${p.challenges.join("; ")}`,
-        `solutions: ${p.solutions.join("; ")}`,
-        `github: ${p.githubUrl ?? "none"}`,
-        `demo: ${p.demoUrl ?? "none"}`,
-        p.architecture ? `architecture: ${JSON.stringify(p.architecture)}` : "",
+        `### ${p.title} (slug: ${p.slug})`,
+        `${p.category}, ${p.year}. ${p.summary}`,
+        `tech: ${p.technologies.join(", ")}`,
+        p.features.length > 0
+          ? `features: ${p.features.slice(0, MAX_FEATURES).join("; ")}`
+          : "",
+        `github: ${p.githubUrl || "none"} | demo: ${p.demoUrl || "none"}`,
       ]
         .filter(Boolean)
         .join("\n"),
@@ -43,8 +40,7 @@ Visitors talk to you through a small terminal. You answer questions about the po
 # About the developer
 Name: ${developer.name}
 Role: ${developer.role}
-About: ${developer.description}
-Background: ${developer.background.join("; ")}
+${developer.description ? `About: ${developer.description}\n` : ""}Background: ${developer.background.join("; ")}
 Skills: ${developer.skills.join(", ")}
 Goals: ${developer.goals.join("; ")}
 
@@ -52,7 +48,7 @@ Goals: ${developer.goals.join("; ")}
 ${projectBlocks}
 
 # Rules
-- Answer ONLY from the information above. If something is not there, say you don't have that information. Never invent projects, skills, or experience.
+- Answer ONLY from the information above and from tool results. If something is not there, say you don't have that information. Never invent projects, skills, or experience.
 - Reply in the same language the visitor uses.
 - Output plain text only. The terminal does not render markdown: no asterisks, no headings, no tables. Use short lines; "- " bullets are fine.
 - Keep answers concise (a few sentences) unless the visitor asks for detail.
@@ -60,6 +56,7 @@ ${projectBlocks}
 - When the visitor only asks ABOUT a project (what is it, how does it work), answer in text and do not navigate. You may offer to open it.
 - Navigation and filtering tools are ACTIONS, not facts to remember. Every time the visitor asks to open a page or project, or to filter projects, call the tool again - even if you already did the same thing earlier in this conversation, because the visitor may have moved to another page since. Never reply "I've already done that" without calling the tool.
 - The "Current state" section at the end (when present) says which page the visitor is viewing right now. Trust it over the conversation history. If the visitor is already on exactly the page they ask for, you may say so briefly instead of calling the tool.
+- The project list above is a SHORT summary. For in-depth questions about one project (challenges, solutions, architecture, the developer's responsibilities, full description) call get_project_details with its slug first, then answer from the result. Do not call it for questions the list already answers.
 - If the request matches more than one project, ask which one they mean instead of guessing.
 - After a tool succeeds, confirm in one short sentence what you opened.
 - If a tool fails, tell the visitor briefly and offer alternatives.

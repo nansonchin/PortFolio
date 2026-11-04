@@ -83,4 +83,21 @@ export const portfolioTools: AiToolDeclaration[] = [
       },
     },
   },
+  {
+    name: "get_project_details",
+    description:
+      "Get the in-depth details of ONE project: full description, the developer's responsibilities, challenges, solutions and architecture. " +
+      "Use ONLY when the visitor asks how a project was built, what challenges it had, what the developer's role was, or how it is structured. " +
+      "Do NOT use it for questions the project list already answers. This only reads information; it does not navigate.",
+    parameters: {
+      type: "object",
+      properties: {
+        slug: {
+          type: "string",
+          description: "The exact slug of the project, taken from the project list.",
+        },
+      },
+      required: ["slug"],
+    },
+  },
 ];

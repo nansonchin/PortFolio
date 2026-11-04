@@ -85,43 +85,47 @@ export function rateLimit(key: string): { ok: boolean; retryAfter: number } {
   return { ok: true, retryAfter: 0 };
 }
 
-
-function sanitizeModelContent(raw: unknown, allowedTools: Set<string>): Json | null {
-  if (!isRecord(raw) || !Array.isArray(raw.parts)) return null;
-  if (raw.parts.length > LIMITS.maxPartsPerMessage) return null;
-
-  const parts: Json[] = [];
-
-  for (const part of raw.parts) {
-    if (!isRecord(part)) continue;
-
-    const clean: Json = {};
-
-    if (typeof part.text === "string") {
-      clean.text = part.text.slice(0, LIMITS.maxModelTextChars);
-    }
-
-    const call = part.functionCall;
-    if (isRecord(call) && typeof call.name === "string" && allowedTools.has(call.name)) {
-      const args = isRecord(call.args) ? call.args : {};
-
-      if (JSON.stringify(args).length <= 2000) {
-        clean.functionCall = {
-          name: call.name,
-          args,
-          ...(typeof call.id === "string" && call.id.length <= 200 ? { id: call.id } : {}),
-        };
+/**
+ * 前端回传的 raw 是“上一轮 Groq 返回的 assistant 消息”，不可信，逐字段重建：
+ *  { role: "assistant", content: string, tool_calls?: [{ id, type: "function", function: { name, arguments } }] }
+ * tool_calls 里的 id 必须原样带回去，后面的 tool 消息要靠它配对。
+ */
+function sanitizeAssistantMessage(raw: unknown, allowedTools: Set<string>): Json | null {
+  if (!isRecord(raw) || raw.role !== "assistant") return null;
+ 
+  const content =
+    typeof raw.content === "string" ? raw.content.slice(0, LIMITS.maxModelTextChars) : "";
+ 
+  const toolCalls: Json[] = [];
+ 
+  if (Array.isArray(raw.tool_calls)) {
+    if (raw.tool_calls.length > LIMITS.maxToolResults) return null;
+ 
+    for (const call of raw.tool_calls) {
+      if (!isRecord(call) || !isRecord(call.function)) return null;
+ 
+      const { id } = call;
+      const { name, arguments: args } = call.function;
+ 
+      if (typeof id !== "string" || id.length === 0 || id.length > 200) return null;
+      if (typeof name !== "string" || !allowedTools.has(name)) return null;
+      if (typeof args !== "string" || args.length > 2000) return null;
+ 
+      // arguments 必须是合法 JSON 对象字符串，否则 Groq 会直接 400
+      try {
+        const parsedArgs = JSON.parse(args);
+        if (!isRecord(parsedArgs)) return null;
+      } catch {
+        return null;
       }
+ 
+      toolCalls.push({ id, type: "function", function: { name, arguments: args } });
     }
-
-    if (typeof part.thoughtSignature === "string" && part.thoughtSignature.length <= 8000) {
-      clean.thoughtSignature = part.thoughtSignature;
-    }
-
-    if (Object.keys(clean).length > 0) parts.push(clean);
   }
-
-  return parts.length > 0 ? { role: "model", parts } : null;
+ 
+  if (content === "" && toolCalls.length === 0) return null;
+ 
+  return { role: "assistant", content, ...(toolCalls.length > 0 ? { tool_calls: toolCalls } : {}) };
 }
 
 export function parseMessages(body: unknown, allowedTools: Set<string>): ParseResult {
@@ -153,7 +157,7 @@ export function parseMessages(body: unknown, allowedTools: Set<string>): ParseRe
 
     if (item.role === "model") {
       const text = typeof item.text === "string" ? item.text.slice(0, LIMITS.maxModelTextChars) : "";
-      const raw = sanitizeModelContent(item.raw, allowedTools);
+      const raw = sanitizeAssistantMessage(item.raw, allowedTools);
 
       if (!raw && text === "") return { ok: false, error: "empty model message" };
 
@@ -202,21 +206,47 @@ export function parseMessages(body: unknown, allowedTools: Set<string>): ParseRe
   return { ok: true, messages };
 }
 
-export function toGeminiContents(messages: ChatMessage[]) {
-  return messages.map((message) => {
+type PendingCall = { id: string; name: string };
+
+export function toGroqMessages(messages: ChatMessage[], systemPrompt: string) {
+  const out: Json[] = [{ role: "system", content: systemPrompt }];
+  let pending: PendingCall[] = [];
+ 
+  for (const message of messages) {
     if (message.role === "user") {
-      return { role: "user", parts: [{ text: message.text }] };
+      pending = [];
+      out.push({ role: "user", content: message.text });
+      continue;
     }
-
+ 
     if (message.role === "model") {
-      return message.raw ?? { role: "model", parts: [{ text: message.text }] };
+      const assistant = message.raw ?? { role: "assistant", content: message.text };
+      out.push(assistant);
+ 
+      const calls = Array.isArray(assistant.tool_calls) ? (assistant.tool_calls as Json[]) : [];
+      pending = calls.map((call) => ({
+        id: String(call.id),
+        name: String((call.function as Json).name),
+      }));
+      continue;
     }
-
-    return {
-      role: "user",
-      parts: message.results.map((result) => ({
-        functionResponse: { name: result.name, response: result.response },
-      })),
-    };
-  });
+ 
+    // role === "tool"：每个 tool_call 必须恰好有一条 tool 消息，少一条 Groq 就 400
+    const unused = [...message.results];
+ 
+    for (const call of pending) {
+      const index = unused.findIndex((result) => result.name === call.name);
+      const result = index >= 0 ? unused.splice(index, 1)[0] : null;
+ 
+      out.push({
+        role: "tool",
+        tool_call_id: call.id,
+        content: JSON.stringify(result?.response ?? { success: false, error: "no result" }),
+      });
+    }
+ 
+    pending = [];
+  }
+ 
+  return out;
 }

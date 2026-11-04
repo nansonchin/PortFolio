@@ -4,7 +4,8 @@ import { isAbortError } from "../provider/proxyProvider";
 import { executeTool, type ToolContext } from "../tools/toolHandlers";
 
 const MAX_TOOL_ROUNDS = 4;
-const MAX_USER_TURNS = 10;
+// 免费档 TPM 很小，历史越长每次请求越贵；5 轮对“终端导航 + 问答”足够
+const MAX_USER_TURNS = 5;
 
 let history: AiMessage[] = [];
 
@@ -21,16 +22,24 @@ export function resetChat() {
   history = [];
 }
 
-function describeAction({response}:AiToolResult):string|null{
-  if(response.success!==true){
-    return null;
-  }
+/** 输入里有中文就用中文确认，否则英文（和模型“跟随访客语言”的行为保持一致） */
+const hasCjk = (text: string) => /[\u4e00-\u9fff]/.test(text);
 
-  if(typeof response.opened === "string"){
-    return `Opened ${response.opened}.`;
-  }
-  if (typeof response.navigatedTo === "string") return `Opened ${response.navigatedTo}.`;
-  return "Done."
+function describeAction({ response }: AiToolResult, zh: boolean): string | null {
+  if (response.success !== true) return null;
+
+  // get_project_details 这类“只读取信息”的工具不是动作，需要模型继续回答
+  if ("details" in response) return null;
+
+  const target =
+    typeof response.opened === "string"
+      ? response.opened
+      : typeof response.navigatedTo === "string"
+        ? response.navigatedTo
+        : null;
+
+  if (target) return zh ? `已打开 ${target}。` : `Opened ${target}.`;
+  return zh ? "已完成。" : "Done.";
 }
 
 export type AskJarvisOptions = {
@@ -57,6 +66,7 @@ export async function askJarvis(
   const provider = getAIProvider();
   trimHistory(MAX_USER_TURNS-1)
   const checkpoint = history.length;
+  const zh = hasCjk(input);
 
   history.push({ role: "user", text: input });
 
@@ -94,13 +104,41 @@ const completedActions: string[] = [];
       if (res.text.trim()) needsBreak = true;
 
       const results = res.toolCalls.map((call) => executeTool(call, ctx));
+      const roundActions = results.map((r) => describeAction(r, zh));
 
-      for(const result of results){
-        const action = describeAction(result)
-        if(action) completedActions.push(action)
+      for (const action of roundActions) {
+        if (action) completedActions.push(action);
       }
 
       history.push({ role: "tool", results });
+
+      /*
+       * 省额度的关键：如果这一轮的工具全是“动作”且全部成功（导航 / 筛选 / 开链接），
+       * 页面已经变了，就不再请求模型“确认”——那一轮要把整份 system prompt 再发一遍。
+       * 直接用本地生成的确认语收尾。
+       *
+       * 仍然走第二轮的情况：有工具失败（需要模型解释并给替代方案），
+       * 或有 get_project_details 这类只读工具（模型要拿结果回答）。
+       */
+      if (roundActions.every((action) => action !== null)) {
+        // 模型这轮已经说了话（例如“好的，这就打开”）就不再重复追加确认语
+        const confirmation = res.text.trim() ? "" : roundActions.join(" ");
+
+        if (confirmation) {
+          if (displayed) needsBreak = true;
+          emit(confirmation);
+        }
+
+        // 收尾成一条 assistant 消息，保证历史是 assistant(tool_calls) → tool → assistant，
+        // 下一轮 user 消息接在后面是个完整的、各家 API 都认的序列
+        history.push({
+          role: "model",
+          text: confirmation || res.text.trim() || (zh ? "已完成。" : "Done."),
+        });
+
+        trimHistory();
+        return displayed || confirmation;
+      }
     }
 
     return "Sorry, I got stuck on that one. Could you rephrase?";

@@ -2,10 +2,49 @@ import { projectRepository } from "../../../repository/ProjectRepository";
 import { resolveNavigationPath } from "../../TerminalAssistant/Navigations/navigationService";
 import type { AiToolCall, AiToolResult } from "../provider/aiProvider.types";
 
+const DETAILS_BUDGET = 2800;
+
+function clip(text: string, max: number) {
+  return text.length <= max ? text : text.slice(0, max - 1) + "…";
+}
+
 export type ToolContext = {
   navigate: (path: string) => void;
   openExternal: (url: string) => void;
 };
+
+function buildDetails(
+  project: NonNullable<ReturnType<typeof projectRepository.getBySlug>>,
+) {
+  const details: Record<string, unknown> = {
+    title: project.title,
+    description: project.description,
+    responsibilities: project.responsibilities,
+    challenges: project.challenges,
+    solutions: project.solutions,
+  };
+
+  if (project.architecture) {
+    details.architecture = project.architecture;
+  }
+
+  // 超预算：先把 architecture 压成文字再逐步截断，最后截 description
+  const size = () => JSON.stringify({ success: true, details }).length;
+
+  if (size() > DETAILS_BUDGET && details.architecture) {
+    details.architecture = clip(JSON.stringify(details.architecture), 900);
+  }
+  if (size() > DETAILS_BUDGET && details.architecture) {
+    delete details.architecture;
+    details.note =
+      "Architecture omitted (too long). Offer to open the project page.";
+  }
+  if (size() > DETAILS_BUDGET) {
+    details.description = clip(String(details.description ?? ""), 500);
+  }
+
+  return details;
+}
 
 export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
   switch (call.name) {
@@ -39,7 +78,10 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
     /* ============ navigate_to_page ============ */
     case "navigate_to_page": {
       const page = String(call.args.page ?? "") as
-        | "home" | "projects" | "about" | "contact";
+        | "home"
+        | "projects"
+        | "about"
+        | "contact";
 
       if (!["home", "projects", "about", "contact"].includes(page)) {
         return {
@@ -73,14 +115,19 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
       }
 
       const url =
-        link === "github" ? project.githubUrl
-        : link === "demo" ? project.demoUrl
-        : undefined;
+        link === "github"
+          ? project.githubUrl
+          : link === "demo"
+            ? project.demoUrl
+            : undefined;
 
       if (!url) {
         return {
           name: call.name,
-          response: { success: false, error: `${project.title} has no ${link} link` },
+          response: {
+            success: false,
+            error: `${project.title} has no ${link} link`,
+          },
         };
       }
 
@@ -104,7 +151,8 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
       if (search) params.set("search", search);
 
       const queryString = params.toString();
-      const url = queryString.length > 0 ? "/projects?" + queryString : "/projects";
+      const url =
+        queryString.length > 0 ? "/projects?" + queryString : "/projects";
 
       ctx.navigate(url);
 
@@ -115,6 +163,27 @@ export function executeTool(call: AiToolCall, ctx: ToolContext): AiToolResult {
           navigatedTo: url,
           applied: { category: category || "All", search: search || "(none)" },
         },
+      };
+    }
+    /* ============ get_project_details（只读，不导航）============ */
+    case "get_project_details": {
+      const slug = String(call.args.slug ?? "");
+      const project = projectRepository.getBySlug(slug);
+
+      if (!project) {
+        return {
+          name: call.name,
+          response: {
+            success: false,
+            error: `No project with slug "${slug}"`,
+            availableSlugs: projectRepository.getAll().map((p) => p.slug),
+          },
+        };
+      }
+
+      return {
+        name: call.name,
+        response: { success: true, details: buildDetails(project) },
       };
     }
 
