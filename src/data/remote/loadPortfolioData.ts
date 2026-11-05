@@ -2,6 +2,7 @@ import { cache } from "react";
 import { projectRepository } from "../../repository/ProjectRepository";
 import {
   isPortfolioSnapshot,
+  readZhTranslations,
   type PortfolioSnapshot,
 } from "./portfolioSnapshot";
 
@@ -71,17 +72,20 @@ export async function loadPortfolioData(): Promise<DataSource> {
   const fetched = await withTimeout(fetchSnapshot(), FETCH_TIMEOUT_MS);
 
   if (fetched !== "timeout" && fetched !== null) {
-    projectRepository.setProjects(fetched.projects);
+    projectRepository.setProjects(
+      fetched.projects,
+      readZhTranslations(fetched),
+    );
     console.info(
       `[portfolio] data: remote — ${fetched.projects.length} projects, generated ${fetched.generatedAt}`,
     );
     return "remote";
   }
-  const cached= readCache();
+  const cached = readCache();
 
-  if(cached){
-    projectRepository.setProjects(cached.projects);
-     console.info(
+  if (cached) {
+    projectRepository.setProjects(cached.projects, readZhTranslations(cached));
+    console.info(
       `[portfolio] data: cache — ${cached.projects.length} projects, generated ${cached.generatedAt}`,
     );
     return "cache";

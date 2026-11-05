@@ -1,17 +1,21 @@
 import { projects } from "../data/project";
 import type { Project } from "../entities/Project";
 import { projectsZh } from "../il8n/contents/zh";
+import { zh } from "../il8n/locales/zh";
 import { localizeProject, type ProjectTranslation } from "../il8n/localize";
 import { DEFAULT_LANGUAGE, type Language } from "../il8n/types";
 import type { ProjectStat } from "../models/ProjectStatsModel";
 
-const translations: Partial<Record<Language, Record<string, ProjectTranslation>>> = {
-  zh: projectsZh,
-};
+let source: Project[] = projects;
+let zhSource: Record<string, ProjectTranslation> = projectsZh;
+
+function translationsFor(
+  lang: Language,
+): Record<string, ProjectTranslation> | undefined {
+  return lang === "zh" ? zhSource : undefined;
+}
 
 const cache = new Map<Language, Project[]>();
-
-let source: Project[] = projects;
 
 function listFor(lang: Language): Project[] {
   if (lang === DEFAULT_LANGUAGE) {
@@ -25,7 +29,7 @@ function listFor(lang: Language): Project[] {
   }
 
   const localized = source.map((project) =>
-    localizeProject(project, translations[lang]?.[project.slug]),
+    localizeProject(project, translationsFor(lang)?.[project.slug]),
   );
 
   cache.set(lang, localized);
@@ -34,11 +38,11 @@ function listFor(lang: Language): Project[] {
 }
 
 export class ProjectRepository {
-   setProjects(next: Project[]): void {
+  setProjects(next: Project[], zh?: Record<string, ProjectTranslation>): void {
     source = next;
+    zhSource = zh ?? projectsZh;
     cache.clear();
   }
-
 
   getAll(lang: Language = DEFAULT_LANGUAGE): Project[] {
     return listFor(lang);
@@ -48,18 +52,26 @@ export class ProjectRepository {
     return listFor(lang).filter((project) => project.featured);
   }
 
-  getBySlug(slug: string, lang: Language = DEFAULT_LANGUAGE): Project | undefined {
+  getBySlug(
+    slug: string,
+    lang: Language = DEFAULT_LANGUAGE,
+  ): Project | undefined {
     const key = slug.toLowerCase();
 
     return listFor(lang).find((project) => project.slug === key);
   }
 
-  getNext(slug: string, lang: Language = DEFAULT_LANGUAGE): Project | undefined {
+  getNext(
+    slug: string,
+    lang: Language = DEFAULT_LANGUAGE,
+  ): Project | undefined {
     const list = listFor(lang);
 
     const key = slug.toLowerCase();
 
-    const index = list.findIndex((project) => project.slug.toLowerCase() === key);
+    const index = list.findIndex(
+      (project) => project.slug.toLowerCase() === key,
+    );
 
     if (index === -1 || list.length < 2) {
       return undefined;

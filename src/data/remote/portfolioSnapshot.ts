@@ -1,14 +1,15 @@
 import type { Project } from "../../entities/Project";
+import type { ProjectTranslation } from "../../il8n/localize";
 
-export type PortfolioSnapshot={
-    version:1,
-    generatedAt:string;
-    projects:   Project[]
-}
+export type PortfolioSnapshot = {
+  version: 1;
+  generatedAt: string;
+  projects: Project[];
+  translations?: { zh?: Record<string, ProjectTranslation> };
+};
 
-function isRecord (value:unknown):value is Record<string,unknown>{
-      return typeof value === "object" && value !== null && !Array.isArray(value);
-
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 const isString = (value: unknown): value is string => typeof value === "string";
@@ -49,7 +50,9 @@ function isProject(value: unknown): value is Project {
   );
 }
 
-export function isPortfolioSnapshot(value: unknown): value is PortfolioSnapshot {
+export function isPortfolioSnapshot(
+  value: unknown,
+): value is PortfolioSnapshot {
   return (
     isRecord(value) &&
     value.version === 1 &&
@@ -58,4 +61,51 @@ export function isPortfolioSnapshot(value: unknown): value is PortfolioSnapshot 
     value.projects.length > 0 &&
     value.projects.every(isProject)
   );
+}
+
+function isProjectTranslation(value: unknown): value is ProjectTranslation {
+  if (!isRecord(value)) return false;
+
+  const textOk = ["title", "summary", "description"].every(
+    (key) => value[key] === undefined || isString(value[key]),
+  );
+  const listsOk = [
+    "features",
+    "responsibilities",
+    "challenges",
+    "solutions",
+  ].every((key) => value[key] === undefined || isStringArray(value[key]));
+  const story = value.story;
+  const storyOk =
+    story === undefined ||
+    (isRecord(story) &&
+      (story.architecture === undefined || isStringArray(story.architecture)));
+  const galleryOk = value.gallery === undefined || isRecord(value.gallery);
+  const architecture = value.architecture;
+  const architectureOk =
+    architecture === undefined ||
+    (isRecord(architecture) &&
+      (architecture.nodes === undefined || isRecord(architecture.nodes)));
+
+  return textOk && listsOk && storyOk && galleryOk && architectureOk;
+}
+
+
+export function readZhTranslations(
+  snapShot:PortfolioSnapshot
+):Record<string,ProjectTranslation>|undefined{
+  const zh= snapShot.translations?.zh;
+  if(!isRecord(zh)){
+    return  undefined;
+  }
+
+  const valid: Record<string , ProjectTranslation>={}
+
+  for(const [slug,translation] of Object.entries(zh)){
+    if(isProjectTranslation(translation)){
+      valid[slug]=translation
+    }
+  }
+
+  return valid;
 }
