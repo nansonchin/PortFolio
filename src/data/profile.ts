@@ -56,21 +56,21 @@ export type ContactLink = {
 const stripProtocol = (url: string) =>
   url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
 
-export function getContactLinks(): ContactLink[] {
+export function buildContactLinks(source: Profile): ContactLink[] {
   const links: ContactLink[] = [];
 
   links.push({
     label: "EMAIL",
     href: "",
-    display: profile.email,
+    display: source.email,
     external: false,
     cursor: "view",
   });
 
   links.push({
     label: "GITHUB",
-    href: profile.github,
-    display: stripProtocol(profile.github),
+    href: source.github,
+    display: stripProtocol(source.github),
     external: true,
     cursor: "code",
   });
@@ -78,10 +78,14 @@ export function getContactLinks(): ContactLink[] {
   links.push({
     label: "LINKEDIN",
     href: "",
-    display: stripProtocol(profile.linkedin),
+    display: stripProtocol(source.linkedin),
     external: true,
     cursor: "view",
   });
 
   return links;
+}
+
+export function getContactLinks(): ContactLink[] {
+  return buildContactLinks(profile);
 }

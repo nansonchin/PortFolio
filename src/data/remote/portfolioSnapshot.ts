@@ -1,11 +1,25 @@
+import type { DeveloperContext } from "../../components/Ai/context/AiContext";
 import type { Project } from "../../entities/Project";
-import type { ProjectTranslation } from "../../il8n/localize";
+import type { DeveloperContextTranslation, ProfileTranslation, ProjectTranslation } from "../../il8n/localize";
+import type { Profile } from "../profile";
 
 export type PortfolioSnapshot = {
   version: 1;
   generatedAt: string;
   projects: Project[];
   translations?: { zh?: Record<string, ProjectTranslation> };
+    site?: unknown;
+};
+
+export type SiteData = {
+  profile?: Profile;
+  developerContext?: DeveloperContext;
+  translations?: {
+    zh?: {
+      profile?: ProfileTranslation;
+      developerContext?: DeveloperContextTranslation;
+    };
+  };
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -108,4 +122,87 @@ export function readZhTranslations(
   }
 
   return valid;
+}
+
+
+function isSkillGroup(value: unknown): boolean {
+  return isRecord(value) && isString(value.title) && isStringArray(value.items);
+}
+
+function isProfile(value: unknown): value is Profile {
+  return (
+    isRecord(value) &&
+    isStringArray(value.headline) &&
+    isStringArray(value.intro) &&
+    isString(value.location) &&
+    isString(value.status) &&
+    isString(value.email) &&
+    isString(value.github) &&
+    isString(value.linkedin) &&
+    isStringArray(value.focus) &&
+    Array.isArray(value.skillGroups) &&
+    value.skillGroups.every(isSkillGroup)
+  );
+}
+
+function isDeveloperContext(value: unknown): value is DeveloperContext {
+  return (
+    isRecord(value) &&
+    isString(value.name) &&
+    isString(value.role) &&
+    isString(value.description) &&
+    isStringArray(value.background) &&
+    isStringArray(value.skills) &&
+    isStringArray(value.goals)
+  );
+}
+
+function isProfileTranslation(value: unknown): value is ProfileTranslation {
+  if (!isRecord(value)) return false;
+
+  const titles = value.skillGroupTitles;
+
+  return (
+    (value.headline === undefined || isStringArray(value.headline)) &&
+    (value.intro === undefined || isStringArray(value.intro)) &&
+    (value.status === undefined || isString(value.status)) &&
+    (value.location === undefined || isString(value.location)) &&
+    (titles === undefined || (isRecord(titles) && Object.values(titles).every(isString)))
+  );
+}
+
+function isDeveloperTranslation(value: unknown): value is DeveloperContextTranslation {
+  return (
+    isRecord(value) &&
+    (value.role === undefined || isString(value.role)) &&
+    (value.description === undefined || isString(value.description)) &&
+    (value.background === undefined || isStringArray(value.background)) &&
+    (value.goals === undefined || isStringArray(value.goals))
+  );
+}
+
+export function readSite(snapshot: PortfolioSnapshot): SiteData | undefined {
+  const site = snapshot.site;
+  if (!isRecord(site)) return undefined;
+
+  const result: SiteData = {};
+
+  if (isProfile(site.profile)) result.profile = site.profile;
+  if (isDeveloperContext(site.developerContext)) result.developerContext = site.developerContext;
+
+  const translations = site.translations;
+  const zh = isRecord(translations) ? translations.zh : undefined;
+
+  if (isRecord(zh)) {
+    const validZh: NonNullable<SiteData["translations"]>["zh"] = {};
+
+    if (isProfileTranslation(zh.profile)) validZh.profile = zh.profile;
+    if (isDeveloperTranslation(zh.developerContext)) {
+      validZh.developerContext = zh.developerContext;
+    }
+
+    result.translations = { zh: validZh };
+  }
+
+  return result;
 }

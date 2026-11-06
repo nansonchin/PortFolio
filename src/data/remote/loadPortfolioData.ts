@@ -2,9 +2,11 @@ import { cache } from "react";
 import { projectRepository } from "../../repository/ProjectRepository";
 import {
   isPortfolioSnapshot,
+  readSite,
   readZhTranslations,
   type PortfolioSnapshot,
 } from "./portfolioSnapshot";
+import { siteRepository } from "../../repository/SiteRepository";
 
 const SNAPSHOT_URL = String(import.meta.env.VITE_SNAPSHOT_URL ?? "");
 const CACHE_KEY = "portfolio:snapshot:v1";
@@ -76,6 +78,7 @@ export async function loadPortfolioData(): Promise<DataSource> {
       fetched.projects,
       readZhTranslations(fetched),
     );
+    siteRepository.setSite(readSite(fetched));
     console.info(
       `[portfolio] data: remote — ${fetched.projects.length} projects, generated ${fetched.generatedAt}`,
     );
@@ -85,6 +88,7 @@ export async function loadPortfolioData(): Promise<DataSource> {
 
   if (cached) {
     projectRepository.setProjects(cached.projects, readZhTranslations(cached));
+     siteRepository.setSite(readSite(cached));
     console.info(
       `[portfolio] data: cache — ${cached.projects.length} projects, generated ${cached.generatedAt}`,
     );

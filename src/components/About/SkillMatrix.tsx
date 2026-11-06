@@ -1,9 +1,13 @@
 import { profile } from "../../data/profile";
+import { useLanguage } from "../../il8n/LanguageContext";
+import { siteRepository } from "../../repository/SiteRepository";
 import SectionLabel from "../SectionLabel/SectionLabel";
 
 const pad = (value: number) => String(value).padStart(2, "0");
 
 function SkillMatrix() {
+    const { lang } = useLanguage();
+  const profile = siteRepository.getProfile(lang);
   return (
     <section className="border-t border-line px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-7xl">

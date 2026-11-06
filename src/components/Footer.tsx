@@ -4,6 +4,7 @@ import { getContactLinks } from "../data/profile";
 import { useLanguage } from "../il8n/LanguageContext";
 import type { TranslationKey } from "../il8n/locales/en";
 import TransitionLink from "./PageTransition/TransitionLink";
+import { siteRepository } from "../repository/SiteRepository";
 
 const navLinks: { to: string; label: TranslationKey }[] = [
   { to: "/projects", label: "nav.projects" },
@@ -14,9 +15,10 @@ const navLinks: { to: string; label: TranslationKey }[] = [
 const linkClass = "label text-gold-dim transition-colors hover:text-gold-bright";
 
 function Footer() {
-  const { t } = useLanguage();
+    const { t, lang } = useLanguage();
   const year = new Date().getFullYear();
-  const contactLinks = getContactLinks();
+  const developerContext = siteRepository.getDeveloperContext(lang);
+  const contactLinks = siteRepository.getContactLinks();
 
   return (
     <footer className="border-t border-line px-6 py-10 md:px-10">

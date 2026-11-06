@@ -8,6 +8,7 @@ import { useLanguage } from "../il8n/LanguageContext";
 import type { TranslationKey } from "../il8n/locales/en";
 import TransitionLink from "./PageTransition/TransitionLink";
 import TransitionNavLink from "./PageTransition/TransitionNavLink";
+import { siteRepository } from "../repository/SiteRepository";
 
 const NAV_LINKS : { to: string; label: TranslationKey; end: boolean }[] = [
   { to: "/", label: "nav.home", end: true },
@@ -21,7 +22,8 @@ function Navbar() {
 
   const close = useCallback(() => setMenuOpen(false), []);
   const toggle = useCallback(() => setMenuOpen((prev) => !prev), []);
- const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const developerContext = siteRepository.getDeveloperContext(lang);
   return (
     <>
       <nav
