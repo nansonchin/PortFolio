@@ -1,5 +1,5 @@
-import { developerContext } from "../../data/developerContext";
-import { profile } from "../../data/profile";
+import { useLanguage } from "../../il8n/LanguageContext";
+import { siteRepository } from "../../repository/SiteRepository";
 import GlitchText from "../GlitchText/GlitchText";
 import SectionLabel from "../SectionLabel/SectionLabel";
 
@@ -9,6 +9,10 @@ type ReadoutRow ={
 }
 
 function AboutIntro(){
+    const { lang } = useLanguage();
+    const profile = siteRepository.getProfile(lang);
+    const developerContext = siteRepository.getDeveloperContext(lang);
+    
     const rows:ReadoutRow[]=[
         {
             label:"NAME", value:developerContext.name.toUpperCase()

@@ -5,15 +5,19 @@ import { useLenis } from "lenis/react";
 import { developerContext } from "../../data/developerContext";
 import { projectRepository } from "../../repository/ProjectRepository";
 import { prefersReducedMotion } from "../../animations/glitch";
+import { siteRepository } from "../../repository/SiteRepository";
 
 const SECONDS_PER_ITEM = 2.4; // 每个词约走过 2.4 秒（决定整体速度）
-const MAX_EXTRA_SPEED = 5;     // 滚动时最多额外加速几倍
+const MAX_EXTRA_SPEED = 5; // 滚动时最多额外加速几倍
 const SPEED_PER_VELOCITY = 0.08;
 
 function collectTechItems(): string[] {
   const unique = new Set<string>();
 
-  developerContext.skills.forEach((skill) => unique.add(skill.toUpperCase()));
+  siteRepository
+    .getDeveloperContext()
+    .skills.forEach((skill) => unique.add(skill.toUpperCase()));
+
   projectRepository.getAll().forEach((project) => {
     project.technologies.forEach((tech) => unique.add(tech.toUpperCase()));
   });
@@ -41,7 +45,6 @@ function TechMarquee() {
         repeat: -1,
       });
 
-
       return () => {
         loopRef.current = null;
       };
@@ -54,10 +57,18 @@ function TechMarquee() {
     const loop = loopRef.current;
     if (!loop) return;
 
-    const extra = Math.min(Math.abs(lenis.velocity) * SPEED_PER_VELOCITY, MAX_EXTRA_SPEED);
+    const extra = Math.min(
+      Math.abs(lenis.velocity) * SPEED_PER_VELOCITY,
+      MAX_EXTRA_SPEED,
+    );
 
     loop.timeScale(1 + extra);
-    gsap.to(loop, { timeScale: 1, duration: 0.9, ease: "power2.out", overwrite: true });
+    gsap.to(loop, {
+      timeScale: 1,
+      duration: 0.9,
+      ease: "power2.out",
+      overwrite: true,
+    });
   });
 
   return (
@@ -65,9 +76,16 @@ function TechMarquee() {
       <p className="sr-only">Tech stack: {items.join(", ")}</p>
 
       <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
-        <div ref={trackRef} aria-hidden="true" className="flex w-max items-center whitespace-nowrap will-change-transform">
+        <div
+          ref={trackRef}
+          aria-hidden="true"
+          className="flex w-max items-center whitespace-nowrap will-change-transform"
+        >
           {[...items, ...items].map((item, index) => (
-            <span key={`${item}-${index}`} className="label flex items-center gap-10 pr-10 text-gold-dim">
+            <span
+              key={`${item}-${index}`}
+              className="label flex items-center gap-10 pr-10 text-gold-dim"
+            >
               {item}
               <span className="text-gold">◆</span>
             </span>

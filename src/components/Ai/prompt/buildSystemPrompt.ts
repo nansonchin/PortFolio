@@ -1,4 +1,5 @@
 import { profile } from "../../../data/profile";
+import { siteRepository } from "../../../repository/SiteRepository";
 import type { PortfolioContext } from "../context/AiContext";
 
 export function buildSystemPrompt({
@@ -7,6 +8,8 @@ export function buildSystemPrompt({
 }: PortfolioContext): string {
 
   const MAX_FEATURES = 5;
+
+   const profile = siteRepository.getProfile();
 
   const projectBlocks = projects
     .map((p) =>

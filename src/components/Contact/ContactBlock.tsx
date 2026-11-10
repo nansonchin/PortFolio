@@ -3,11 +3,16 @@ import { glitchBurst } from "../../animations/glitch";
 import { getContactLinks, profile } from "../../data/profile";
 import GlitchText from "../GlitchText/GlitchText";
 import SectionLabel from "../SectionLabel/SectionLabel";
+import { siteRepository } from "../../repository/SiteRepository";
+import { useLanguage } from "../../il8n/LanguageContext";
 
 const pad = (value: number) => String(value).padStart(2, "0");
 
 function ContactBlock() {
-  const links = getContactLinks();
+    const { lang } = useLanguage();
+  const profile = siteRepository.getProfile(lang);
+  const links = siteRepository.getContactLinks();
+
   const [copied, setCopied] = useState(false);
   const labelRef = useRef<HTMLSpanElement>(null);
   const timerRef = useRef<number | undefined>(undefined);

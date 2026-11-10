@@ -7,6 +7,8 @@ import React, { useState } from "react";
 import WorkPreview from "../FeaturedProjects/WorkPreview";
 import { canHover } from "../FeaturedProjects/workUtils";
 import TransitionLink from "../PageTransition/TransitionLink";
+import { useLanguage } from "../../il8n/LanguageContext";
+import { siteRepository } from "../../repository/SiteRepository";
 
 function groupByYear(projects: Project[]): [number, Project[]][] {
   const map = new Map<number, Project[]>();
@@ -19,6 +21,8 @@ function groupByYear(projects: Project[]): [number, Project[]][] {
 }
 
 function BuildLog() {
+   const { lang } = useLanguage();
+  const developerContext = siteRepository.getDeveloperContext(lang);
   const groups = groupByYear(projectRepository.getAll());
   const [activeProject, setActiveProject] = useState<{
     year: number;
